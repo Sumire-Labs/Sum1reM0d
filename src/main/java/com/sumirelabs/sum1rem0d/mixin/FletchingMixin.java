@@ -22,7 +22,7 @@ public abstract class FletchingMixin {
     private void sum1rem0d$fletch(Level level, Player player, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
         if (!((BlockState) (Object) this).is(Blocks.FLETCHING_TABLE) || !Rules.on("fletching")) return;
         BlockPos pos = hit.getBlockPos();
-        if (player instanceof ServerPlayer server) server.openMenu(new SimpleMenuProvider((id, inv, p) -> new FletchingMenu(id, inv, ContainerLevelAccess.create(level, pos)), Component.literal("矢細工台")));
+        if (player instanceof ServerPlayer server) server.openMenu(new SimpleMenuProvider((id, inv, p) -> new FletchingMenu(id, inv, ContainerLevelAccess.create(level, pos)), Component.translatable("block.minecraft.fletching_table")));
         cir.setReturnValue(InteractionResult.SUCCESS);
     }
 }

@@ -16,7 +16,7 @@ public final class VisualBlocks {
             var id = Rules.id(ClientRules.text("diamond_disguise", "replacement"));
             if (id != null) return BuiltInRegistries.BLOCK.getOptional(id).orElse(Blocks.DIAMOND_ORE).defaultBlockState();
         }
-        if (ClientRules.enabled("furnace_textures") && (state.is(Blocks.FURNACE) || state.is(Blocks.BLAST_FURNACE) || state.is(Blocks.SMOKER))) {
+        if (ClientGameState.daily("furnace_textures") && (state.is(Blocks.FURNACE) || state.is(Blocks.BLAST_FURNACE) || state.is(Blocks.SMOKER))) {
             List<String> choices = ClientRules.list("furnace_textures", "candidate_blocks");
             if (choices.isEmpty()) return state;
             int index = state.is(Blocks.FURNACE) ? 0 : state.is(Blocks.BLAST_FURNACE) ? 1 : 2;

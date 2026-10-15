@@ -15,6 +15,7 @@ public final class ClientEntrypoint implements ClientModInitializer {
     @Override public void onInitializeClient() {
         com.sumirelabs.sum1rem0d.config.PersonalConfig.initialize(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir());
         net.minecraft.client.gui.screens.MenuScreens.register(com.sumirelabs.sum1rem0d.game.FletchingMenu.TYPE, FletchingScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE, TradeScreen::new);
         ClientPlayNetworking.registerGlobalReceiver(ConfigStatePayload.TYPE,
             (state, context) -> ClientRuntime.acceptRules(state));
         ClientPlayNetworking.registerGlobalReceiver(GameStatePayload.TYPE, (state, context) -> ClientRuntime.accept(state));
@@ -50,7 +51,7 @@ public final class ClientEntrypoint {
         event.register(GameStatePayload.TYPE, (state, context) -> ClientRuntime.accept(state));
         event.register(FakeAdvancementPayload.TYPE, (state, context) -> FakeAdvancementToast.receive(state));
     }
-    private static void screens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) { event.register(com.sumirelabs.sum1rem0d.game.FletchingMenu.TYPE, FletchingScreen::new); }
+    private static void screens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) { event.register(com.sumirelabs.sum1rem0d.game.FletchingMenu.TYPE, FletchingScreen::new); event.register(com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE, TradeScreen::new); }
     private static void login(ClientPlayerNetworkEvent.LoggingIn event) {
         ClientRules.clear();
         ClientGameState.clear();

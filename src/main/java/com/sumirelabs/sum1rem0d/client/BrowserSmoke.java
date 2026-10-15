@@ -30,6 +30,7 @@ public final class BrowserSmoke {
     private static HttpServer fixture;
     private static BrowserSession first, second, ad;
     private static net.dimaskama.mcef.api.MCEFBrowser releasedFirst, releasedYoutube;
+    private static final java.util.List<net.dimaskama.mcef.api.MCEFBrowser> earlyClosed = new java.util.ArrayList<>();
     private static CountingEnchantmentMenu enchantment;
     private static String pointerTarget;
     private static long pointerMovedAt;
@@ -96,8 +97,14 @@ public final class BrowserSmoke {
                     releasedFirst = (net.dimaskama.mcef.api.MCEFBrowser) first.cef();
                     mc.gui.setScreen(null); require(first.closed() && BrowserOverlays.youtubeSession() == null, "Closing inventory releases browser");
                     pass("closing inventory releases browser and focus"); mc.gui.setScreen(new InventoryScreen(mc.player)); advance(now);
+                    for (int i = 0; i < 10; i++) {
+                        var pending = net.dimaskama.mcef.api.MCEFApi.getInstanceFuture().join().createBrowser(localUrl(), false);
+                        pending.close(); earlyClosed.add(pending);
+                    }
                 }
                 case 6 -> {
+                    require(earlyClosed.stream().allMatch(browser -> browser.getTexture() == null && browser.getTextureView() == null), "Closing during native creation never restores GPU resources");
+                    pass("ten browsers closed during creation release resources and allow native shutdown");
                     require(releasedFirst.getTexture() == null && releasedFirst.getTextureView() == null, "Closed browser does not recreate GPU resources from queued paints");
                     pass("closed browser keeps GPU texture and view released");
                     second = BrowserOverlays.youtubeSession(); if (second == null || !second.ready()) return;
@@ -205,8 +212,15 @@ public final class BrowserSmoke {
                 }
                 case 26 -> {
                     double backgroundVolume = probe(second, "document.getElementById('volumeprobe').volume").getAsDouble();
+                    require(probe(second, "window.open(location.href,'_blank')===null").getAsBoolean(), "Unmanaged popup windows are blocked");
                     require(mc.gui.screen() == null && Math.abs(backgroundVolume - .65) < .001, "Volume changes apply while inventory is closed: volume=" + backgroundVolume + ", screen=" + mc.gui.screen()); pass("background browser applies Config volume changes without reopening inventory");
                     mc.gui.setScreen(new InventoryScreen(mc.player)); require(BrowserOverlays.youtubeSession() == second, "Reopening reuses the retained browser");
+                    int browserId = second.cef().getIdentifier();
+                    for (int opening = 0; opening < 10; opening++) {
+                        mc.gui.setScreen(null); mc.gui.setScreen(new InventoryScreen(mc.player));
+                        require(BrowserOverlays.youtubeSession() == second && second.cef().getIdentifier() == browserId, "Repeated inventory openings reuse one native browser");
+                    }
+                    pass("ten inventory reopenings reuse the same native browser; unmanaged popups cannot leave hidden media windows");
                     var draft = PersonalConfig.store().snapshot(); var yt = draft.getAsJsonObject("features").getAsJsonObject("youtube"); yt.addProperty("stop_on_close", true); yt.addProperty("random_video", true); yt.addProperty("random_urls", localUrl() + "?selected=1&variant=2"); PersonalConfig.store().update(draft, PersonalConfig.store().revision()); mc.gui.setScreen(null); mc.gui.setScreen(new InventoryScreen(mc.player)); second = BrowserOverlays.youtubeSession(); advanceTo(22, now);
                 }
                 case 22 -> {
@@ -224,6 +238,21 @@ public final class BrowserSmoke {
                     var repeated = BrowserOverlays.adSession(); if (repeated == null || !repeated.ready()) return; if (!probe(repeated, "Boolean(document.getElementById('volumeprobe'))").getAsBoolean()) { evaluations.clear(); return; }
                     require(repeated != ad && !repeated.closed(), "Advertisement interval creates a new browser after skipping");
                     var rules = ClientRules.snapshot(); rules.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("enabled", false); applyRules(rules); BrowserOverlays.tick(); require(repeated.closed() && BrowserOverlays.adSession() == null, "Disabling advertisements closes the active popup"); pass("advertisements repeat at the configured interval and disabling releases the popup");
+                    mc.gui.setScreen(null);
+                    rules.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("enabled", true);
+                    rules.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("anvil", true);
+                    applyRules(rules);
+                    mc.gui.setScreen(new AnvilScreen(new net.minecraft.world.inventory.AnvilMenu(0, mc.player.getInventory()), mc.player.getInventory(), Component.literal("Anvil verification")));
+                    advanceTo(27, now);
+                }
+                case 27 -> {
+                    var anvilAd = BrowserOverlays.adSession(); if (anvilAd == null || !anvilAd.ready()) return;
+                    if (!probe(anvilAd, "Boolean(document.getElementById('volumeprobe'))").getAsBoolean()) { evaluations.clear(); return; }
+                    require(mc.gui.screen() instanceof AnvilScreen, "MCEF advertisement renders on the actual anvil screen");
+                    screenshot(mc, "anvil-ad");
+                    var rules = ClientRules.snapshot(); rules.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("anvil", false);
+                    applyRules(rules); BrowserOverlays.tick(); require(anvilAd.closed() && BrowserOverlays.adSession() == null, "Anvil advertisement can be disabled independently");
+                    pass("anvil displays the configured web advertisement and its independent toggle releases the popup");
                     mc.gui.setScreen(null); applyRules(originalRules);
                     var draft = PersonalConfig.store().snapshot(); var yt = draft.getAsJsonObject("features").getAsJsonObject("youtube"); yt.addProperty("url", "https://www.youtube.com/watch?v=jNQXAC9IVRw"); yt.addProperty("volume", 25); PersonalConfig.store().update(draft, PersonalConfig.store().revision()); mc.gui.setScreen(new InventoryScreen(mc.player)); advanceTo(9, now);
                 }
@@ -252,10 +281,9 @@ public final class BrowserSmoke {
     }
     private static void click(Minecraft mc, BrowserSession browser, double px, double py) {
         var screen = mc.gui.screen(); var access = (ContainerScreenAccess) screen;
-        int width = Math.max(40, Math.min(PersonalConfig.store().integer("youtube", "width"), access.sum1rem0d$leftPos() - 12));
-        int height = Math.max(30, Math.min(PersonalConfig.store().integer("youtube", "height"), screen.height - 42));
+        var layout = BrowserOverlays.layout(screen);
         double scale = mc.getWindow().getGuiScale();
-        double x = access.sum1rem0d$leftPos() - width - 8 + px / scale, y = Math.max(25, (screen.height - height) / 2) + py / scale;
+        double x = layout.x() + px / scale, y = layout.y() + py / scale;
         String target = browser.cef().getIdentifier() + ":" + px + ":" + py;
         if (!target.equals(pointerTarget)) { pointerTarget = target; pointerMovedAt = System.nanoTime(); BrowserOverlays.moved(x, y); throw new ProbePending(); }
         if (System.nanoTime() - pointerMovedAt < 300_000_000L) throw new ProbePending();

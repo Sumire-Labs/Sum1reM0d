@@ -58,6 +58,8 @@ public final class ConfigScreen extends Screen {
     @Override protected void init() {
         int panel = Math.min(420, width - 20);
         int left = (width - panel) / 2;
+        var wiki = addRenderableWidget(Button.builder(Component.literal("Wiki"), button -> minecraft.gui.setScreen(new WikiScreen(this))).bounds(5, 5, 55, 20).build());
+        wiki.active = WikiRuntime.enabled();
         if (!personal) addRenderableWidget(Button.builder(Component.literal("個人設定"), button -> minecraft.gui.setScreen(new ConfigScreen(this, true))).bounds(width - 77, 5, 72, 20).build());
         EditBox search = addRenderableWidget(new EditBox(font, left, 42, panel - 65, 20, Component.literal("機能を検索")));
         search.setMaxLength(80);

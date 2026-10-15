@@ -24,10 +24,16 @@ public final class BlockGameplay {
         if (!Rules.on("ore_drops") || Rules.b("ore_drops", "silk_original") && Gameplay.silk(level, tool)) return original;
         String block = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
         if (Rules.b("ore_drops", "deepslate")) block = block.replace(":deepslate_", ":");
-        for (String raw : Rules.list("ore_drops", "mapping")) {
-            String[] mapping = raw.split("=", 2);
-            if (mapping.length != 2 || !mapping[0].trim().equals(block)) continue;
-            Identifier id = Rules.id(mapping[1].trim());
+        var entries = Rules.list("ore_drops", "mapping");
+        String source = block;
+        if (entries.stream().noneMatch(entry -> entry.split("=", 2)[0].trim().equals(source))) return original;
+        String mode = Rules.s("ore_drops", "mode");
+        var overworld = level.getServer().overworld();
+        String output = OreDropMapping.output(entries, block, mode, overworld.getSeed(),
+                Math.floorDiv(overworld.getOverworldClockTime(), 24000),
+                mode.equals("mining") && !entries.isEmpty() ? level.getRandom().nextInt(entries.size()) : 0);
+        if (output != null) {
+            Identifier id = Rules.id(output);
             if (id == null) return original;
             Item item = BuiltInRegistries.ITEM.getOptional(id).orElse(Items.AIR);
             if (item == Items.AIR) return original;
@@ -44,8 +50,7 @@ public final class BlockGameplay {
     }
     public static boolean growthSleeps(ServerLevel level, BlockState state) {
         if (!Rules.on("growth_sleep") || !Rules.matches(state, Rules.list("growth_sleep", "target_blocks"))) return false;
-        String moon = Long.toString(Math.floorMod(Math.floorDiv(level.getOverworldClockTime(), 24000), 8));
-        return Rules.list("growth_sleep", "moon_phases").contains(moon);
+        return WorldState.get(level.getServer()).daily("growth_sleep");
     }
     public static boolean dropper(ServerLevel level, BlockPos pos, BlockState state) {
         BlockPos target = pos.relative(state.getValue(DropperBlock.FACING));

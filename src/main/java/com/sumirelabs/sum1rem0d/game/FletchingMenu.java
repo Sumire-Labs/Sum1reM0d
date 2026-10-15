@@ -17,14 +17,14 @@ public final class FletchingMenu extends AbstractContainerMenu {
     public FletchingMenu(int id, Inventory inventory) { this(id, inventory, ContainerLevelAccess.NULL); }
     public FletchingMenu(int id, Inventory inventory, ContainerLevelAccess access) {
         super(TYPE, id); this.access = access;
-        addSlot(new Slot(input, 0, 80, 18) {
+        addSlot(new Slot(input, 0, 48, 22) {
             @Override public boolean mayPlace(ItemStack stack) { return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals(Rules.s("fletching", "input_item")); }
         });
-        for (int row = 0; row < 3; row++) for (int column = 0; column < 9; column++) addSlot(new Slot(output, row * 9 + column, 8 + column * 18, 50 + row * 18) {
+        for (int row = 0; row < 3; row++) for (int column = 0; column < 9; column++) addSlot(new Slot(output, row * 9 + column, 8 + column * 18, 58 + row * 18) {
             @Override public boolean mayPlace(ItemStack stack) { return false; }
             @Override public void onTake(Player player, ItemStack stack) { super.onTake(player, stack); fill(); }
         });
-        addStandardInventorySlots(inventory, 8, 120);
+        addStandardInventorySlots(inventory, 8, 126);
     }
     public boolean canCraft() { return Rules.on("fletching") && pending == 0 && output.isEmpty() && input.getItem(0).getCount() >= Rules.i("fletching", "input_count") && BuiltInRegistries.ITEM.getKey(input.getItem(0).getItem()).toString().equals(Rules.s("fletching", "input_item")); }
     @Override public boolean clickMenuButton(Player player, int button) {

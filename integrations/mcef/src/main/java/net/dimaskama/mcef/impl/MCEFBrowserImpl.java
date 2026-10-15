@@ -264,7 +264,14 @@ public class MCEFBrowserImpl extends CustomCefBrowserOsr implements MCEFBrowser 
             gpuTexture.close();
             gpuTexture = null;
         }
-        close(true);
+        // Calling CefBrowser_N.close(true) before its native handle exists marks
+        // it as closing forever, so a later onAfterCreated cannot close it again.
+        if (getNativeRef("CefBrowser") != 0) super.close(true);
+    }
+
+    void nativeCreated() {
+        // Let CEF finish its creation callback before requesting native teardown.
+        if (closed) java.awt.EventQueue.invokeLater(() -> super.close(true));
     }
 
     @Override

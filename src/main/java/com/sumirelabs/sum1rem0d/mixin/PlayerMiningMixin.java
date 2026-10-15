@@ -21,7 +21,7 @@ public abstract class PlayerMiningMixin {
     }
     @Inject(method = "destroyBlock(Lnet/minecraft/core/BlockPos;)Z", at = @At("RETURN"))
     private void sum1rem0d$afterBreak(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValueZ() && sum1rem0d$broken != null) Gameplay.broke(player, sum1rem0d$broken, sum1rem0d$tool);
+        if (cir.getReturnValueZ() && sum1rem0d$broken != null) { Gameplay.broke(player, sum1rem0d$broken, sum1rem0d$tool); com.sumirelabs.sum1rem0d.game.Economy.mined(player,pos,sum1rem0d$broken,sum1rem0d$tool); }
     }
     @Inject(method = "handleBlockBreakAction", at = @At("HEAD"))
     private void sum1rem0d$attack(BlockPos pos, ServerboundPlayerActionPacket.Action action, Direction direction, int height, int sequence, CallbackInfo ci) {

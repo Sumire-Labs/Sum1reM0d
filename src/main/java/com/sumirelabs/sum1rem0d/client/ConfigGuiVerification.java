@@ -19,10 +19,19 @@ final class ConfigGuiVerification {
         var previousScreen = mc.gui.screen(); var store = Sum1reM0d.config(); var original = store.snapshot();
         var feature = ConfigSchema.features().stream().filter(value -> value.id().equals("ore_drops")).findFirst().orElseThrow();
         var option = feature.options().stream().filter(value -> value.key().equals("mapping")).findFirst().orElseThrow();
+        String originalFile=Files.readString(store.path());
         String before = store.text("ore_drops", "mapping");
         require(before.contains("minecraft:coal_ore=minecraft:redstone"), "Mapping fixture expects default coal entry");
         try {
+            Files.writeString(store.path(),"// GUI検証用の手書きメモ\n"+originalFile);
             var root = new ConfigScreen(previousScreen); var details = new FeatureScreen(root, feature); mc.gui.setScreen(details);
+            String originalMode = root.values(feature).get("mode").getAsString();
+            var modes = java.util.List.of("fixed", "world", "daily", "mining");
+            for (int i = 1; i <= modes.size(); i++) {
+                clickPrefix(details, "交換モード:");
+                require(root.values(feature).get("mode").getAsString().equals(modes.get((modes.indexOf(originalMode) + i) % modes.size())), "Ore mode button cycles all four choices");
+                require(store.text("ore_drops", "mode").equals(originalMode), "Cycling mode does not apply an unsaved draft");
+            }
             openMap(mc, option.label());
             clickPrefix(mc.gui.screen(), "minecraft:coal_ore=");
             var fields = mc.gui.screen().children().stream().filter(child -> child instanceof EditBox).map(child -> (EditBox) child).toList();
@@ -39,17 +48,18 @@ final class ConfigGuiVerification {
             require(root.values(feature).get("mapping").getAsString().equals(expected) && store.text("ore_drops", "mapping").equals(before), "List confirmation updates only the unsaved root draft");
             mc.gui.setScreen(root); click(root, "適用");
             require(store.text("ore_drops", "mapping").equals(expected), "Root Apply commits the mapping through ConfigStore");
-            var saved = JsonParser.parseString(Files.readString(mc.gameDirectory.toPath().resolve("config/sum1rem0d.json"))).getAsJsonObject();
+            var saved = com.sumirelabs.sum1rem0d.config.Json5Config.read(Files.readString(mc.gameDirectory.toPath().resolve("config/sum1rem0d.json5")));
             require(saved.getAsJsonObject("features").getAsJsonObject("ore_drops").get("mapping").getAsString().equals(expected), "Mapping is present in the actual saved JSON file");
-            String savedText = Files.readString(mc.gameDirectory.toPath().resolve("config/sum1rem0d.json")); long savedRevision = store.revision();
+            require(Files.readString(store.path()).contains("GUI検証用の手書きメモ"),"Native GUI Apply preserves handwritten JSON5 comments");
+            String savedText = Files.readString(mc.gameDirectory.toPath().resolve("config/sum1rem0d.json5")); long savedRevision = store.revision();
             var invalidRoot = new ConfigScreen(previousScreen); mc.gui.setScreen(new FeatureScreen(invalidRoot, feature)); openMap(mc, option.label()); clickPrefix(mc.gui.screen(), "minecraft:coal_ore=");
             fields = mc.gui.screen().children().stream().filter(child -> child instanceof EditBox).map(child -> (EditBox) child).toList(); fields.get(1).setValue("sum1rem0d:missing_item"); click(mc.gui.screen(), "決定"); click(mc.gui.screen(), "変更を保持"); mc.gui.setScreen(invalidRoot); click(invalidRoot, "適用");
-            require(store.revision() == savedRevision && store.text("ore_drops", "mapping").equals(expected) && Files.readString(mc.gameDirectory.toPath().resolve("config/sum1rem0d.json")).equals(savedText), "Before world load, a missing registered item still rejects Apply without changing revision or disk contents");
+            require(store.revision() == savedRevision && store.text("ore_drops", "mapping").equals(expected) && Files.readString(mc.gameDirectory.toPath().resolve("config/sum1rem0d.json5")).equals(savedText), "Before world load, a missing registered item still rejects Apply without changing revision or disk contents");
         } finally {
-            store.update(original, store.revision()); mc.gui.setScreen(previousScreen);
+            store.update(original, store.revision()); Files.writeString(store.path(),originalFile); mc.gui.setScreen(previousScreen);
         }
         require(store.snapshot().equals(original), "Mapping GUI fixture restores the original configuration");
-        Sum1reM0d.LOGGER.info("CLIENT_SMOKE: native mapping editor, invalid syntax, list cancel, draft isolation, Apply and disk save verified");
+        Sum1reM0d.LOGGER.info("CLIENT_SMOKE: ore mode choices, native mapping editor, invalid syntax, list cancel, draft isolation, Apply and disk save verified");
     }
     private static void openMap(Minecraft mc, String label) {
         for (int page = 0; page < 30; page++) {

@@ -22,6 +22,9 @@ public final class ModContent {
     private ModContent() {}
     public static Identifier id(String name) { return Identifier.fromNamespaceAndPath(Sum1reM0d.MOD_ID, name); }
     public static Holder<MobEffect> effect(String name) { return BuiltInRegistries.MOB_EFFECT.getOrThrow(ResourceKey.create(Registries.MOB_EFFECT, id(name))); }
+    public static Item coin() { return BuiltInRegistries.ITEM.getValue(id("coin")); }
+    public static Item coinRoll() { return BuiltInRegistries.ITEM.getValue(id("coin_roll")); }
+    public static Item createCoin(String name) { return new CoinItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id(name))).stacksTo(64)); }
     public static Item soap() { return BuiltInRegistries.ITEM.getValue(id("soap")); }
     public static Block upsideDownGrass() { return BuiltInRegistries.BLOCK.getValue(id("upside_down_grass")); }
     public static Block createGrass() { return new VisualGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).setId(ResourceKey.create(Registries.BLOCK, id("upside_down_grass")))); }
@@ -40,6 +43,8 @@ public final class ModContent {
     public static void registerFabric() {
         for (String name : EFFECTS) Registry.register(BuiltInRegistries.MOB_EFFECT, id(name), createEffect(name));
         Registry.register(BuiltInRegistries.ITEM, id("soap"), createSoap());
+        for (String name : List.of("coin", "coin_roll")) Registry.register(BuiltInRegistries.ITEM,id(name),createCoin(name));
+        Registry.register(BuiltInRegistries.MENU,id("trade"),TradeMenu.TYPE);
         Registry.register(BuiltInRegistries.BLOCK, id("upside_down_grass"), createGrass());
         for (String name : List.of("furnace", "blast_furnace", "smoker")) Registry.register(BuiltInRegistries.BLOCK, id("visual_" + name), createVisualFurnace(name));
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id("configured_crafting"), ConfiguredCraftingRecipe.SERIALIZER);

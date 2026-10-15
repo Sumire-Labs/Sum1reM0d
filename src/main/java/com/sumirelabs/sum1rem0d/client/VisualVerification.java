@@ -76,7 +76,7 @@ public final class VisualVerification {
             var targets = ore.get("target_blocks").deepCopy(); ore.addProperty("target_blocks", "minecraft:iron_ore"); apply(); require(shapes.get(coal) == baseCoal && shapes.get(net.minecraft.world.level.block.Blocks.IRON_ORE.defaultBlockState()) == shapes.get(net.minecraft.world.level.block.Blocks.EMERALD_ORE.defaultBlockState()), "Configured ore targets affect only the selected blocks");
             ore.add("target_blocks", targets); daily.addProperty("diamond_disguise", false); apply(); require(shapes.get(coal) == baseCoal, "Inactive ore-disguise day restores the original model"); daily.addProperty("diamond_disguise", true);
             ore.addProperty("enabled", false); apply(); require(shapes.get(coal) == baseCoal, "Disabling ore disguise restores the original native model");
-            var furnace = features.getAsJsonObject("furnace_textures"); furnace.addProperty("enabled", true); furnace.addProperty("candidate_blocks", "minecraft:furnace,minecraft:blast_furnace,minecraft:smoker");
+            var furnace = features.getAsJsonObject("furnace_textures"); furnace.addProperty("enabled", true); furnace.addProperty("candidate_blocks", "minecraft:furnace,minecraft:blast_furnace,minecraft:smoker"); daily.addProperty("furnace_textures", true);
             var kinds = java.util.List.of(net.minecraft.world.level.block.Blocks.FURNACE, net.minecraft.world.level.block.Blocks.BLAST_FURNACE, net.minecraft.world.level.block.Blocks.SMOKER); var permutations = new java.util.HashSet<String>();
             for (int permutation = 0; permutation < 6; permutation++) {
                 state.addProperty("furnacePermutation", permutation); apply(); var choices = new java.util.ArrayList<String>();

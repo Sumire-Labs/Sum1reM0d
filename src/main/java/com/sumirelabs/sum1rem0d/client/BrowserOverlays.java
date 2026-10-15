@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.input.*;
@@ -23,15 +22,26 @@ public final class BrowserOverlays {
     static BrowserSession youtubeSession() { return youtube; }
     static BrowserSession adSession() { return ad; }
     private static boolean inventory(Screen screen) { return screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen; }
+    private static boolean advertisementScreen(Screen screen) {
+        return screen instanceof EnchantmentScreen && ClientRules.bool("advertisements", "enchanting")
+                || screen instanceof AnvilScreen && ClientRules.bool("advertisements", "anvil");
+    }
+    static BrowserLayout layout(Screen screen) {
+        int left = ((ContainerScreenAccess) screen).sum1rem0d$leftPos();
+        if (screen instanceof com.sumirelabs.sum1rem0d.mixin.RecipeBookScreenAccess access && access.sum1rem0d$recipeBook().isVisible()) left -= 147;
+        return BrowserLayout.fit(left, screen.height, PersonalConfig.store().integer("youtube", "width"),
+                PersonalConfig.store().integer("youtube", "height"), PersonalConfig.store().integer("youtube", "left_gap"));
+    }
+    public static int[] exclusion() {
+        var screen = Minecraft.getInstance().gui.screen();
+        if (!inventory(screen) || !ClientRules.enabled("youtube")) return null;
+        var bounds = layout(screen);
+        return bounds.visible() ? bounds.exclusion() : null;
+    }
     public static void initialize(Screen screen) {
-        if (!inventory(screen) && !(screen instanceof EnchantmentScreen)) return;
+        if (!inventory(screen) && !advertisementScreen(screen)) return;
         if (owner != screen) { changed(screen); owner = screen; nextAd = 0; }
         if (inventory(screen) && ClientRules.enabled("youtube")) {
-            var access = (ContainerScreenAccess) screen;
-            int panel = Math.max(50, Math.min(PersonalConfig.store().integer("youtube", "width"), screen.width - access.sum1rem0d$imageWidth() - 24));
-            int newLeft = Math.min(screen.width - access.sum1rem0d$imageWidth() - 8, (screen.width + panel + 8 - access.sum1rem0d$imageWidth()) / 2);
-            int shift = newLeft - access.sum1rem0d$leftPos(); access.sum1rem0d$setLeftPos(newLeft);
-            for (var child : screen.children()) if (child instanceof AbstractWidget widget) widget.setX(widget.getX() + shift);
             if (youtube == null) youtube = new BrowserSession(youtubeUrl());
         }
     }
@@ -58,8 +68,9 @@ public final class BrowserOverlays {
     }
     public static void tick() {
         var mc = Minecraft.getInstance();
+        if (owner != null && owner != mc.gui.screen()) changed(mc.gui.screen());
         if (youtube != null && (!ClientRules.enabled("youtube") || mc.level == null)) { youtube.close(); youtube = null; }
-        if (ad != null && (!ClientRules.enabled("advertisements") || mc.level == null)) closeAd();
+        if (ad != null && (!ClientRules.enabled("advertisements") || mc.level == null || !advertisementScreen(mc.gui.screen()))) closeAd();
         if (youtube != null) youtube.updateVolume(PersonalConfig.store().integer("youtube", "volume"));
         if (ad != null) ad.updateVolume(PersonalConfig.store().integer("advertisements", "volume"));
         String url = PersonalConfig.store().text("youtube", "url");
@@ -76,19 +87,18 @@ public final class BrowserOverlays {
         if (inventory(screen) && youtube != null) {
             if (!ClientRules.enabled("youtube")) { youtube.close(); youtube = null; }
             else {
-                var access = (ContainerScreenAccess) screen;
-                youtubeWidth = Math.max(40, Math.min(PersonalConfig.store().integer("youtube", "width"), access.sum1rem0d$leftPos() - 12));
-                youtubeHeight = Math.max(30, Math.min(PersonalConfig.store().integer("youtube", "height"), screen.height - 42));
-                youtubeX = access.sum1rem0d$leftPos() - youtubeWidth - 8; youtubeY = Math.max(25, (screen.height - youtubeHeight) / 2);
+                var bounds = layout(screen);
+                youtubeWidth = bounds.width(); youtubeHeight = bounds.height(); youtubeX = bounds.x(); youtubeY = bounds.y();
+                if (!bounds.visible()) { youtube.focus(false); return; }
                 graphics.fill(youtubeX - 2, youtubeY - 18, youtubeX + youtubeWidth + 2, youtubeY + youtubeHeight + 2, 0xEE101114);
                 graphics.text(font, "←  →  ↻  YouTube", youtubeX + 3, youtubeY - 13, -1);
                 youtube.draw(graphics, youtubeX, youtubeY, youtubeWidth, youtubeHeight, PersonalConfig.store().integer("youtube", "volume"));
             }
         }
         long now = System.nanoTime();
-        if (screen instanceof EnchantmentScreen && ClientRules.enabled("advertisements") && now >= nextAd && ad == null) {
+        if (advertisementScreen(screen) && ClientRules.enabled("advertisements") && now >= nextAd && ad == null) {
             var urls = ClientRules.list("advertisements", "urls");
-            String url = urls.isEmpty() ? "sum1rem0d:default_ad" : urls.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(urls.size()));
+            String url = urls.isEmpty() ? "https://www.youtube.com/" : urls.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(urls.size()));
             ad = new BrowserSession(url.equals("sum1rem0d:default_ad") ? defaultAd() : safe(url, defaultAd()));
             adOpened = now; nextAd = now + (long) ClientRules.number("advertisements", "interval") * 1_000_000_000L;
         }
@@ -112,13 +122,13 @@ public final class BrowserOverlays {
     }
     private static void closeAd() { if (ad != null) ad.close(); ad = null; }
     public static boolean click(Screen screen, MouseButtonEvent event, boolean doubled) {
-        if (owner != screen) return false;
+        if (owner == null || owner != screen) return false;
         if (ad != null) {
             if (event.y() >= adY - 23 && event.y() < adY && event.x() >= adX + adWidth - 95 && System.nanoTime() - adOpened >= ClientRules.integer("advertisements", "skip_after") * 1_000_000_000L) closeAd();
             else ad.click(event, doubled);
             return true;
         }
-        if (youtube != null && inventory(screen)) {
+        if (youtube != null && inventory(screen) && layout(screen).visible()) {
             if (event.y() >= youtubeY - 18 && event.y() < youtubeY && event.x() >= youtubeX && event.x() < youtubeX + 54) {
                 int part = (int) ((event.x() - youtubeX) / 18); if (part == 0) youtube.back(); else if (part == 1) youtube.forward(); else youtube.reload(); return true;
             }
@@ -126,17 +136,17 @@ public final class BrowserOverlays {
         }
         return false;
     }
-    public static boolean release(Screen screen, MouseButtonEvent event) { if (owner != screen) return false; if (ad != null) { ad.release(event); return true; } if (youtube != null && youtube.focused()) { youtube.release(event); return true; } return false; }
+    public static boolean release(Screen screen, MouseButtonEvent event) { if (owner == null || owner != screen) return false; if (ad != null) { ad.release(event); return true; } if (youtube != null && youtube.focused()) { youtube.release(event); return true; } return false; }
     public static boolean drag(Screen screen, MouseButtonEvent event) {
-        if (owner != screen) return false;
+        if (owner == null || owner != screen) return false;
         BrowserSession target = ad != null ? ad : youtube != null && youtube.focused() ? youtube : null;
         if (target == null) return false;
         target.move(event.x(), event.y()); return true;
     }
-    public static boolean scroll(Screen screen, double x, double y, double amount) { if (owner != screen) return false; if (ad != null) { ad.scroll(x, y, amount); return true; } return youtube != null && youtube.scroll(x, y, amount); }
-    public static void moved(double x, double y) { var mc = Minecraft.getInstance(); if (owner != mc.gui.screen()) return; if (ad != null) ad.move(x, y); else if (youtube != null) youtube.move(x, y); }
+    public static boolean scroll(Screen screen, double x, double y, double amount) { if (owner == null || owner != screen) return false; if (ad != null) { ad.scroll(x, y, amount); return true; } return youtube != null && inventory(screen) && layout(screen).visible() && youtube.scroll(x, y, amount); }
+    public static void moved(double x, double y) { var mc = Minecraft.getInstance(); if (owner == null || owner != mc.gui.screen()) return; if (ad != null) ad.move(x, y); else if (youtube != null) youtube.move(x, y); }
     public static boolean key(KeyEvent event, boolean released) {
-        if (owner != Minecraft.getInstance().gui.screen()) return false;
+        if (owner == null || owner != Minecraft.getInstance().gui.screen()) return false;
         if (ad != null) {
             if (!released && event.key() == InputConstants.KEY_ESCAPE && System.nanoTime() - adOpened >= ClientRules.integer("advertisements", "skip_after") * 1_000_000_000L) closeAd();
             else ad.key(event, released);
@@ -148,6 +158,6 @@ public final class BrowserOverlays {
         }
         return false;
     }
-    public static boolean character(CharacterEvent event) { if (owner != Minecraft.getInstance().gui.screen()) return false; return ad != null ? ad.character(event) : youtube != null && youtube.character(event); }
+    public static boolean character(CharacterEvent event) { if (owner == null || owner != Minecraft.getInstance().gui.screen()) return false; return ad != null ? ad.character(event) : youtube != null && youtube.character(event); }
     public static void closeAll() { if (youtube != null) youtube.close(); youtube = null; closeAd(); owner = null; lastYoutubeUrl = null; configuredYoutubeUrl = null; }
 }

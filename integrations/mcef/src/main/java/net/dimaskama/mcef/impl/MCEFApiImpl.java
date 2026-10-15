@@ -47,6 +47,15 @@ public class MCEFApiImpl implements MCEFApi {
         cefApp = cefAppBuilder.build();
 
         client = cefApp.createClient();
+        // This embedder has one managed surface per browser, no unmanaged tabs/windows.
+        client.addLifeSpanHandler(new org.cef.handler.CefLifeSpanHandlerAdapter() {
+            @Override public void onAfterCreated(org.cef.browser.CefBrowser browser) {
+                if (browser instanceof MCEFBrowserImpl managed) managed.nativeCreated();
+            }
+            @Override public boolean onBeforePopup(org.cef.browser.CefBrowser browser, org.cef.browser.CefFrame frame, String targetUrl, String targetFrameName) {
+                return true;
+            }
+        });
     }
 
     public static synchronized Initialization initialize() {

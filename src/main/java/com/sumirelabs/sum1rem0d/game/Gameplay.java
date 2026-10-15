@@ -32,17 +32,19 @@ public final class Gameplay {
         var state = WorldState.get(server);
         boolean newDay = state.updateDay();
         RedstoneRefresh.tick(server);
+        Economy.tick(server);
+        EconomyMultiplayerVerification.tick(server);
         long gameTime = server.overworld().getGameTime();
         if (newDay) {
             List<String> active = new ArrayList<>();
-            for (String f : List.of("vegan", "upside_down_grass", "diamond_disguise", "hardness_swap"))
-                if (state.daily(f) && Rules.b(f, "announce")) active.add(switch (f) { case "vegan" -> "ヴィーガン"; case "upside_down_grass" -> "草の上下反転"; case "diamond_disguise" -> "ダイヤ偽装"; default -> "硬さ交換"; });
+            for (String f : DailyEvents.FEATURES)
+                if (state.daily(f) && Rules.b("daily_events", "announce") && (!List.of("vegan", "upside_down_grass", "diamond_disguise", "hardness_swap").contains(f) || Rules.b(f, "announce"))) active.add(DailyEvents.label(f));
             if (!active.isEmpty()) server.getPlayerList().broadcastSystemMessage(Component.literal("今日の異変: " + String.join(" / ", active)), false);
         }
         for (ServerPlayer player : server.getPlayerList().getPlayers()) tickPlayer(player, state, gameTime);
         if (gameTime % 20 == 0) {
-            if (Rules.on("inventory_swap") && Math.floorMod(server.overworld().getOverworldClockTime(), 24000) >= 13000
-                && Math.floorMod(state.day(), 8) == Rules.i("inventory_swap", "moon_phase") && state.exchangedDay() != state.day()) exchangeInventories(server, state);
+            if (state.daily("inventory_swap") && state.exchangedDay() != state.day()
+                && server.getPlayerList().getPlayers().stream().filter(Gameplay::eligible).count() >= 2) exchangeInventories(server, state);
             scheduled(server, state, gameTime);
             for (ServerPlayer player : server.getPlayerList().getPlayers()) sendState(player);
         }
@@ -229,10 +231,11 @@ public final class Gameplay {
         return selected;
     }
     private static void exchangeInventories(MinecraftServer server, WorldState state) {
-        state.exchangedDay(state.day());
         Map<String, List<ServerPlayer>> groups = new LinkedHashMap<>();
         for (ServerPlayer player : server.getPlayerList().getPlayers()) if (eligible(player))
             groups.computeIfAbsent(Rules.b("inventory_swap", "same_dimension") ? player.level().dimension().identifier().toString() : "all", key -> new ArrayList<>()).add(player);
+        if (groups.values().stream().noneMatch(group -> group.size() >= 2)) return;
+        state.exchangedDay(state.day());
         for (var group : groups.values()) {
             exchangeRows(group, new Random(server.overworld().getSeed() ^ state.day()));
         }
@@ -355,7 +358,7 @@ public final class Gameplay {
         var state = WorldState.get(player.level().getServer()); state.updateDay();
         var p = state.player(player);
         var json = new JsonObject(); json.addProperty("day", state.day()); json.addProperty("fuel", state.fuelMultiplier()); json.addProperty("fuelEfficiency", state.fuelEfficiency()); json.addProperty("furnacePermutation", state.furnacePermutation());
-        var daily = new JsonObject(); for (String name : List.of("vegan", "upside_down_grass", "diamond_disguise", "hardness_swap")) daily.addProperty(name, state.daily(name)); json.add("daily", daily);
+        var daily = new JsonObject(); for (String name : DailyEvents.FEATURES) daily.addProperty(name, state.daily(name)); json.add("daily", daily);
         var white = new JsonObject();
         if (Rules.on("afk_white")) for (ServerPlayer other : player.level().getServer().getPlayerList().getPlayers()) if (state.player(other).afkTicks >= Rules.i("afk_white", "after") * 20) white.addProperty(other.getUUID().toString(), true);
         json.add("white", white); var aliases = new JsonObject(); if (Rules.on("name_swap")) state.aliases().forEach(aliases::addProperty); json.add("aliases", aliases);
@@ -363,6 +366,7 @@ public final class Gameplay {
         json.addProperty("headache", player.hasEffect(ModContent.effect("headache")));
         json.addProperty("redTicks", p.redTicks); json.addProperty("cameraTicks", p.cameraTicks); json.addProperty("cameraYaw", p.cameraYaw); json.addProperty("cameraPitch", p.cameraPitch);
         json.addProperty("originalYaw", p.originalYaw); json.addProperty("originalPitch", p.originalPitch);
+        json.add("economy", Economy.state(player));
         PlatformNetwork.send(player, new GameStatePayload(json.toString()));
     }
 }

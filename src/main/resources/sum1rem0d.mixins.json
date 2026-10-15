@@ -4,6 +4,7 @@
   "package": "com.sumirelabs.sum1rem0d.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "SoapCreativeTabMixin",
     "FallDamageMixin",
     "WoodenPickaxeMixin",
     "ServerLifecycleMixin",
@@ -40,7 +41,11 @@
     "PlayerConnectionMixin",
     "SleepWakeMixin",
     "SleepEnoughMixin",
-    "CakeMixin"
+    "CakeMixin",
+    "CoinMerchantMixin",
+    "CoinMerchantSyncMixin",
+    "CoinPlacedBlockMixin",
+    "CoinInventoryRevisionMixin"
   ],
   "client": [
     "MenuScreenMixin",
@@ -57,6 +62,7 @@
     "OreItemNameMixin",
     "OreItemModelMixin",
     "ContainerScreenAccess",
+    "RecipeBookScreenAccess",
     "BrowserScreenMixin",
     "BrowserInitMixin",
     "BrowserGuiMixin",
@@ -72,6 +78,7 @@
     "compat.ReiRuntimeMixin",
     "compat.ReiViewMixin",
     "compat.JeiMixin",
+    "compat.JeiBrowserAreaMixin",
     "compat.JeiInputMixin",
     "GrassColorMixin",
     "OreBlockNameMixin"

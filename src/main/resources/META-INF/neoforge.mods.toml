@@ -5,6 +5,7 @@ license="@{MOD_LICENSE}"
 modId="@{MOD_ID}"
 version="@{MOD_VERSION}"
 displayName="@{MOD_NAME_JSON}"
+logoFile="assets/sum1rem0d/icon.png"
 authors="@{MOD_AUTHORS_TEXT}"
 description='''@{MOD_DESCRIPTION}'''
 [[dependencies.@{MOD_ID}]]

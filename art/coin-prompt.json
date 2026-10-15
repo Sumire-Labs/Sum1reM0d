@@ -1,0 +1,8 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "date": "2026-10-16",
+  "transparent_background": true,
+  "prompt": "Use case: stylized-concept. Asset type: Minecraft inventory item sprite for Sum1reM0d, currency Sum1re coin. One single gold coin, front face slightly tilted with a small visible right edge, chunky vanilla Minecraft pixel-art style, intended to read clearly on a 32 by 32 pixel grid. Stepped circular silhouette, dark ochre outline, gold face, restrained pale yellow top-left highlight. Center embossed simple violet S-shaped emblem, no other letters or text. Centered with generous transparent padding, completely transparent background, no shadow outside silhouette, no glow, no scenery, no UI, no watermark. Crisp square pixels and limited palette, no antialiasing or gradients.",
+  "source": "art/source/coin-ai.png",
+  "texture": "src/main/resources/assets/sum1rem0d/textures/item/coin.png"
+}

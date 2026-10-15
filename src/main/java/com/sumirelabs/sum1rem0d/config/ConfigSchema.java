@@ -59,6 +59,8 @@ public final class ConfigSchema {
         if (option.kind() == Kind.MAP) {
             String[] pair = entry.split("=", -1);
             valid = pair.length == 2 && resourceId(pair[0], false) && resourceId(pair[1], false);
+        } else if (key.equals("mode")) {
+            valid = com.sumirelabs.sum1rem0d.game.OreDropMapping.MODES.contains(entry);
         } else if (key.contains("url")) {
             if (key.equals("urls") && entry.equals("sum1rem0d:default_ad")) return;
             try { var uri = java.net.URI.create(entry); valid = ("https".equals(uri.getScheme()) || "http".equals(uri.getScheme())) && uri.getHost() != null; }
@@ -94,6 +96,7 @@ public final class ConfigSchema {
                 option.validate(values.get(option.key()));
             }
         }
+        ordered(features, "economy", "starting_balance", "maximum_balance");
         ordered(features, "daily_fuel", "minimum", "maximum");
         ordered(features, "knockback_mob", "minimum_distance", "maximum_distance");
         ordered(features, "sleep_deprivation", "hunger_days", "slow_days");
@@ -104,6 +107,8 @@ public final class ConfigSchema {
         var soap = split(features.getAsJsonObject("cleanliness").get("soap_materials").getAsString());
         if (soap.isEmpty() || soap.size() > 9) throw new IllegalArgumentException("石鹸の材料は1～9枠で指定してください。");
         var ores = new java.util.HashSet<String>();
+        if (!com.sumirelabs.sum1rem0d.game.OreDropMapping.MODES.contains(features.getAsJsonObject("ore_drops").get("mode").getAsString()))
+            throw new IllegalArgumentException("鉱石ドロップのモードは fixed / world / daily / mining から選んでください。");
         for (String pair : split(features.getAsJsonObject("ore_drops").get("mapping").getAsString()))
             if (!ores.add(pair.split("=", 2)[0])) throw new IllegalArgumentException("鉱石ドロップの交換元が重複しています。");
         if (result.toString().length() > MAX_LENGTH) throw new IllegalArgumentException("Configuration is too large");

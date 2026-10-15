@@ -7,6 +7,7 @@
   "authors": ["@{MOD_AUTHORS_JSON_STRINGS}"],
   "contact": {"homepage": "@{MOD_URL}", "sources": "@{MOD_SOURCES_URL}", "issues": "@{MOD_ISSUE_TRACKER}"},
   "license": "@{MOD_LICENSE}",
+  "icon": "assets/sum1rem0d/icon.png",
   "environment": "*",
   "entrypoints": {"main": ["@{MOD_PACKAGE}.ModEntrypoint"], "client": ["@{MOD_PACKAGE}.client.ClientEntrypoint"]},
   "mixins": ["sum1rem0d.mixins.json"],

@@ -28,13 +28,13 @@ public final class ClientSmoke {
         if (now - changedAt < 3_000_000_000L) return;
         switch (stage) {
             case 1 -> { screenshot(mc, "01-title"); config = new ConfigScreen(title); mc.gui.setScreen(config); }
-            case 2 -> { screenshot(mc, "02-config"); feature = new FeatureScreen(config, ConfigSchema.features().getFirst()); mc.gui.setScreen(feature); }
-            case 3 -> { screenshot(mc, "03-feature"); var f = ConfigSchema.features().getFirst(); mc.gui.setScreen(new ListOptionScreen(feature, config, f, f.options().stream().filter(o -> o.key().equals("forbidden_items")).findFirst().orElseThrow())); }
+            case 2 -> { screenshot(mc, "02-config"); feature = new FeatureScreen(config, ConfigSchema.features().stream().filter(value -> value.id().equals("vegan")).findFirst().orElseThrow()); mc.gui.setScreen(feature); }
+            case 3 -> { screenshot(mc, "03-feature"); var f = ConfigSchema.features().stream().filter(value -> value.id().equals("vegan")).findFirst().orElseThrow(); mc.gui.setScreen(new ListOptionScreen(feature, config, f, f.options().stream().filter(o -> o.key().equals("forbidden_items")).findFirst().orElseThrow())); }
             case 4 -> {
                 screenshot(mc, "04-list");
                 try { ConfigGuiVerification.verifyMap(mc); mappingVerified = true; }
                 catch (Throwable error) { Sum1reM0d.LOGGER.error("CLIENT_SMOKE mapping GUI failed", error); finish(mc, false, error.toString()); return; }
-                var f = ConfigSchema.features().getFirst(); mc.gui.setScreen(new OptionScreen(feature, config, f, f.options().stream().filter(o -> o.key().equals("chance")).findFirst().orElseThrow()));
+                var f = ConfigSchema.features().stream().filter(value -> value.id().equals("vegan")).findFirst().orElseThrow(); mc.gui.setScreen(new OptionScreen(feature, config, f, f.options().stream().filter(o -> o.key().equals("chance")).findFirst().orElseThrow()));
             }
             case 5 -> { screenshot(mc, "06-option"); browser = new BrowserCheck(); mc.gui.setScreen(browser); }
             case 6 -> {

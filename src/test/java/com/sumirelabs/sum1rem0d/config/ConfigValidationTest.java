@@ -27,13 +27,23 @@ class ConfigValidationTest {
         assertDoesNotThrow(() -> ConfigSchema.normalize(input));
     }
     @Test void mappingSyntaxAndDuplicateSourcesAreRejected() {
+        invalid("ore_drops", "mode", "unknown");
         invalid("ore_drops", "mapping", "minecraft:coal_ore=broken");
         invalid("ore_drops", "mapping", "minecraft:coal_ore=minecraft:coal,minecraft:coal_ore=minecraft:diamond");
+    }
+    @Test void oreModesMigrateOldConfigsAndAcceptAllFourChoices() {
+        var old = ConfigSchema.defaults();
+        old.getAsJsonObject("features").getAsJsonObject("ore_drops").remove("mode");
+        assertEquals("daily", ConfigSchema.normalize(old).getAsJsonObject("features").getAsJsonObject("ore_drops").get("mode").getAsString());
+        for (String mode : java.util.List.of("fixed", "world", "daily", "mining")) {
+            old.getAsJsonObject("features").getAsJsonObject("ore_drops").addProperty("mode", mode);
+            assertEquals(mode, ConfigSchema.normalize(old).getAsJsonObject("features").getAsJsonObject("ore_drops").get("mode").getAsString());
+        }
     }
     @Test void urlsPhasesAndModIdsAreValidated() {
         invalid("youtube", "url", "javascript:alert(1)");
         invalid("advertisements", "urls", "file:///etc/passwd");
-        invalid("growth_sleep", "moon_phases", "0,8");
+        invalid("growth_sleep", "chance", -1);
         invalid("recipe_viewers", "target_mods", "invalid mod id");
     }
     @Test void soapMaterialsMustFitCraftingGrid() {

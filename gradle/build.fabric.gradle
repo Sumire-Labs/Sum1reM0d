@@ -16,6 +16,7 @@ dependencies {
         implementation "net.fabricmc.fabric-api:fabric-api:${targetProperties.fabric_api_version}"
         implementation project(mcefProjectPath)
         include project(mcefProjectPath)
+        include json5Coordinate
     }
 }
 loom.runs {

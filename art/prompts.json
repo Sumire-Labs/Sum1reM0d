@@ -1,0 +1,12 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "date": "2026-10-16",
+  "soap": {
+    "transparent_background": true,
+    "prompt": "Use case: stylized-concept. Asset type: production Minecraft mod inventory item sprite, square PNG with genuine transparent background. Create ONE single small solid bar of soap for a mod called Sum1reM0d. Crisp pixel art matching vanilla Minecraft item sprites, designed as an approximately 32 by 32 pixel-grid sprite enlarged cleanly to the output size. Ivory-white rounded rectangular soap bar in a simple slightly diagonal three-quarter view, subtle pale lavender shadow along lower edge, white highlight on upper edge, tiny embossed shallow rectangular indent on its face, two or three small pale blue soap bubbles tightly adjacent to the top right edge to make it unmistakably soap rather than an iron ingot. Restrained 8-12 color palette. Bold readable silhouette when displayed at 16 pixels. The complete item fills about 80 percent of the square, with clear transparent margin around all edges. Hard square pixel edges, nearest-neighbor aesthetic, no anti-alias blur, no gradients, no photo, no realistic reflections, no text, no letters, no watermark, no ground plane, no background, no cast shadow outside the item. Not a sprite sheet. Only the soap and its tiny bubbles."
+  },
+  "mod_icon": {
+    "transparent_background": false,
+    "prompt": "Use case: logo-brand. Asset type: square Minecraft mod icon for Sum1reM0d, used at 32 to 128 pixels in a mod list. Create a polished original pixel-art emblem showing one floating cubic grass block with its grass on the BOTTOM and its dirt on TOP: an unmistakably upside-down grass block, to express this mod's absurd upside-down rules. A single strong central cube in clean three-quarter isometric perspective, deep purple silhouette/outline, muted warm dirt on its top face, vivid emerald grass growing downward along the bottom edges, with a small bright violet angular rotation/swap arrow wrapping around the cube. Background is a solid very dark aubergine square, with ample margin, no frame. High contrast, limited jewel-tone palette, crisp deliberate pixel shapes and broad simple forms, readable as a small app icon. No characters, no extra blocks, no clutter, no gradients, no blur, no photorealism, no gloss. Absolutely no text, no letters or numbers, no watermark. It should look like a distinctive cohesive indie-game mod emblem, not the Minecraft application logo. One finished square icon, not a sheet or presentation."
+  }
+}

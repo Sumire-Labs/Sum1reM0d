@@ -20,6 +20,7 @@ public final class ViewerSmoke {
     private static Object runtime, overlay, recipes;
     private static Object filter;
     private static String originalFilter;
+    private static int vanillaLeft;
     private static final boolean REI = System.getProperty("sum1rem0d.viewer", "jei").equals("rei");
     private static final String ID = REI ? "roughlyenoughitems" : "jei", LABEL = REI ? "REI" : "JEI";
     private static final List<String> passed = new ArrayList<>();
@@ -60,12 +61,31 @@ public final class ViewerSmoke {
                     personal = PersonalConfig.store().snapshot(); rules = ClientRules.snapshot();
                     var fixture = rules.deepCopy(); fixture.getAsJsonObject("features").getAsJsonObject("youtube").addProperty("enabled", false); fixture.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("enabled", false);
                     ClientRuntime.acceptRules(new ConfigStatePayload(ClientRules.revision, ClientRules.editable, fixture.toString(), "", 0, false));
-                    toggle(false); mc.gui.setScreen(new InventoryScreen(mc.player)); changed = now; stage = 2;
+                    toggle(false); mc.gui.setScreen(new InventoryScreen(mc.player));
+                    vanillaLeft = ((com.sumirelabs.sum1rem0d.mixin.ContainerScreenAccess) mc.gui.screen()).sum1rem0d$leftPos();
+                    fixture.getAsJsonObject("features").getAsJsonObject("youtube").addProperty("enabled", true);
+                    ClientRuntime.acceptRules(new ConfigStatePayload(ClientRules.revision, ClientRules.editable, fixture.toString(), "", 0, false));
+                    var browserOptions = PersonalConfig.store().snapshot(); browserOptions.getAsJsonObject("features").getAsJsonObject("youtube").addProperty("stop_on_close", false);
+                    PersonalConfig.store().update(browserOptions, PersonalConfig.store().revision());
+                    BrowserOverlays.initialize(mc.gui.screen()); changed = now; stage = 2;
                     if (REI) overlay = Class.forName("me.shedaniel.rei.impl.client.gui.ScreenOverlayImpl").getMethod("getInstance").invoke(null);
                 }
                 case 2 -> {
                     if (now - changed < 2_000_000_000L) return;
                     require(visible(), "Actual " + LABEL + " overlay is visible when blocking is disabled"); shot(mc, "enabled");
+                    require(((com.sumirelabs.sum1rem0d.mixin.ContainerScreenAccess) mc.gui.screen()).sum1rem0d$leftPos() == vanillaLeft, "Browser does not move the vanilla container");
+                    require(BrowserOverlays.youtubeSession() != null && BrowserOverlays.layout(mc.gui.screen()).visible(), "Browser and recipe viewer coexist beside the unchanged container");
+                    if (!REI) {
+                        var screenHelper = call(runtime, "getScreenHelper");
+                        var areaStream = (java.util.stream.Stream<?>) screenHelper.getClass().getMethod("getGuiExclusionAreas", Screen.class).invoke(screenHelper, mc.gui.screen());
+                        var areas = areaStream.toList(); areaStream.close();
+                        int[] browserArea = BrowserOverlays.exclusion();
+                        require(areas.stream().anyMatch(area -> {
+                            try { return ((Number) call(area, "getX")).intValue() == browserArea[0] && ((Number) call(area, "getWidth")).intValue() == browserArea[2]; }
+                            catch (Exception failure) { throw new IllegalStateException(failure); }
+                        }), "JEI excludes the actual browser bounds from its ingredient and bookmark grids");
+                    }
+                    passed.add("browser preserves vanilla inventory position beside the actual recipe viewer; JEI reserves its bounds");
                     setSearch(""); typeSearch(mc, 'q');
                     require(searchText().equals("q"), "Actual KeyboardHandler focuses and types into unblocked " + LABEL + " search");
                     showRecipes(); require(recipeScreen(mc), "Actual " + LABEL + " recipes can open normally");

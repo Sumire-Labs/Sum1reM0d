@@ -128,7 +128,7 @@ final class PlayerVerification {
             Gameplay.tickPlayer(peer, state, 201);
             require(state.player(peer).awakeTicks == 0, "Death resets sleeplessness");
             passed.accept("five sleepless days kill and death resets sleep timer");
-            candidate = config.snapshot(); candidate.getAsJsonObject("features").getAsJsonObject("vegan").addProperty("enabled", true); config.update(candidate, config.revision());
+            candidate = config.snapshot(); candidate.getAsJsonObject("features").getAsJsonObject("daily_events").addProperty("enabled", true); candidate.getAsJsonObject("features").getAsJsonObject("vegan").addProperty("enabled", true); config.update(candidate, config.revision());
             var fixture = state.checkpoint(); fixture.getAsJsonObject("daily").addProperty("vegan", true); state.restore(fixture);
             player.removeAllEffects(); player.setHealth(20); Gameplay.ate(player, new ItemStack(Items.BREAD));
             require(player.isAlive(), "Plant food is safe on vegan days");
@@ -506,32 +506,31 @@ final class PlayerVerification {
         var player = new TestPlayer(server, level, "SumireDailyPersistence", true); players.add(player);
         var daily = java.util.List.of("vegan", "upside_down_grass", "diamond_disguise", "hardness_swap");
         try {
-            var draft = config.snapshot(); var features = draft.getAsJsonObject("features"); for (var feature : features.entrySet()) feature.getValue().getAsJsonObject().addProperty("enabled", false);
-            for (String feature : daily) { var options = features.getAsJsonObject(feature); options.addProperty("enabled", true); options.addProperty("chance", 100); options.addProperty("announce", true); }
-            var fuel = features.getAsJsonObject("daily_fuel"); fuel.addProperty("enabled", true); fuel.addProperty("minimum", .2); fuel.addProperty("maximum", .2); config.update(draft, config.revision());
-            var initial = state.checkpoint(); initial.addProperty("day", Long.MIN_VALUE); state.restore(initial);
-            gameplayAt(server, level, 23999, 20);
-            require(state.day() == 0 && daily.stream().allMatch(state::daily) && state.fuelEfficiency() == .2, "Actual daily update enables all four events at one hundred percent and samples the configured fixed fuel range");
-            require(dailyAnnouncementCount(player) == 1, "New day broadcasts one combined daily announcement");
-            int permutation = state.furnacePermutation(); require(permutation >= 0 && permutation < 6, "Daily furnace appearance is a valid permutation");
-            for (String feature : daily) features.getAsJsonObject(feature).addProperty("chance", 0);
-            fuel.addProperty("minimum", 1.8); fuel.addProperty("maximum", 1.8); config.update(draft, config.revision());
-            gameplayAt(server, level, 23999, 21);
-            require(!state.updateDay() && daily.stream().allMatch(state::daily) && state.fuelEfficiency() == .2 && state.furnacePermutation() == permutation && dailyAnnouncementCount(player) == 1, "Same-day Config changes do not reroll events, fuel, appearance or announcements");
-            for (String feature : daily) features.getAsJsonObject(feature).addProperty("enabled", false); fuel.addProperty("enabled", false); config.update(draft, config.revision());
-            require(daily.stream().noneMatch(state::daily) && state.fuelEfficiency() == 1, "Disabled daily features stop applying while their saved draw remains intact");
-            for (String feature : daily) features.getAsJsonObject(feature).addProperty("enabled", true); fuel.addProperty("enabled", true); config.update(draft, config.revision());
-            require(daily.stream().allMatch(state::daily) && state.fuelEfficiency() == .2, "Reenable restores the saved same-day draw without using new probabilities");
-            var data = state.player(player); data.awakeTicks = 4 * 24000L; data.sleepWarningStage = 2; state.save();
-            var loaded = new WorldState(server);
-            require(loaded.day() == 0 && daily.stream().allMatch(loaded::daily) && loaded.fuelEfficiency() == .2 && loaded.furnacePermutation() == permutation, "Independent world-state construction reads actual disk values for day, events, fuel and appearance");
-            require(!loaded.updateDay() && loaded.player(player).awakeTicks == 4 * 24000L && loaded.player(player).sleepWarningStage == 2, "Reload does not reroll the current day and preserves the per-player sleep warning stage");
-            passed.accept("actual daily draws, combined announcement, same-day Config changes and disable/reenable preserve saved outcomes; native disk reload preserves fuel, appearance and sleep stage");
+            var draft = config.snapshot(); var features = draft.getAsJsonObject("features");
+            var group = features.getAsJsonObject("daily_events"); group.addProperty("enabled", true); group.addProperty("chance", 100); group.addProperty("announce", true);
+            for (String selected : DailyEvents.FEATURES) {
+                for (String id : DailyEvents.FEATURES) { var option = features.getAsJsonObject(id); option.addProperty("enabled", true); option.addProperty("chance", id.equals(selected) ? 100 : 0); }
+                features.getAsJsonObject("daily_fuel").addProperty("minimum", .2); features.getAsJsonObject("daily_fuel").addProperty("maximum", .2);
+                config.update(draft, config.revision());
+                var initial = state.checkpoint(); initial.addProperty("day", Long.MIN_VALUE); state.restore(initial);
+                gameplayAt(server, level, 6000, 20);
+                require(DailyEvents.FEATURES.stream().filter(state::daily).count() == 1 && state.daily(selected), "Exactly the sole weighted candidate is active: " + selected);
+                require(state.fuelEfficiency() == (selected.equals("daily_fuel") ? .2 : 1), "Fuel is neutral outside its event");
+                if (!selected.equals("furnace_textures")) require(state.furnacePermutation() == 0, "Furnace appearance is neutral outside its event");
+                require(!state.updateDay(), "Same day never rerolls");
+                state.save(); var loaded = new WorldState(server);
+                require(loaded.day() == 0 && loaded.daily(selected) && DailyEvents.FEATURES.stream().filter(loaded::daily).count() == 1 && !loaded.updateDay(), "Actual disk reload preserves one exclusive event");
+            }
+            passed.accept("all eight morning candidates select exclusively, neutral fuel/appearance outside their event, no same-day reroll and actual disk persistence");
+            group.addProperty("chance", 0); config.update(draft, config.revision());
             gameplayAt(server, level, 24000, 40);
-            require(state.day() == 1 && daily.stream().noneMatch(state::daily) && state.fuelEfficiency() == 1.8, "Exact next-day boundary applies new zero-percent probabilities and fixed fuel range");
-            require(dailyAnnouncementCount(player) == 1 && !state.updateDay(), "Inactive next day emits no event announcement and repeated updates do not reroll");
-            var nextLoaded = new WorldState(server); require(nextLoaded.day() == 1 && daily.stream().noneMatch(nextLoaded::daily) && nextLoaded.fuelEfficiency() == 1.8 && !nextLoaded.updateDay(), "Next-day outcomes are saved and survive another independent disk reload");
-            passed.accept("exact day boundary applies new daily probabilities and fuel limits once, saves them and does not announce inactive events");
+            require(DailyEvents.FEATURES.stream().noneMatch(state::daily) && state.fuelEfficiency() == 1 && state.furnacePermutation() == 0, "Zero chance produces an entirely neutral day");
+            group.addProperty("chance", 100); config.update(draft, config.revision());
+            require(!state.updateDay() && DailyEvents.FEATURES.stream().noneMatch(state::daily), "Probability changes wait until the next morning");
+            gameplayAt(server, level, 48000, 60); require(state.daily("growth_sleep"), "Next morning uses new chance");
+            group.addProperty("enabled", false); config.update(draft, config.revision()); require(DailyEvents.FEATURES.stream().noneMatch(state::daily), "Global off disables every event");
+            group.addProperty("enabled", true); config.update(draft, config.revision()); require(state.daily("growth_sleep"), "Reenable reuses the saved result");
+            passed.accept("zero-probability days, next-morning Config application and global event disable/reenable");
         } finally {
             players.remove(player); server.getWorldData().overworldData().setGameTime(gameTime); server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set " + clock); level.environmentAttributes().invalidateTickCache(); level.updateSkyBrightness(); state.restore(checkpoint); state.save(); config.update(previous, config.revision());
         }
@@ -600,19 +599,18 @@ final class PlayerVerification {
         players.add(a); players.add(b); a.setPos(0.5, 245, .5); b.setPos(2.5, 245, .5);
         try {
             var draft = config.snapshot(); var features = draft.getAsJsonObject("features"); for (var feature : features.entrySet()) feature.getValue().getAsJsonObject().addProperty("enabled", false);
-            var swap = features.getAsJsonObject("inventory_swap"); swap.addProperty("enabled", true); swap.addProperty("moon_phase", 0); swap.addProperty("same_dimension", true); swap.addProperty("start_slot", 18); swap.addProperty("slots", 9); config.update(draft, config.revision());
+            var swap = features.getAsJsonObject("inventory_swap"); swap.addProperty("enabled", true); swap.addProperty("same_dimension", true); swap.addProperty("start_slot", 18); swap.addProperty("slots", 9); features.getAsJsonObject("daily_events").addProperty("enabled", true); features.getAsJsonObject("daily_events").addProperty("chance", 100); swap.addProperty("chance", 100); config.update(draft, config.revision());
             for (int slot = 18; slot < 27; slot++) { a.getInventory().setItem(slot, new ItemStack(Items.DIAMOND)); b.getInventory().setItem(slot, new ItemStack(Items.EMERALD)); remote.getInventory().setItem(slot, new ItemStack(Items.GOLD_INGOT)); }
-            state.exchangedDay(Long.MIN_VALUE); gameplayAt(server, level, 6000, 20);
-            require(a.getInventory().getItem(18).is(Items.DIAMOND) && state.exchangedDay() == Long.MIN_VALUE, "Full moon daytime does not exchange inventory");
-            gameplayAt(server, level, 13000, 21); require(a.getInventory().getItem(18).is(Items.DIAMOND), "Exchange waits for the once-per-second event check");
-            gameplayAt(server, level, 13000, 40); require(a.getInventory().getItem(18).is(Items.EMERALD) && b.getInventory().getItem(18).is(Items.DIAMOND) && state.exchangedDay() == 0, "Full moon night triggers actual scheduled inventory exchange");
-            gameplayAt(server, level, 14000, 60); require(a.getInventory().getItem(18).is(Items.EMERALD), "Same full moon night cannot exchange twice");
-            gameplayAt(server, level, 37000, 80); require(a.getInventory().getItem(18).is(Items.EMERALD) && state.exchangedDay() == 0, "Other moon phases cannot exchange inventory");
-            gameplayAt(server, level, 205000, 100); require(a.getInventory().getItem(18).is(Items.DIAMOND) && b.getInventory().getItem(18).is(Items.EMERALD) && state.exchangedDay() == 8, "Next full moon night grants a new exchange");
-            players.remove(b); players.add(remote); gameplayAt(server, level, 397000, 120); require(a.getInventory().getItem(18).is(Items.DIAMOND) && remote.getInventory().getItem(18).is(Items.GOLD_INGOT), "Same-dimension setting prevents cross-world exchange");
-            swap.addProperty("same_dimension", false); config.update(draft, config.revision()); gameplayAt(server, level, 589000, 140); require(a.getInventory().getItem(18).is(Items.GOLD_INGOT) && remote.getInventory().getItem(18).is(Items.DIAMOND), "Config permits cross-world pairing on a later full moon");
+            var initial = state.checkpoint(); initial.addProperty("day", Long.MIN_VALUE); state.restore(initial); state.exchangedDay(Long.MIN_VALUE);
+            gameplayAt(server, level, 6000, 20);
+            require(a.getInventory().getItem(18).is(Items.EMERALD) && b.getInventory().getItem(18).is(Items.DIAMOND) && state.exchangedDay() == 0, "Selected morning event exchanges inventories in daytime");
+            gameplayAt(server, level, 13000, 40); require(a.getInventory().getItem(18).is(Items.EMERALD), "Same day cannot exchange twice");
+            gameplayAt(server, level, 30000, 80); require(a.getInventory().getItem(18).is(Items.DIAMOND) && state.exchangedDay() == 1, "A new selected day exchanges once regardless of moon");
+            players.remove(b); players.add(remote); gameplayAt(server, level, 54000, 100); require(a.getInventory().getItem(18).is(Items.DIAMOND) && remote.getInventory().getItem(18).is(Items.GOLD_INGOT), "Dimension grouping prevents cross-world exchange");
+            swap.addProperty("same_dimension", false); config.update(draft, config.revision()); gameplayAt(server, level, 78000, 120); require(a.getInventory().getItem(18).is(Items.GOLD_INGOT) && remote.getInventory().getItem(18).is(Items.DIAMOND), "Config permits cross-world pairing on a later selected day");
+            passed.accept("exclusive selected-day inventory exchange runs once, ignores moon phases and respects dimension grouping");
             swap.addProperty("enabled", false); config.update(draft, config.revision()); gameplayAt(server, level, 781000, 160); require(a.getInventory().getItem(18).is(Items.GOLD_INGOT), "Disabled full moon exchange does not trigger");
-            passed.accept("actual gameplay tick dispatches full moon exchange only at night, once per night, across configured dimensions and respects disable");
+            passed.accept("disabling selected-day inventory exchange prevents further transfers");
             players.remove(remote); players.add(b); var names = features.getAsJsonObject("name_swap"); names.addProperty("enabled", true); names.addProperty("interval", 1); names.addProperty("chat", true); config.update(draft, config.revision());
             state.aliases().clear(); state.next("names", 0); var aId = a.getUUID(); var bId = b.getUUID();
             gameplayAt(server, level, 6000, 200); require(state.aliases().isEmpty() && state.next("names") == 220, "Name schedule initializes without an immediate swap");

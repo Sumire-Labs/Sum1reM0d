@@ -83,5 +83,12 @@ public final class BrowserSession implements AutoCloseable {
     public String url() { return browser == null ? initialUrl : browser.getCefBrowser().getURL(); }
     org.cef.browser.CefBrowser cef() { return browser == null ? null : browser.getCefBrowser(); }
     boolean closed() { return closed; }
-    @Override public void close() { closed = true; focus(false); if (browser != null) { browser.close(); browser = null; } }
+    @Override public void close() {
+        if (closed) return;
+        closed = true; focus(false);
+        if (browser != null) {
+            try { browser.getCefBrowser().executeJavaScript("document.querySelectorAll('video,audio').forEach(v=>{v.pause();v.muted=true});", browser.getCefBrowser().getURL(), 0); }
+            finally { browser.close(); browser = null; }
+        }
+    }
 }

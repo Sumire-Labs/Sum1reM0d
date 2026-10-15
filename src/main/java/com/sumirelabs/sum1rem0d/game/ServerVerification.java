@@ -60,6 +60,7 @@ public final class ServerVerification {
             testEcology(level, state);
             testFletching(server, level);
             PlayerVerification.verify(server, level, state, ServerVerification::passed);
+            EconomyVerification.verify(server, ServerVerification::passed);
             report.addProperty("success", true);
             Sum1reM0d.LOGGER.info("SERVER_VERIFY: all {} checks passed", PASSED.size());
         } catch (Throwable failure) {
@@ -216,6 +217,9 @@ public final class ServerVerification {
         var soapRecipe = level.recipeAccess().getRecipeFor(RecipeType.CRAFTING, soap, level);
         require(soapRecipe.isPresent() && soapRecipe.get().value().assemble(soap).getItem() == ModContent.soap(), "Soap recipe registered");
         require(soapRecipe.get().value().getRemainingItems(soap).get(2).is(Items.BUCKET), "Soap must return empty bucket");
+        CreativeModeTabs.tryRebuildTabContents(level.enabledFeatures(), true, level.registryAccess());
+        var utilityTab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(Rules.id("minecraft:tools_and_utilities"));
+        require(utilityTab.getDisplayItems().stream().anyMatch(stack -> stack.is(ModContent.soap())) && CreativeModeTabs.searchTab().contains(new ItemStack(ModContent.soap())), "Soap is available in the utility tab and creative search");
         passed("configured crafting recipes and bucket remainder");
         var config = Sum1reM0d.config(); var previous = config.snapshot();
         try {
@@ -290,7 +294,7 @@ public final class ServerVerification {
         var server = level.getServer(); long clock = level.getOverworldClockTime(); var crop = new BlockPos(326, 241, 70);
         try {
             var draft = config.snapshot(); var options = draft.getAsJsonObject("features").getAsJsonObject("growth_sleep");
-            options.addProperty("enabled", true); options.addProperty("moon_phases", "0,4"); options.addProperty("bonemeal", true); config.update(draft, config.revision());
+            options.addProperty("enabled", true); var growthState = state.checkpoint(); growthState.getAsJsonObject("daily").addProperty("growth_sleep", true); state.restore(growthState); options.addProperty("bonemeal", true); config.update(draft, config.revision());
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set 6000"); level.environmentAttributes().invalidateTickCache(); level.updateSkyBrightness();
             place(level, crop.below(), Blocks.FARMLAND.defaultBlockState()); place(level, crop, Blocks.WHEAT.defaultBlockState());
             var meal = new ItemStack(Items.BONE_MEAL, 2);
@@ -302,13 +306,13 @@ public final class ServerVerification {
             var cane = crop.east(4); place(level, cane.below(), Blocks.SAND.defaultBlockState()); place(level, cane.below().north(), Blocks.WATER.defaultBlockState()); place(level, cane.above(), Blocks.AIR.defaultBlockState()); place(level, cane, Blocks.SUGAR_CANE.defaultBlockState().setValue(SugarCaneBlock.AGE, 15));
             level.getBlockState(cane).randomTick(level, cane, net.minecraft.util.RandomSource.create(42));
             require(level.getBlockState(cane.above()).isAir() && level.getBlockState(cane).getValue(SugarCaneBlock.AGE) == 15, "Native sugar cane random tick is suspended during resting moon");
-            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set 30000"); level.environmentAttributes().invalidateTickCache(); level.updateSkyBrightness();
+            growthState.getAsJsonObject("daily").addProperty("growth_sleep", false); state.restore(growthState); server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set 30000"); level.environmentAttributes().invalidateTickCache(); level.updateSkyBrightness();
             level.getBlockState(cane).randomTick(level, cane, net.minecraft.util.RandomSource.create(42)); require(level.getBlockState(cane.above()).is(Blocks.SUGAR_CANE), "Native random growth resumes on an active moon");
             require(BoneMealItem.growCrop(meal, level, crop) && meal.isEmpty(), "Active moon permits bone meal with suspension enabled");
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set 6000"); level.environmentAttributes().invalidateTickCache(); level.updateSkyBrightness();
             options.addProperty("enabled", false); config.update(draft, config.revision());
             place(level, crop, Blocks.WHEAT.defaultBlockState()); require(BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), level, crop), "Disabling suspension restores bone meal on resting moon");
-            passed("native moon-based random growth, bone meal consumption, override, sapling targeting and disable");
+            passed("exclusive growth event suspends native random growth, bone meal and saplings; inactive state and disable restore growth");
             var hardness = draft.getAsJsonObject("features").getAsJsonObject("hardness_swap"); hardness.addProperty("enabled", false); config.update(draft, config.revision());
             float stone = Blocks.STONE.defaultBlockState().getDestroySpeed(level, crop), deep = Blocks.DEEPSLATE.defaultBlockState().getDestroySpeed(level, crop), sand = Blocks.SAND.defaultBlockState().getDestroySpeed(level, crop);
             hardness.addProperty("enabled", true); config.update(draft, config.revision()); var daily = state.checkpoint(); daily.getAsJsonObject("daily").addProperty("hardness_swap", true); state.restore(daily);
@@ -327,10 +331,12 @@ public final class ServerVerification {
     }
     private static void testLoot(ServerLevel level) throws Exception {
         var config = Sum1reM0d.config(); var previous = config.snapshot();
+        long originalClock = level.getOverworldClockTime();
         try {
             var draft = config.snapshot();
             draft.getAsJsonObject("features").add("ore_drops", com.sumirelabs.sum1rem0d.config.ConfigSchema.defaults().getAsJsonObject("features").get("ore_drops").deepCopy());
             var options = draft.getAsJsonObject("features").getAsJsonObject("ore_drops");
+            options.addProperty("mode", "fixed");
             config.update(draft, config.revision());
             var pick = new ItemStack(Items.DIAMOND_PICKAXE);
             for (String pair : Rules.list("ore_drops", "mapping")) {
@@ -368,7 +374,41 @@ public final class ServerVerification {
             drops = Block.getDrops(Blocks.DIAMOND_ORE.defaultBlockState(), level, pos(2), null, null, pick);
             require(drops.size() == 1 && drops.getFirst().is(Items.DIAMOND), "Disabled substitution restores vanilla");
             passed("ore silk-touch policy, fortune multiplier, deepslate switch and vanilla restoration");
-        } finally { config.update(previous, config.revision()); }
+            options.addProperty("enabled", true); options.addProperty("deepslate", true);
+            options.addProperty("silk_original", true);
+            var entries = Rules.list("ore_drops", "mapping");
+            var candidates = entries.stream().map(pair -> pair.split("=")[1]).collect(java.util.stream.Collectors.toSet());
+            for (String mode : List.of("world", "daily", "mining")) {
+                options.addProperty("mode", mode); config.update(draft, config.revision());
+                var observed = new java.util.HashSet<String>();
+                long day = Math.floorDiv(level.getOverworldClockTime(), 24000);
+                for (String pair : entries) {
+                    String source = pair.split("=")[0];
+                    var block = BuiltInRegistries.BLOCK.getValue(Rules.id(source));
+                    drops = Block.getDrops(block.defaultBlockState(), level, pos(2), null, null, pick);
+                    require(drops.size() == 1 && drops.getFirst().getCount() == 1, "Random modes retain configured count");
+                    String item = BuiltInRegistries.ITEM.getKey(drops.getFirst().getItem()).toString(); observed.add(item);
+                    require(candidates.contains(item), "Random ore output stays in configured pool");
+                    if (!mode.equals("mining")) {
+                        require(item.equals(OreDropMapping.output(entries, source, mode, level.getSeed(), day, 0)), "Seeded mode selects expected shared output");
+                        var deepBlock = BuiltInRegistries.BLOCK.getValue(Rules.id(source.replace("minecraft:", "minecraft:deepslate_")));
+                        var deepDrops = Block.getDrops(deepBlock.defaultBlockState(), level, pos(2), null, null, pick);
+                        require(deepDrops.getFirst().is(drops.getFirst().getItem()), "Normal and deepslate ores share random mapping");
+                    }
+                }
+                if (!mode.equals("mining")) require(observed.equals(candidates), "Random permutation retains every configured mineral");
+            }
+            options.addProperty("mode", "daily"); config.update(draft, config.revision());
+            level.getServer().getCommands().performPrefixedCommand(level.getServer().createCommandSourceStack(), "time set 24000");
+            drops = Block.getDrops(Blocks.COAL_ORE.defaultBlockState(), level, pos(2), null, null, pick);
+            require(BuiltInRegistries.ITEM.getKey(drops.getFirst().getItem()).toString().equals(OreDropMapping.output(entries, "minecraft:coal_ore", "daily", level.getSeed(), 1, 0)), "Daily mapping follows clock changes immediately");
+            drops = Block.getDrops(Blocks.DIAMOND_ORE.defaultBlockState(), level, pos(2), null, null, silk);
+            require(drops.size() == 1 && drops.getFirst().is(Items.DIAMOND_ORE), "Random mode still preserves silk touch");
+            passed("world, daily and per-mining ore randomization; shared deepslate mapping, complete output pool, clock changes and silk touch");
+        } finally {
+            level.getServer().getCommands().performPrefixedCommand(level.getServer().createCommandSourceStack(), "time set " + originalClock);
+            config.update(previous, config.revision());
+        }
     }
     private static void testMachines(ServerLevel level) {
         place(level, pos(3), Blocks.DROPPER.defaultBlockState().setValue(DropperBlock.FACING, Direction.EAST));

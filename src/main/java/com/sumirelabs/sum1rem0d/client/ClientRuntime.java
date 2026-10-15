@@ -46,6 +46,7 @@ public final class ClientRuntime {
         ViewerSmoke.tick(mc);
         EmiSmoke.tick(mc);
         MultiplayerSmoke.tick(mc);
+        EconomySmoke.tick(mc); WikiSmoke.tick(mc); WikiRuntime.tick(mc);
         BrowserOverlays.tick();
         AfkLights.tick();
         if (mc.player == null) { cameraTicks = 0; redTicks = 0; cameraActive = false; return; }
@@ -74,6 +75,10 @@ public final class ClientRuntime {
             int color = alpha << 24;
             graphics.fill(0, 0, graphics.guiWidth(), 16, color); graphics.fill(0, graphics.guiHeight() - 16, graphics.guiWidth(), graphics.guiHeight(), color);
             graphics.fill(0, 16, 16, graphics.guiHeight() - 16, color); graphics.fill(graphics.guiWidth() - 16, 16, graphics.guiWidth(), graphics.guiHeight() - 16, color);
+        }
+        if (ClientRules.enabled("economy") && PersonalConfig.store().bool("economy","hud")) {
+            String label = "Sum1reコ↑イン↓ " + WalletScreen.number(WalletScreen.state(),"balance");
+            int x=8,y=28; graphics.fill(x,y,x+mc.font.width(label)+6,y+13,0xA0000000); graphics.text(mc.font,label,x+3,y+2,0xFFFFD060);
         }
         if (ClientRules.enabled("cleanliness") && PersonalConfig.store().bool("cleanliness", "hud")) {
             int x = 8, y = 8;

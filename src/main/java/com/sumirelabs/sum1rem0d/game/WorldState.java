@@ -16,6 +16,8 @@ public final class WorldState {
     public static final class PlayerData {
         public double cleanliness = 100;
         public long awakeTicks;
+        public long coins;
+        public boolean walletInitialized;
         public int sleepTicks, exposureTicks, influenzaTicks, environmentTicks, angerTicks;
         public int explosionCooldown, damageCooldown, bedrockCooldown, bedCooldown;
         public int afkTicks, redTicks, cameraTicks, lightningTicks;
@@ -28,6 +30,9 @@ public final class WorldState {
     }
     private static final class Data {
         int schema = 1;
+        Set<String> coinBlocks = new HashSet<>();
+        Map<String, JsonObject> coinInventories = new LinkedHashMap<>();
+        int eventVersion;
         long day = Long.MIN_VALUE;
         long moonExchangeDay = Long.MIN_VALUE;
         double fuelMultiplier = 1;
@@ -49,6 +54,7 @@ public final class WorldState {
             data = Files.exists(path) ? GSON.fromJson(Files.readString(path), Data.class) : new Data();
             if (data == null || data.schema != 1 || data.players == null || data.daily == null || data.aliases == null)
                 throw new IllegalStateException("Invalid or unsupported world state");
+            if (data.eventVersion != 1) { data.day = Long.MIN_VALUE; data.eventVersion = 1; data.daily.clear(); data.fuelMultiplier = 1; data.furnacePermutation = 0; }
         } catch (IOException | RuntimeException exception) { throw new IllegalStateException("Cannot read world state; original preserved: " + path, exception); }
     }
     public static WorldState get(MinecraftServer server) { currentServer = server; return ACTIVE.computeIfAbsent(server, WorldState::new); }
@@ -57,11 +63,16 @@ public final class WorldState {
     public static void saveIfLoaded(MinecraftServer server) { var state = ACTIVE.get(server); if (state != null) state.save(); }
     public static void unload(MinecraftServer server) { RedstoneRefresh.close(server); saveIfLoaded(server); ACTIVE.remove(server); if (currentServer == server) currentServer = null; }
     public PlayerData player(ServerPlayer player) { return data.players.computeIfAbsent(player.getUUID().toString(), key -> { var p = new PlayerData(); p.cleanliness = Rules.n("cleanliness", "maximum"); return p; }); }
-    public boolean daily(String feature) { return Rules.on(feature) && data.daily.getOrDefault(feature, false); }
-    public double fuelEfficiency() { return Rules.on("daily_fuel") ? data.fuelMultiplier : 1; }
+    public Map<String, JsonObject> coinInventories() { if (data.coinInventories == null) data.coinInventories = new LinkedHashMap<>(); return data.coinInventories; }
+    public boolean markCoinBlock(net.minecraft.server.level.ServerLevel level, net.minecraft.core.BlockPos pos) {
+        if (data.coinBlocks == null) data.coinBlocks = new HashSet<>();
+        return !data.coinBlocks.add(level.dimension().identifier() + ":" + pos.asLong());
+    }
+    public boolean daily(String feature) { return Rules.on("daily_events") && Rules.on(feature) && data.daily.getOrDefault(feature, false); }
+    public double fuelEfficiency() { return daily("daily_fuel") ? data.fuelMultiplier : 1; }
     public double fuelMultiplier() { return FuelAccounting.consumptionMultiplier(fuelEfficiency()); }
-    public void fuelEfficiency(double value) { FuelAccounting.consumptionMultiplier(value); data.fuelMultiplier = value; }
-    public int furnacePermutation() { return data.furnacePermutation; }
+    public void fuelEfficiency(double value) { FuelAccounting.consumptionMultiplier(value); data.fuelMultiplier = value; data.daily.put("daily_fuel", true); }
+    public int furnacePermutation() { return daily("furnace_textures") ? data.furnacePermutation : 0; }
     public Map<String, String> aliases() { return data.aliases; }
     // Native verification restores the complete saved state after temporary fixtures.
     JsonObject checkpoint() { return GSON.toJsonTree(data).getAsJsonObject(); }
@@ -75,26 +86,31 @@ public final class WorldState {
         long day = Math.floorDiv(server.overworld().getOverworldClockTime(), 24000);
         if (day == data.day) return false;
         data.day = day;
-        for (String feature : List.of("vegan", "upside_down_grass", "diamond_disguise", "hardness_swap")) {
-            var random = new Random(server.overworld().getSeed() ^ day * 0x9E3779B97F4A7C15L ^ feature.hashCode());
-            data.daily.put(feature, random.nextDouble() * 100 < Rules.n(feature, "chance"));
-        }
+        var weights = new LinkedHashMap<String, Double>();
+        for (String feature : DailyEvents.FEATURES) if (Rules.on(feature)) weights.put(feature, Rules.n(feature, "chance"));
+        String selected = DailyEvents.choose(server.overworld().getSeed(), day, Rules.on("daily_events") ? Rules.n("daily_events", "chance") : 0, weights);
+        data.daily.clear();
+        for (String feature : DailyEvents.FEATURES) data.daily.put(feature, feature.equals(selected));
         var random = new Random(server.overworld().getSeed() ^ day * 0xD1B54A32D192ED03L);
         double min = Rules.n("daily_fuel", "minimum"), max = Math.max(min, Rules.n("daily_fuel", "maximum"));
-        data.fuelMultiplier = min + random.nextDouble() * (max - min);
-        data.furnacePermutation = random.nextInt(6);
+        data.fuelMultiplier = selected.equals("daily_fuel") ? min + random.nextDouble() * (max - min) : 1;
+        data.furnacePermutation = selected.equals("furnace_textures") ? 1 + random.nextInt(5) : 0;
         save();
         return true;
     }
     public void save() {
+        try { saveStrict(); } catch (IllegalStateException exception) { Sum1reM0d.LOGGER.error("Cannot save world state {}", path, exception); }
+    }
+    public void saveStrict() {
         try {
             Files.createDirectories(path.getParent());
             Path temp = Files.createTempFile(path.getParent(), "sum1rem0d-state", ".tmp");
             try {
                 Files.writeString(temp, GSON.toJson(data) + "\n");
+                try (var channel = java.nio.channels.FileChannel.open(temp, StandardOpenOption.WRITE)) { channel.force(true); }
                 try { Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE); }
                 catch (AtomicMoveNotSupportedException exception) { Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING); }
             } finally { Files.deleteIfExists(temp); }
-        } catch (IOException exception) { Sum1reM0d.LOGGER.error("Cannot save world state {}", path, exception); }
+        } catch (IOException exception) { throw new IllegalStateException("Cannot save world state " + path, exception); }
     }
 }

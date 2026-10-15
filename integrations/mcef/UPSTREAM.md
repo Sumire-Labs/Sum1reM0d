@@ -39,3 +39,10 @@ may wait for an installation or initialization that has already started.
 This is a compatibility adapter, not an upstream NeoForge release. LGPL source
 and license files must accompany redistribution of the adapter. JCEF and
 Chromium have their own notices and licenses, supplied by their distributions.
+
+The embedded client rejects popup browser creation: there is no unmanaged tab or
+window surface, so window.open and target=_blank cannot create hidden media
+windows that outlive the managed Sum1reM0d session.
+Closing an OSR browser before its native handle exists records the close request
+without setting JCEF's irreversible closing flag; onAfterCreated then completes
+the native close. GPU resources are still released immediately.

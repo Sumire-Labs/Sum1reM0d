@@ -11,6 +11,8 @@ public final class PlatformNetwork {
     public static void initialize() {
         PayloadTypeRegistry.serverboundPlay().register(ConfigRequestPayload.TYPE, ConfigRequestPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(ActivityPayload.TYPE, ActivityPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(EconomyRequestPayload.TYPE, EconomyRequestPayload.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(EconomyRequestPayload.TYPE,(request,context)->com.sumirelabs.sum1rem0d.game.Economy.handle(request,context.player()));
         PayloadTypeRegistry.clientboundPlay().register(ConfigStatePayload.TYPE, ConfigStatePayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(GameStatePayload.TYPE, GameStatePayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(FakeAdvancementPayload.TYPE, FakeAdvancementPayload.CODEC);
@@ -41,6 +43,7 @@ public final class PlatformNetwork {
         var registrar = event.registrar("1").optional();
         registrar.playToServer(ConfigRequestPayload.TYPE, ConfigRequestPayload.CODEC,
             (request, context) -> ServerConfigHandler.handle(request, (ServerPlayer) context.player()));
+        registrar.playToServer(EconomyRequestPayload.TYPE, EconomyRequestPayload.CODEC,(request,context)->com.sumirelabs.sum1rem0d.game.Economy.handle(request,(ServerPlayer)context.player()));
         registrar.playToServer(ActivityPayload.TYPE, ActivityPayload.CODEC, (request, context) -> ((ServerPlayer) context.player()).resetLastActionTime());
         registrar.playToClient(ConfigStatePayload.TYPE, ConfigStatePayload.CODEC);
         registrar.playToClient(GameStatePayload.TYPE, GameStatePayload.CODEC);

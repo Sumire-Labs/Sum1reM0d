@@ -6,5 +6,10 @@
   "effect.sum1rem0d.environment_group": "Mysterious Environmental Group",
   "effect.sum1rem0d.environment_anger": "Environmental Wrath",
   "effect.sum1rem0d.sleep_hunger": "Sleep Deprivation: Hunger",
-  "effect.sum1rem0d.sleep_slowness": "Sleep Deprivation: Slowness"
+  "effect.sum1rem0d.sleep_slowness": "Sleep Deprivation: Slowness",
+  "gui.sum1rem0d.fletching.craft": "Craft",
+  "gui.sum1rem0d.fletching.input": "Input",
+  "gui.sum1rem0d.fletching.output": "Output",
+  "item.sum1rem0d.coin": "Sum1re Coin",
+  "item.sum1rem0d.coin_roll": "Sum1re Coins ×10"
 }

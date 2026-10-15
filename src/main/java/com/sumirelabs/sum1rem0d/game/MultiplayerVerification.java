@@ -62,14 +62,14 @@ public final class MultiplayerVerification {
                 }
                 case 2 -> {
                     if (!ready()) return; passed.add("two real clients acknowledge seeded inventory rows");
-                    var draft = Sum1reM0d.config().snapshot(); var swap = draft.getAsJsonObject("features").getAsJsonObject("inventory_swap"); swap.addProperty("enabled", true); swap.addProperty("moon_phase", 0); swap.addProperty("same_dimension", true); swap.addProperty("start_slot", 18); swap.addProperty("slots", 9); Sum1reM0d.config().update(draft, Sum1reM0d.config().revision()); state.exchangedDay(Long.MIN_VALUE); time(server, 13000); step = 3;
+                    var draft = Sum1reM0d.config().snapshot(); var swap = draft.getAsJsonObject("features").getAsJsonObject("inventory_swap"); for (String id : DailyEvents.FEATURES) draft.getAsJsonObject("features").getAsJsonObject(id).addProperty("enabled", id.equals("inventory_swap")); draft.getAsJsonObject("features").getAsJsonObject("daily_events").addProperty("enabled", true); draft.getAsJsonObject("features").getAsJsonObject("daily_events").addProperty("chance", 100); swap.addProperty("enabled", true); swap.addProperty("chance", 100); var selectedDay = state.checkpoint(); selectedDay.addProperty("day", Long.MIN_VALUE); state.restore(selectedDay); swap.addProperty("same_dimension", true); swap.addProperty("start_slot", 18); swap.addProperty("slots", 9); Sum1reM0d.config().update(draft, Sum1reM0d.config().revision()); state.exchangedDay(Long.MIN_VALUE); time(server, 13000); step = 3;
                 }
                 case 3 -> {
                     if (state.exchangedDay() != 0) return;
                     requireSwapped(a, b); swappedAt = now; sendPhase(2); step = 4;
                 }
                 case 4 -> {
-                    if (!ready() || now - swappedAt < 40) return; requireSwapped(a, b); passed.add("full moon swaps rows on both connected clients and cannot repeat in the same night");
+                    if (!ready() || now - swappedAt < 40) return; requireSwapped(a, b); passed.add("selected daily event swaps rows on both connected clients and cannot repeat on the same day");
                     var draft = Sum1reM0d.config().snapshot(); var features = draft.getAsJsonObject("features"); features.getAsJsonObject("inventory_swap").addProperty("enabled", false); var names = features.getAsJsonObject("name_swap"); names.addProperty("enabled", true); names.addProperty("interval", 2); names.addProperty("chat", true); names.addProperty("tab", true); names.addProperty("nametag", true); Sum1reM0d.config().update(draft, Sum1reM0d.config().revision()); state.next("names", now + 20); step = 5;
                 }
                 case 5 -> {

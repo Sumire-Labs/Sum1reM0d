@@ -1,7 +1,38 @@
 [
   {
+    "id": "daily_events",
+    "label": "朝の異変抽選（同時に最大1種類）",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "異変が発生する確率 (%)",
+        "type": "DECIMAL",
+        "initial": 80,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "announce",
+        "label": "選ばれた異変を通知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
     "id": "vegan",
-    "label": "ヴィーガンの日",
+    "label": "ヴィーガン化",
     "implemented": false,
     "options": [
       {
@@ -14,7 +45,7 @@
       },
       {
         "key": "chance",
-        "label": "発生日の確率 (%)",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
         "type": "INTEGER",
         "initial": 20,
         "min": 0,
@@ -963,6 +994,14 @@
         "max": 0
       },
       {
+        "key": "chance",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
+        "type": "DECIMAL",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
         "key": "minimum",
         "label": "最低燃料効率 (1が通常、0.2で消費5倍)",
         "type": "DECIMAL",
@@ -1031,6 +1070,14 @@
     "label": "鉱石ドロップ交換",
     "implemented": false,
     "options": [
+      {
+        "key": "mode",
+        "label": "交換モード",
+        "type": "TEXT",
+        "initial": "daily",
+        "min": 0,
+        "max": 16
+      },
       {
         "key": "enabled",
         "label": "有効",
@@ -1401,7 +1448,7 @@
       },
       {
         "key": "chance",
-        "label": "発生日の確率 (%)",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
         "type": "INTEGER",
         "initial": 20,
         "min": 0,
@@ -1435,7 +1482,7 @@
   },
   {
     "id": "growth_sleep",
-    "label": "月齢で成長休止",
+    "label": "木・作物の成長停止",
     "implemented": false,
     "options": [
       {
@@ -1447,12 +1494,12 @@
         "max": 0
       },
       {
-        "key": "moon_phases",
-        "label": "休止する月齢 (0〜7)",
-        "type": "LIST",
-        "initial": "0,4",
+        "key": "chance",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
+        "type": "DECIMAL",
+        "initial": 20,
         "min": 0,
-        "max": 512
+        "max": 100
       },
       {
         "key": "target_blocks",
@@ -1565,7 +1612,7 @@
       },
       {
         "key": "chance",
-        "label": "発生日の確率 (%)",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
         "type": "INTEGER",
         "initial": 20,
         "min": 0,
@@ -1596,7 +1643,7 @@
       },
       {
         "key": "chance",
-        "label": "発生日の確率 (%)",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
         "type": "INTEGER",
         "initial": 20,
         "min": 0,
@@ -1650,6 +1697,14 @@
         "max": 0
       },
       {
+        "key": "chance",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
+        "type": "DECIMAL",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
         "key": "candidate_blocks",
         "label": "外観候補",
         "type": "LIST",
@@ -1661,7 +1716,7 @@
   },
   {
     "id": "inventory_swap",
-    "label": "満月のインベントリ交換",
+    "label": "インベントリ交換",
     "implemented": false,
     "options": [
       {
@@ -1673,12 +1728,12 @@
         "max": 0
       },
       {
-        "key": "moon_phase",
-        "label": "対象月齢",
-        "type": "INTEGER",
-        "initial": 0,
+        "key": "chance",
+        "label": "朝の抽選で選ばれる重み（0で選ばれない）",
+        "type": "DECIMAL",
+        "initial": 20,
         "min": 0,
-        "max": 7
+        "max": 100
       },
       {
         "key": "start_slot",
@@ -2065,6 +2120,14 @@
         "max": 800
       },
       {
+        "key": "left_gap",
+        "label": "インベントリ左側の間隔 (GUIピクセル)",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 4,
+        "max": 800
+      },
+      {
         "key": "volume",
         "label": "音量 (%)",
         "type": "DECIMAL",
@@ -2076,7 +2139,7 @@
         "key": "stop_on_close",
         "label": "画面を閉じたら停止",
         "type": "BOOLEAN",
-        "initial": true,
+        "initial": false,
         "min": 0,
         "max": 0
       },
@@ -2112,6 +2175,22 @@
         "max": 0
       },
       {
+        "key": "enchanting",
+        "label": "エンチャント台で表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "anvil",
+        "label": "金床で表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
         "key": "interval",
         "label": "広告間隔 (秒)",
         "type": "INTEGER",
@@ -2131,7 +2210,7 @@
         "key": "urls",
         "label": "広告ページURL一覧",
         "type": "LIST",
-        "initial": "sum1rem0d:default_ad",
+        "initial": "https://www.youtube.com/",
         "min": 0,
         "max": 8192
       },
@@ -2189,6 +2268,241 @@
         "initial": 180,
         "min": -360,
         "max": 360
+      }
+    ]
+  },
+  {
+    "id": "wiki",
+    "label": "ゲーム内Wiki",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "Wikiを有効にする",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "auto_show",
+        "label": "参加時に自動で開く",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "first_join_only",
+        "label": "初回だけ自動で開く",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "delay_seconds",
+        "label": "参加後の表示待ち時間 (秒)",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 60
+      },
+      {
+        "key": "seen",
+        "label": "導入ガイドを既読として扱う",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "economy",
+    "label": "Sum1reコ↑イン↓・財布",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "starting_balance",
+        "label": "新規プレイヤーの初期残高",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 1000000
+      },
+      {
+        "key": "maximum_balance",
+        "label": "残高上限（既存残高は切り捨てない）",
+        "type": "INTEGER",
+        "initial": 1000000000,
+        "min": 1,
+        "max": 2000000000
+      },
+      {
+        "key": "deposit",
+        "label": "アイテムの入金",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "withdraw",
+        "label": "残高の出金",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hud",
+        "label": "残高HUD",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "coin_rewards",
+    "label": "討伐・採掘のコイン報酬",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hostile_kills",
+        "label": "敵の討伐報酬",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "kill_coins",
+        "label": "敵1体の報酬",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 0,
+        "max": 1000000
+      },
+      {
+        "key": "ores",
+        "label": "鉱石の採掘報酬",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "ore_coins",
+        "label": "鉱石1個の報酬",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 0,
+        "max": 1000000
+      },
+      {
+        "key": "spawners",
+        "label": "スポーンブロックの破壊報酬",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "spawner_coins",
+        "label": "スポーンブロック1個の報酬",
+        "type": "INTEGER",
+        "initial": 100,
+        "min": 0,
+        "max": 1000000
+      },
+      {
+        "key": "chance",
+        "label": "報酬を受け取る確率 (%)",
+        "type": "DECIMAL",
+        "initial": 100,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "coin_trading",
+    "label": "村人・行商人のコイン交易",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "player_trading",
+    "label": "双方承諾のプレイヤー取引",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "maximum_distance",
+        "label": "取引可能な距離",
+        "type": "DECIMAL",
+        "initial": 16,
+        "min": 1,
+        "max": 128
+      },
+      {
+        "key": "timeout_seconds",
+        "label": "依頼・取引の有効時間（秒）",
+        "type": "INTEGER",
+        "initial": 120,
+        "min": 10,
+        "max": 3600
+      },
+      {
+        "key": "coins",
+        "label": "コインの提示・送金",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "items",
+        "label": "アイテムの提示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
       }
     ]
   }

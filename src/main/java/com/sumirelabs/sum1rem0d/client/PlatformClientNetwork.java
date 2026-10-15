@@ -23,6 +23,14 @@ public final class PlatformClientNetwork {
         *///?}
         return true;
     }
+    public static void economy(com.sumirelabs.sum1rem0d.network.EconomyRequestPayload request) {
+        //? if fabric {
+        if (ClientPlayNetworking.canSend(com.sumirelabs.sum1rem0d.network.EconomyRequestPayload.TYPE)) ClientPlayNetworking.send(request);
+        //?} elif neoforge {
+        /*var connection = Minecraft.getInstance().getConnection();
+        if (connection != null && connection.hasChannel(com.sumirelabs.sum1rem0d.network.EconomyRequestPayload.TYPE)) ClientPacketDistributor.sendToServer(request);
+        *///?}
+    }
     public static void refresh() { send(ConfigRequestPayload.refresh()); }
     public static void activity() {
         //? if fabric {

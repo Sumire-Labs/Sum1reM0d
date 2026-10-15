@@ -15,7 +15,7 @@ public final class Sum1reM0d {
     private Sum1reM0d() {}
 
     public static void initialize(Path configDirectory) {
-        config = new ConfigStore(configDirectory.resolve(MOD_ID + ".json"), com.sumirelabs.sum1rem0d.game.RegisteredConfigValidation::validate);
+        config = new ConfigStore(configDirectory.resolve(MOD_ID + ".json5"), com.sumirelabs.sum1rem0d.game.RegisteredConfigValidation::validate);
         config.load();
         LOGGER.info("{} {} initialized", MOD_NAME, VERSION);
     }

@@ -113,13 +113,30 @@ public final class ToastSmoke {
                     if (now - visibleAt < 1_000_000_000L) return;
                     VisualVerification.assertHud(mc, 0, 0, false); screenshot(mc, "cleanliness-hidden");
                     passed.add("native cleanliness HUD extracts numeric text, value-dependent bar width and warning color, configurable maximum and personal hide toggle");
-                    VisualVerification.restore(mc); passed.add("client configuration and camera restored after visual fixtures"); finish(mc, true, "");
+                    VisualVerification.restore(mc); passed.add("client configuration and camera restored after visual fixtures");
+                    AssetPreviewScreen.verify(mc); mc.gui.setScreen(new AssetPreviewScreen()); visibleAt = now; stage = 16;
+                }
+                case 16 -> {
+                    if (now - visibleAt < 2_000_000_000L) return;
+                    screenshot(mc, "soap-and-mod-icon"); passed.add("native soap item resolves its own generated sprite and the registered mod icon renders");
+                    FletchingGuiVerification.begin(mc); visibleAt = now; stage = 17;
+                }
+                case 17 -> {
+                    if (now - visibleAt < 2_000_000_000L) return;
+                    screenshot(mc, "fletching-ready"); FletchingGuiVerification.craft(mc); visibleAt = now; stage = 18;
+                }
+                case 18 -> {
+                    if (now - visibleAt < 2_000_000_000L) return;
+                    FletchingGuiVerification.verifyOutput(); screenshot(mc, "fletching-output");
+                    passed.add("vanilla-part fletching screen renders input/output/inventory, enables craft and displays exactly 1000 arrows with bounded stacks");
+                    FletchingGuiVerification.restore(); finish(mc, true, "");
                 }
             }
         } catch (Throwable failure) { Sum1reM0d.LOGGER.error("TOAST_SMOKE failed", failure); finish(mc, false, failure.toString()); }
     }
     private static void require(boolean value, String message) { if (!value) throw new AssertionError(message); }
     private static void finish(Minecraft mc, boolean success, String failure) {
+        FletchingGuiVerification.restore();
         try { VisualVerification.restore(mc); } catch (Throwable error) { success = false; failure += "; visual restore: " + error; }
         stage = -1; var result = new JsonObject(); result.addProperty("success", success); result.addProperty("failure", failure); result.add("passed", new Gson().toJsonTree(passed));
         try { Files.writeString(mc.gameDirectory.toPath().resolve("sum1rem0d-toast-verification.json"), new GsonBuilder().setPrettyPrinting().create().toJson(result)); }

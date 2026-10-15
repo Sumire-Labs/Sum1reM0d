@@ -73,7 +73,7 @@ final class ResourceEntryScreen extends Screen {
             *///?}
             rebuildWidgets(); return;
         }
-        if (option.key().contains("url")) { suggestions = option.key().equals("urls") ? java.util.List.of("sum1rem0d:default_ad") : java.util.List.of("https://www.youtube.com/"); rebuildWidgets(); return; }
+        if (option.key().contains("url")) { suggestions = option.key().equals("urls") ? java.util.List.of("https://www.youtube.com/", "sum1rem0d:default_ad") : java.util.List.of("https://www.youtube.com/"); rebuildWidgets(); return; }
         var registry = mapping ? right ? BuiltInRegistries.ITEM : BuiltInRegistries.BLOCK
             : option.key().contains("effect") ? BuiltInRegistries.MOB_EFFECT
             : option.key().contains("block") ? BuiltInRegistries.BLOCK

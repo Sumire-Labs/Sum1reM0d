@@ -11,5 +11,5 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InventoryChangeTrigger.class)
 public abstract class VerificationInventoryCriteriaMixin {
     @Inject(method = "trigger", at = @At("HEAD"), cancellable = true)
-    private void sum1rem0d$temporaryItems(ServerPlayer player, Inventory inventory, ItemStack stack, CallbackInfo ci) { if (MultiplayerVerification.temporaryInventory(player)) ci.cancel(); }
+    private void sum1rem0d$temporaryItems(ServerPlayer player, Inventory inventory, ItemStack stack, CallbackInfo ci) { if (MultiplayerVerification.temporaryInventory(player) || com.sumirelabs.sum1rem0d.game.EconomyMultiplayerVerification.temporaryInventory(player)) ci.cancel(); }
 }

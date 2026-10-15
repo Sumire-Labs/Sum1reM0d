@@ -25,9 +25,16 @@ final class FeatureScreen extends Screen {
         for (int row = 0; row < rows && page * rows + row < options.size(); row++) {
             var option = options.get(page * rows + row);
             var current = parent.values(feature).get(option.key());
+            boolean oreMode = feature.id().equals("ore_drops") && option.key().equals("mode");
             String value = option.isBoolean() ? (current.getAsBoolean() ? "ON" : "OFF") : option.kind() == ConfigSchema.Kind.LIST || option.kind() == ConfigSchema.Kind.MAP ? ConfigSchema.split(current.getAsString()).size() + "件" : current.getAsString();
+            if (oreMode) value = switch (current.getAsString()) { case "fixed" -> "固定"; case "world" -> "ワールド固定ランダム"; case "daily" -> "日替わりランダム"; default -> "採掘ごとにランダム"; };
             Button entry = addRenderableWidget(Button.builder(Component.literal(option.label() + ": " + value), button -> {
-                if (option.isBoolean()) {
+                if (oreMode) {
+                    var modes = java.util.List.of("fixed", "world", "daily", "mining");
+                    int index = modes.indexOf(parent.values(feature).get(option.key()).getAsString());
+                    parent.values(feature).addProperty(option.key(), modes.get((index + 1) % modes.size()));
+                    rebuildWidgets();
+                } else if (option.isBoolean()) {
                     parent.values(feature).addProperty(option.key(), !parent.values(feature).get(option.key()).getAsBoolean());
                     rebuildWidgets();
                 } else if (option.kind() == ConfigSchema.Kind.LIST || option.kind() == ConfigSchema.Kind.MAP) {

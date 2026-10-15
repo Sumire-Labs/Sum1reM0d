@@ -20,5 +20,13 @@ public abstract class MenuScreenMixin extends Screen {
         addRenderableWidget(Button.builder(Component.literal("Sum1reM0d"),
             button -> minecraft.gui.setScreen(new ConfigScreen((Screen) (Object) this)))
             .bounds(5, 5, 100, 20).build());
+        var wiki = addRenderableWidget(Button.builder(Component.literal("Sum1reM0d Wiki"),
+            button -> minecraft.gui.setScreen(new com.sumirelabs.sum1rem0d.client.WikiScreen((Screen) (Object) this)))
+            .bounds(5, 29, 100, 20).build());
+        if ((Object)this instanceof PauseScreen && minecraft.player != null) {
+            var wallet = addRenderableWidget(Button.builder(Component.literal("Sum1re 財布 / 取引"), button -> minecraft.gui.setScreen(new com.sumirelabs.sum1rem0d.client.WalletScreen(this))).bounds(5,53,100,20).build());
+            wallet.active = com.sumirelabs.sum1rem0d.config.ClientRules.enabled("economy");
+        }
+        wiki.active = com.sumirelabs.sum1rem0d.client.WikiRuntime.enabled();
     }
 }

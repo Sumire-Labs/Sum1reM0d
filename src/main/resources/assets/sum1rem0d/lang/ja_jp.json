@@ -6,5 +6,10 @@
   "effect.sum1rem0d.environment_group": "謎の環境保護団体",
   "effect.sum1rem0d.environment_anger": "環境保護団体の怒り",
   "effect.sum1rem0d.sleep_hunger": "睡眠不足：空腹",
-  "effect.sum1rem0d.sleep_slowness": "睡眠不足：鈍足"
+  "effect.sum1rem0d.sleep_slowness": "睡眠不足：鈍足",
+  "gui.sum1rem0d.fletching.craft": "作成",
+  "gui.sum1rem0d.fletching.input": "材料",
+  "gui.sum1rem0d.fletching.output": "完成品",
+  "item.sum1rem0d.coin": "Sum1reコ↑イン↓",
+  "item.sum1rem0d.coin_roll": "Sum1reコ↑イン↓ ×10"
 }

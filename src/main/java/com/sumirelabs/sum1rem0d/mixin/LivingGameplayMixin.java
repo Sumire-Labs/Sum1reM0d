@@ -20,5 +20,5 @@ public abstract class LivingGameplayMixin {
         if ((Object) this instanceof ServerPlayer player && player.getHealth() < sum1rem0d$healthBefore) Gameplay.damaged(player);
     }
     @Inject(method = "die", at = @At("HEAD"))
-    private void sum1rem0d$death(DamageSource source, CallbackInfo ci) { Gameplay.sheepKilled((LivingEntity) (Object) this, source); }
+    private void sum1rem0d$death(DamageSource source, CallbackInfo ci) { Gameplay.sheepKilled((LivingEntity) (Object) this, source); com.sumirelabs.sum1rem0d.game.Economy.killed((LivingEntity)(Object)this,source); }
 }

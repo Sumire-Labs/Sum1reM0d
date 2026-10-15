@@ -1,0 +1,11 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="LGPL-2.1"
+[[mods]]
+modId="mcef_modern"
+version="0.3.3-sumire.1"
+displayName="MCEF Modern (Sum1reM0d adapter)"
+authors="DimasKama, MCEF contributors, Sumire Labs (loader adapter)"
+description='''MCEF Modern browser API with a NeoForge adapter for Sum1reM0d.'''
+[[mixins]]
+config="mcef-modern.mixins.json"

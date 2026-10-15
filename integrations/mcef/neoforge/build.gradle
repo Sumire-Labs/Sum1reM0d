@@ -1,0 +1,22 @@
+plugins { id 'org.taumc.moddev' }
+apply from: rootProject.file('integrations/mcef/shared.gradle')
+neoForge.enable {
+    version = mcefPins.neoforge_version
+    setDisableRecompilation(true)
+}
+neoForge.mods { mcef_modern { sourceSet sourceSets.main } }
+// CustomCefBrowserOsr extends a package-private JCEF implementation. NeoForge's
+// module loader requires the entire org.cef package in the same mod module.
+configurations { embeddedJcef { transitive = false } }
+dependencies {
+    embeddedJcef 'me.friwi:jcef-api:jcef-d3de827+cef-146.0.10+g8219561+chromium-146.0.7680.179'
+    embeddedJcef 'me.friwi:jcefmaven:146.0.10'
+}
+def embeddedDirectory = layout.buildDirectory.dir('embedded-jcef')
+def embedJcef = tasks.register('embedJcef', Sync) {
+    into embeddedDirectory
+    from({ configurations.embeddedJcef.collect { zipTree(it) } }) {
+        exclude 'META-INF/**', 'module-info.class'
+    }
+}
+sourceSets.main.output.dir([builtBy: embedJcef], embeddedDirectory)

@@ -1,0 +1,88 @@
+plugins {
+    id 'dev.kikugie.stonecutter'
+    id 'base'
+    id 'com.cleanroommc.versioning'
+    id 'io.github.pacifistmc.forgix' apply false
+    id 'com.cleanroommc.tokenenvoy' apply false
+}
+
+def preferred = providers.gradleProperty('stonecutter_active').get()
+def activeTargets = gradle.ext.selectedTargets
+stonecutter.active(activeTargets.contains(preferred) ? preferred : activeTargets.first())
+stonecutter.parameters {
+    def loader = node.metadata.project.substring(node.metadata.project.lastIndexOf('-') + 1)
+    constants.match(loader, 'fabric', 'forge', 'neoforge')
+}
+
+def forgixEnabled = providers.gradleProperty('enable_forgix').map { it.toBoolean() }.orElse(true).get()
+if (forgixEnabled) apply plugin: 'io.github.pacifistmc.forgix'
+
+group = mod_group
+// Resolve once before child projects configure; Versioning owns the root version.
+ext.resolvedModVersion = version.toString()
+ext.selectedTargets = gradle.ext.selectedTargets
+allprojects { group = rootProject.mod_group }
+subprojects { version = rootProject.resolvedModVersion }
+
+plugins.withId('java') {
+    // The controller aggregates targets; its src/ belongs to the version projects.
+    sourceSets.all {
+        java.setSrcDirs([])
+        resources.setSrcDirs([])
+    }
+    tasks.named('jar') { enabled = false }
+}
+tasks.register('listTargets') {
+    group = 'help'
+    description = 'Lists every published target and the current selection.'
+    def available = gradle.ext.targetCatalog
+    def selected = selectedTargets
+    doLast { available.each { println "${selected.contains(it) ? '*' : ' '} $it" } }
+}
+
+if (forgixEnabled) {
+    forgix {
+        archiveBaseName = mod_archive_name
+        archiveVersion = resolvedModVersion
+        archiveClassifier = "${forgix_minecraft_version}-merged"
+        autoRun = false
+    }
+}
+
+gradle.projectsEvaluated {
+    def artifacts = selectedTargets.collect { project(":$it") }
+    tasks.register('buildAll') {
+        group = 'build'
+        description = 'Builds all selected Minecraft / loader targets.'
+        dependsOn artifacts.collect { it.tasks.named('build') }
+    }
+    tasks.named('build') { dependsOn tasks.named('buildAll') }
+    apply from: rootProject.file('gradle/scripts/distribution.gradle')
+    if (!forgixEnabled) return
+    def requestedLoaders = forgix_loaders.split(',').collect { it.trim() }
+    def mergeProjects = artifacts.findAll {
+        it.minecraftVersion == forgix_minecraft_version && requestedLoaders.contains(it.modLoader)
+    }
+    mergeProjects.each { p ->
+        // Use the actual Stonecutter project name; Forgix requires an existing project.
+        forgix.merge(p.name) { inputJar.set(p.ext.distributionJar.flatMap { it.archiveFile }) }
+    }
+    tasks.named('mergeJars') {
+        dependsOn mergeProjects.collect { it.ext.distributionJar }
+        // Forgix uses these labels in relocated class names. Stonecutter node names
+        // contain dots/dashes, so pass Java-safe loader labels instead.
+        jarFileProjectMap.set(mergeProjects.collectEntries { p ->
+            [(p.ext.distributionJar.get().archiveFile.get().asFile): p.modLoader]
+        })
+        doFirst {
+            if (mergeProjects.size() < 2) throw new GradleException('Select at least two loaders for forgix_minecraft_version using target_versions / targets.')
+            if (mergeProjects.any { it.modLoader == 'forge' } && mergeProjects.any { it.modLoader == 'neoforge' } &&
+                forgix_minecraft_version.startsWith('1.20.') && forgix_minecraft_version.tokenize('.')[2].toInteger() < 5) {
+                throw new GradleException('Forge and NeoForge before 1.20.5 share mods.toml. Merge Fabric with either Forge or NeoForge separately.')
+            }
+        }
+    }
+    tasks.named('mergeVersions') {
+        doFirst { throw new GradleException('Cross-Minecraft Forgix bundles are opt-in upstream and are not configured here. Use mergeJars for a single Minecraft release.') }
+    }
+}

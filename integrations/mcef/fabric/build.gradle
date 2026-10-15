@@ -1,0 +1,9 @@
+plugins { id 'net.fabricmc.fabric-loom' }
+apply from: rootProject.file('integrations/mcef/shared.gradle')
+dependencies {
+    minecraft "com.mojang:minecraft:$mcefMinecraft"
+    implementation "net.fabricmc:fabric-loader:${mcefPins.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${mcefPins.fabric_api_version}"
+    include 'me.friwi:jcef-api:jcef-d3de827+cef-146.0.10+g8219561+chromium-146.0.7680.179'
+    include 'me.friwi:jcefmaven:146.0.10'
+}

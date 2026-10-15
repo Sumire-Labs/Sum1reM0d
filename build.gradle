@@ -1,0 +1,72 @@
+plugins {
+    id 'org.taumc.moddev' apply false
+    id 'org.taumc.moddev.legacyforge' apply false
+}
+apply from: rootProject.file('gradle/scripts/mod.gradle')
+
+def forge = modLoader == 'forge'
+apply plugin: (forge ? 'org.taumc.moddev.legacyforge' : 'org.taumc.moddev')
+
+// The development launcher needs a modern JDK even when the production target is Java 8.
+// ModDevGradle also uses this toolchain for IDE/Gradle game launches.
+def compilerJava = targetProperties.getProperty('moddev_toolchain_version', targetJava.toString()).toInteger()
+java.toolchain.languageVersion = JavaLanguageVersion.of(compilerJava)
+tasks.withType(JavaCompile).configureEach { options.release = targetJava }
+
+def recompilationSetting = targetProperties.getProperty('moddev_disable_recompilation', moddev_disable_recompilation)
+if (!(recompilationSetting in ['auto', 'true', 'false'])) {
+    throw new GradleException('moddev_disable_recompilation must be auto, true, or false.')
+}
+def disableRecompilation = recompilationSetting == 'auto' ?
+    providers.environmentVariable('CI').map { it.toBoolean() }.orElse(false).get() : recompilationSetting.toBoolean()
+
+// The platform-specific enable block is the only backend difference.
+if (forge) {
+    legacyForge.enable {
+        forgeVersion = "$minecraftVersion-${targetProperties.forge_version}"
+        useMojangClassNames = stonecutter.eval(minecraftVersion, '<1.17')
+        setDisableRecompilation(disableRecompilation)
+    }
+} else {
+    neoForge.enable {
+        version = targetProperties.neoforge_version
+        setDisableRecompilation(disableRecompilation)
+    }
+}
+
+def moddev = extensions.getByName(forge ? 'legacyForge' : 'neoForge')
+moddev.validateAccessTransformers = targetProperties.getProperty('moddev_validate_access_transformers', moddev_validate_access_transformers).toBoolean()
+moddev.runs {
+    client {
+        client(); programArguments.addAll('--username', minecraft_username)
+        if (providers.gradleProperty('client_run_dir').isPresent()) gameDirectory.set(layout.projectDirectory.dir(providers.gradleProperty('client_run_dir').get()))
+        if (providers.gradleProperty('client_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArguments.add('-Dsum1rem0d.clientSmoke=true')
+        if (providers.gradleProperty('network_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArguments.add('-Dsum1rem0d.networkSmoke=true')
+        if (providers.gradleProperty('browser_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArguments.add('-Dsum1rem0d.browserSmoke=true')
+        if (providers.gradleProperty('toast_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArguments.add('-Dsum1rem0d.toastSmoke=true')
+        if (providers.gradleProperty('network_address').isPresent()) jvmArguments.add("-Dsum1rem0d.networkAddress=${providers.gradleProperty('network_address').get()}")
+    }
+    server {
+        server(); programArgument '--nogui'
+        if (providers.gradleProperty('server_verify').map { it.toBoolean() }.orElse(false).get()) jvmArguments.add('-Dsum1rem0d.serverVerify=true')
+        if (providers.gradleProperty('toast_verify').map { it.toBoolean() }.orElse(false).get()) jvmArguments.add('-Dsum1rem0d.toastVerify=true')
+    }
+}
+moddev.mods { "${mod_id}" { sourceSet sourceSets.main } }
+dependencies {
+    implementation project(mcefProjectPath)
+    jarJar project(mcefProjectPath)
+}
+evaluationDependsOn(mcefProjectPath)
+moddev.mods { mcef_modern { sourceSet project(mcefProjectPath).sourceSets.main } }
+
+// NFRT resolves external tools independently of Gradle's project repositories.
+tasks.named('createMinecraftArtifacts') {
+    additionalRepositories.add('https://maven.minecraftforge.net/')
+    additionalRepositories.add('https://maven.taumc.org/releases/')
+}
+tasks.named('jar') { archiveClassifier = "$minecraftVersion-$modLoader" }
+
+// Legacy Forge's plain jar lives in devlibs; only the SRG-remapped jar is distributable.
+// Forgix and buildAll consume this provider instead of guessing from file names.
+ext.distributionJar = tasks.named(forge ? 'reobfJar' : 'jar')

@@ -1,0 +1,15 @@
+modLoader="javafml"
+loaderVersion="[@{LOADER_MAJOR},)"
+license="@{MOD_LICENSE}"
+[[mods]]
+modId="@{MOD_ID}"
+version="@{MOD_VERSION}"
+displayName="@{MOD_NAME_JSON}"
+authors="@{MOD_AUTHORS_TEXT}"
+description='''@{MOD_DESCRIPTION}'''
+[[dependencies.@{MOD_ID}]]
+modId="minecraft"
+mandatory=true
+versionRange="[@{MINECRAFT_VERSION}]"
+ordering="NONE"
+side="BOTH"

@@ -1,0 +1,12 @@
+{
+  "schemaVersion":1,
+  "id":"mcef-modern",
+  "version":"0.3.3-sumire.1",
+  "name":"MCEF Modern (Sum1reM0d adapter)",
+  "authors":["DimasKama","MCEF contributors","Sumire Labs (loader adapter)"],
+  "license":"LGPL-2.1",
+  "environment":"client",
+  "entrypoints":{"client":["net.dimaskama.mcef.platform.FabricBootstrap"]},
+  "mixins":["mcef-modern.mixins.json"],
+  "depends":{"minecraft":"26.3","java":">=25","fabricloader":">=0.19.5","fabric-api":"*"}
+}

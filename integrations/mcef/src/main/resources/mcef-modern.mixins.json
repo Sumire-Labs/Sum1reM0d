@@ -1,0 +1,1 @@
+{"required":true,"package":"net.dimaskama.mcef.platform.mixin","compatibilityLevel":"JAVA_25","client":["McefShutdownMixin"],"injectors":{"defaultRequire":1}}

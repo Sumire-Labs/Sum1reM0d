@@ -1,0 +1,2195 @@
+[
+  {
+    "id": "vegan",
+    "label": "ヴィーガンの日",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "発生日の確率 (%)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "forbidden_items",
+        "label": "禁止食品",
+        "type": "LIST",
+        "initial": "minecraft:beef,minecraft:cooked_beef,minecraft:porkchop,minecraft:cooked_porkchop,minecraft:chicken,minecraft:cooked_chicken,minecraft:mutton,minecraft:cooked_mutton,minecraft:rabbit,minecraft:cooked_rabbit,minecraft:cod,minecraft:cooked_cod,minecraft:salmon,minecraft:cooked_salmon,minecraft:tropical_fish,minecraft:pufferfish,minecraft:rotten_flesh,minecraft:spider_eye,minecraft:rabbit_stew,minecraft:pumpkin_pie,minecraft:milk_bucket,minecraft:honey_bottle,minecraft:cake",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "unknown_food_allowed",
+        "label": "未分類食品を許可",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "announce",
+        "label": "朝に発生を告知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "allowed_items",
+        "label": "許可食品",
+        "type": "LIST",
+        "initial": "minecraft:apple,minecraft:golden_apple,minecraft:enchanted_golden_apple,minecraft:bread,minecraft:carrot,minecraft:golden_carrot,minecraft:potato,minecraft:baked_potato,minecraft:beetroot,minecraft:beetroot_soup,minecraft:mushroom_stew,minecraft:suspicious_stew,minecraft:cookie,minecraft:melon_slice,minecraft:dried_kelp,minecraft:sweet_berries,minecraft:glow_berries",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "damage_effects",
+    "label": "被ダメージ時のランダム効果",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "付与確率 (%)",
+        "type": "INTEGER",
+        "initial": 100,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "buff_chance",
+        "label": "バフの確率 (%)",
+        "type": "INTEGER",
+        "initial": 50,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "duration",
+        "label": "持続時間 (秒)",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "level",
+        "label": "効果レベル",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "buff_effects",
+        "label": "バフ候補",
+        "type": "LIST",
+        "initial": "minecraft:speed,minecraft:haste,minecraft:strength,minecraft:regeneration,minecraft:resistance",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "debuff_effects",
+        "label": "デバフ候補",
+        "type": "LIST",
+        "initial": "minecraft:slowness,minecraft:mining_fatigue,minecraft:weakness,minecraft:poison,minecraft:blindness",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "cooldown",
+        "label": "連鎖防止間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 3600
+      }
+    ]
+  },
+  {
+    "id": "early_fall",
+    "label": "2mからの落下ダメージ",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "start_height",
+        "label": "ダメージ開始距離 (m)",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 1,
+        "max": 256
+      }
+    ]
+  },
+  {
+    "id": "influenza",
+    "label": "インフルエンザ",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "radius",
+        "label": "集団の判定距離",
+        "type": "DECIMAL",
+        "initial": 5,
+        "min": 1,
+        "max": 128
+      },
+      {
+        "key": "players",
+        "label": "必要人数 (自分を含む)",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 2,
+        "max": 100
+      },
+      {
+        "key": "exposure",
+        "label": "発症まで (秒)",
+        "type": "INTEGER",
+        "initial": 180,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "duration",
+        "label": "持続時間 (秒)",
+        "type": "INTEGER",
+        "initial": 600,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "level",
+        "label": "効果レベル",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "milk_cures",
+        "label": "ミルクで治療",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "afk_white",
+    "label": "AFKで白く発光",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "after",
+        "label": "AFK判定時間 (秒)",
+        "type": "INTEGER",
+        "initial": 300,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "whiteness",
+        "label": "白さ",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "dynamic_light",
+        "label": "周囲も照らす (描画のみ)",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "light_level",
+        "label": "周囲の光の明るさ",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 0,
+        "max": 15
+      },
+      {
+        "key": "light_radius",
+        "label": "周囲の光の半径 (ブロック)",
+        "type": "INTEGER",
+        "initial": 12,
+        "min": 1,
+        "max": 15
+      }
+    ]
+  },
+  {
+    "id": "sleep_deprivation",
+    "label": "睡眠不足",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hunger_days",
+        "label": "空腹になる日数",
+        "type": "INTEGER",
+        "initial": 3,
+        "min": 1,
+        "max": 365
+      },
+      {
+        "key": "slow_days",
+        "label": "鈍足になる日数",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 365
+      },
+      {
+        "key": "death_days",
+        "label": "死亡する日数",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 365
+      },
+      {
+        "key": "sleep_seconds",
+        "label": "解除に必要な睡眠 (秒)",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 60
+      },
+      {
+        "key": "dimensions",
+        "label": "有効な睡眠のディメンション",
+        "type": "LIST",
+        "initial": "minecraft:overworld",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "hunger_level",
+        "label": "空腹レベル",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "slow_level",
+        "label": "鈍足レベル",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "death_resets",
+        "label": "死亡でリセット",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hunger_enabled",
+        "label": "空腹段階を有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "slow_enabled",
+        "label": "鈍足段階を有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "death_enabled",
+        "label": "死亡段階を有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "warnings",
+        "label": "段階ごとの予告",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "headache",
+    "label": "悪天候で頭痛",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "level",
+        "label": "採掘速度低下レベル",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "rain",
+        "label": "雨で発症",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "thunder",
+        "label": "雷雨で発症",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "visual",
+        "label": "画面演出",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "visual_opacity",
+        "label": "画面演出の強さ",
+        "type": "DECIMAL",
+        "initial": 0.15,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "glass_damage",
+    "label": "ガラスが手に刺さる",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "damage",
+        "label": "ダメージ",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0,
+        "max": 1000
+      },
+      {
+        "key": "silk_safe",
+        "label": "シルクタッチなら安全",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "target_blocks",
+        "label": "対象ブロック",
+        "type": "LIST",
+        "initial": "#c:glass_blocks,#c:glass_panes,minecraft:glass,minecraft:glass_pane",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "wooden_pickaxe",
+    "label": "木のツルハシの耐久",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "durability",
+        "label": "最大耐久",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 100000
+      },
+      {
+        "key": "target_items",
+        "label": "対象道具",
+        "type": "LIST",
+        "initial": "minecraft:wooden_pickaxe",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "cleanliness",
+    "label": "清潔度",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "maximum",
+        "label": "清潔度上限",
+        "type": "DECIMAL",
+        "initial": 100,
+        "min": 1,
+        "max": 10000
+      },
+      {
+        "key": "decay_per_minute",
+        "label": "1分の低下量",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0,
+        "max": 1000
+      },
+      {
+        "key": "water_per_second",
+        "label": "入浴中の毎秒回復",
+        "type": "DECIMAL",
+        "initial": 5,
+        "min": 0,
+        "max": 1000
+      },
+      {
+        "key": "soap_recovery",
+        "label": "石鹸の回復量",
+        "type": "DECIMAL",
+        "initial": 50,
+        "min": 0,
+        "max": 10000
+      },
+      {
+        "key": "health_threshold",
+        "label": "体力低下開始の清潔度",
+        "type": "DECIMAL",
+        "initial": 50,
+        "min": 0,
+        "max": 10000
+      },
+      {
+        "key": "minimum_health",
+        "label": "最低最大体力 (2でハート1個)",
+        "type": "DECIMAL",
+        "initial": 10,
+        "min": 2,
+        "max": 1000
+      },
+      {
+        "key": "hud",
+        "label": "メーターを表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "soap_materials",
+        "label": "石鹸材料 (各1個)",
+        "type": "LIST",
+        "initial": "minecraft:clay_ball,minecraft:sugar,minecraft:water_bucket",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "soap_output",
+        "label": "石鹸の作成数",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 64
+      }
+    ]
+  },
+  {
+    "id": "environment_group",
+    "label": "謎の環境保護団体",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "seconds_per_block",
+        "label": "破壊ごとの追加時間 (秒)",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "max_seconds",
+        "label": "蓄積時間上限 (秒)",
+        "type": "INTEGER",
+        "initial": 300,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "target_blocks",
+        "label": "対象",
+        "type": "LIST",
+        "initial": "#minecraft:leaves,#minecraft:crops,minecraft:short_grass,minecraft:tall_grass,minecraft:fern,minecraft:large_fern",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "environment_anger",
+    "label": "環境保護団体の怒り",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "発生確率 (%)",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "duration",
+        "label": "毒の時間 (秒)",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "level",
+        "label": "毒のレベル",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "target_blocks",
+        "label": "対象",
+        "type": "LIST",
+        "initial": "#minecraft:crops,minecraft:short_grass,minecraft:tall_grass,minecraft:fern,minecraft:large_fern",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "lava_explosion",
+    "label": "溶岩で爆発",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "power",
+        "label": "爆発威力",
+        "type": "DECIMAL",
+        "initial": 6,
+        "min": 0,
+        "max": 64
+      },
+      {
+        "key": "break_blocks",
+        "label": "地形破壊",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "cooldown",
+        "label": "再発待ち (秒)",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 3600
+      }
+    ]
+  },
+  {
+    "id": "fire_explosion",
+    "label": "火で爆発",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "power",
+        "label": "爆発威力",
+        "type": "DECIMAL",
+        "initial": 6,
+        "min": 0,
+        "max": 64
+      },
+      {
+        "key": "break_blocks",
+        "label": "地形破壊",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "cooldown",
+        "label": "再発待ち (秒)",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "target_blocks",
+        "label": "発動するブロック",
+        "type": "LIST",
+        "initial": "minecraft:fire,minecraft:soul_fire",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "bedrock_damage",
+    "label": "岩盤で誰かがダメージ",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "damage",
+        "label": "ダメージ",
+        "type": "DECIMAL",
+        "initial": 2,
+        "min": 0,
+        "max": 1000
+      },
+      {
+        "key": "cooldown",
+        "label": "発動間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "include_attacker",
+        "label": "攻撃者本人も抽選対象",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "target_blocks",
+        "label": "叩くブロック",
+        "type": "LIST",
+        "initial": "minecraft:bedrock",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "zeus",
+    "label": "ゼウス",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "抽選間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 600,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "chance",
+        "label": "発動確率 (%)",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "warning",
+        "label": "予告する",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "warning_seconds",
+        "label": "予告から落雷まで (秒)",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 0,
+        "max": 60
+      },
+      {
+        "key": "ceiling_distance",
+        "label": "天井の探索高さ (0なら空まで)",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 384
+      }
+    ]
+  },
+  {
+    "id": "fletching",
+    "label": "矢細工台の大量クラフト",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "input_item",
+        "label": "材料",
+        "type": "TEXT",
+        "initial": "minecraft:stick",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "input_count",
+        "label": "材料数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 64
+      },
+      {
+        "key": "output_item",
+        "label": "完成品",
+        "type": "TEXT",
+        "initial": "minecraft:arrow",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "output_count",
+        "label": "完成品の数",
+        "type": "INTEGER",
+        "initial": 1000,
+        "min": 1,
+        "max": 100000
+      }
+    ]
+  },
+  {
+    "id": "instant_smelting",
+    "label": "即時精錬",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "base_cost",
+        "label": "1回の基準燃料消費",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0.01,
+        "max": 100
+      },
+      {
+        "key": "fuel_items",
+        "label": "使用できる燃料",
+        "type": "LIST",
+        "initial": "minecraft:coal,minecraft:charcoal",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "batch_per_tick",
+        "label": "1tickあたりの最大処理数",
+        "type": "INTEGER",
+        "initial": 64,
+        "min": 1,
+        "max": 1024
+      }
+    ]
+  },
+  {
+    "id": "daily_fuel",
+    "label": "日替わり燃費",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "minimum",
+        "label": "最低燃料効率 (1が通常、0.2で消費5倍)",
+        "type": "DECIMAL",
+        "initial": 0.2,
+        "min": 0.01,
+        "max": 100
+      },
+      {
+        "key": "maximum",
+        "label": "最高燃料効率 (1が通常、1.8で効率80%増)",
+        "type": "DECIMAL",
+        "initial": 1.8,
+        "min": 0.01,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "exclusive_smelting",
+    "label": "精錬装置のレシピ分離",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "single_brewing",
+    "label": "瓶1本の醸造台",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "seconds",
+        "label": "醸造時間 (秒)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "fuel_cost",
+        "label": "1回の燃料数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 64
+      }
+    ]
+  },
+  {
+    "id": "ore_drops",
+    "label": "鉱石ドロップ交換",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "mapping",
+        "label": "鉱石 → ドロップ",
+        "type": "MAP",
+        "initial": "minecraft:coal_ore=minecraft:redstone,minecraft:copper_ore=minecraft:lapis_lazuli,minecraft:iron_ore=minecraft:raw_gold,minecraft:gold_ore=minecraft:raw_copper,minecraft:diamond_ore=minecraft:raw_iron,minecraft:redstone_ore=minecraft:emerald,minecraft:lapis_ore=minecraft:coal,minecraft:emerald_ore=minecraft:diamond",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "deepslate",
+        "label": "深層岩版にも適用",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "silk_original",
+        "label": "シルクタッチは元の鉱石",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "base_count",
+        "label": "基準ドロップ数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 64
+      },
+      {
+        "key": "fortune",
+        "label": "幸運を反映",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "log_loss",
+    "label": "原木ドロップ消失",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "消失確率 (%)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "target_blocks",
+        "label": "対象原木",
+        "type": "LIST",
+        "initial": "#minecraft:logs",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "grass_coal",
+    "label": "草から石炭",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "input_item",
+        "label": "材料",
+        "type": "TEXT",
+        "initial": "minecraft:short_grass",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "input_count",
+        "label": "材料数",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 9
+      },
+      {
+        "key": "output_item",
+        "label": "完成品",
+        "type": "TEXT",
+        "initial": "minecraft:coal",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "output_count",
+        "label": "完成品数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 64
+      }
+    ]
+  },
+  {
+    "id": "redstone_inversion",
+    "label": "レッドストーン反転",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "blocks",
+        "label": "レッドストーンブロック",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "torches",
+        "label": "トーチ",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "wire",
+        "label": "レッドストーンの粉",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "levers",
+        "label": "レバー",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "buttons",
+        "label": "ボタン",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "plates",
+        "label": "感圧板",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "repeaters",
+        "label": "リピーター",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "comparators",
+        "label": "コンパレータ",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "observers",
+        "label": "オブザーバー",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "wire_limit",
+        "label": "粉の探索上限 (1回)",
+        "type": "INTEGER",
+        "initial": 4096,
+        "min": 16,
+        "max": 65536
+      },
+      {
+        "key": "other_sources",
+        "label": "その他の信号源",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "dropper_breaker",
+    "label": "ドロッパー破壊機",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "excluded_blocks",
+        "label": "破壊対象から除外",
+        "type": "LIST",
+        "initial": "minecraft:bedrock,minecraft:barrier,minecraft:end_portal,minecraft:end_portal_frame,minecraft:nether_portal,minecraft:command_block,minecraft:structure_block",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "require_tool",
+        "label": "鉄ツルハシ相当の採掘制限",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "hopper_breaker",
+    "label": "ホッパー破壊機",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "破壊間隔 (tick)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 1,
+        "max": 1200
+      },
+      {
+        "key": "excluded_blocks",
+        "label": "破壊対象から除外",
+        "type": "LIST",
+        "initial": "minecraft:bedrock,minecraft:barrier,minecraft:end_portal,minecraft:end_portal_frame,minecraft:nether_portal,minecraft:command_block,minecraft:structure_block",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "require_tool",
+        "label": "鉄ツルハシ相当の採掘制限",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "comparator_division",
+    "label": "除算コンパレータ",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "zero_passthrough",
+        "label": "横入力0なら後入力を通す",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "round_up",
+        "label": "端数を切り上げる",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "repeater_bedrock",
+    "label": "リピーター岩盤化",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "replacement",
+        "label": "変化するブロック",
+        "type": "TEXT",
+        "initial": "minecraft:bedrock",
+        "min": 0,
+        "max": 256
+      }
+    ]
+  },
+  {
+    "id": "hardness_swap",
+    "label": "石と深層岩の硬さ交換",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "発生日の確率 (%)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "first_block",
+        "label": "交換元",
+        "type": "TEXT",
+        "initial": "minecraft:stone",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "second_block",
+        "label": "交換先",
+        "type": "TEXT",
+        "initial": "minecraft:deepslate",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "announce",
+        "label": "朝に発生を告知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "growth_sleep",
+    "label": "月齢で成長休止",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "moon_phases",
+        "label": "休止する月齢 (0〜7)",
+        "type": "LIST",
+        "initial": "0,4",
+        "min": 0,
+        "max": 512
+      },
+      {
+        "key": "target_blocks",
+        "label": "対象植物",
+        "type": "LIST",
+        "initial": "#minecraft:crops,minecraft:wheat,minecraft:carrots,minecraft:potatoes,minecraft:beetroots,minecraft:sugar_cane,minecraft:bamboo,minecraft:cactus,minecraft:nether_wart,#minecraft:saplings",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "bonemeal",
+        "label": "骨粉による成長も停止",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "melting_bucket",
+    "label": "溶岩バケツが溶ける",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "target_items",
+        "label": "対象容器",
+        "type": "LIST",
+        "initial": "minecraft:bucket",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "place_below",
+        "label": "足元のブロックを溶岩にする",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "warden_bed",
+    "label": "異次元ベッドでウォーデン",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "dimensions",
+        "label": "対象ディメンション",
+        "type": "LIST",
+        "initial": "minecraft:the_nether,minecraft:the_end",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "count",
+        "label": "ウォーデン数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 10
+      },
+      {
+        "key": "cooldown",
+        "label": "再発待ち (秒)",
+        "type": "INTEGER",
+        "initial": 60,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "radius",
+        "label": "召喚位置の探索距離",
+        "type": "DECIMAL",
+        "initial": 5,
+        "min": 1,
+        "max": 32
+      }
+    ]
+  },
+  {
+    "id": "upside_down_grass",
+    "label": "草ブロック上下反転",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "発生日の確率 (%)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "announce",
+        "label": "朝に発生を告知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "diamond_disguise",
+    "label": "鉱石のダイヤ偽装",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "発生日の確率 (%)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "target_blocks",
+        "label": "偽装対象",
+        "type": "LIST",
+        "initial": "#c:ores,minecraft:coal_ore,minecraft:deepslate_coal_ore,minecraft:copper_ore,minecraft:deepslate_copper_ore,minecraft:iron_ore,minecraft:deepslate_iron_ore,minecraft:gold_ore,minecraft:deepslate_gold_ore,minecraft:redstone_ore,minecraft:deepslate_redstone_ore,minecraft:lapis_ore,minecraft:deepslate_lapis_ore,minecraft:emerald_ore,minecraft:deepslate_emerald_ore,minecraft:nether_gold_ore,minecraft:nether_quartz_ore,minecraft:ancient_debris",
+        "min": 0,
+        "max": 4096
+      },
+      {
+        "key": "replacement",
+        "label": "見せる鉱石",
+        "type": "TEXT",
+        "initial": "minecraft:diamond_ore",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "items",
+        "label": "アイテムの見た目と名前も偽装",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "announce",
+        "label": "朝に発生を告知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "furnace_textures",
+    "label": "精錬装置のランダム外観",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "candidate_blocks",
+        "label": "外観候補",
+        "type": "LIST",
+        "initial": "minecraft:furnace,minecraft:blast_furnace,minecraft:smoker",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "inventory_swap",
+    "label": "満月のインベントリ交換",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "moon_phase",
+        "label": "対象月齢",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 7
+      },
+      {
+        "key": "start_slot",
+        "label": "交換範囲の開始スロット",
+        "type": "INTEGER",
+        "initial": 18,
+        "min": 0,
+        "max": 35
+      },
+      {
+        "key": "slots",
+        "label": "交換する枠数",
+        "type": "INTEGER",
+        "initial": 9,
+        "min": 1,
+        "max": 36
+      },
+      {
+        "key": "same_dimension",
+        "label": "同じディメンションでペア",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "name_swap",
+    "label": "プレイヤー名交換",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "交換間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 600,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "chat",
+        "label": "チャット",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "tab",
+        "label": "Tab一覧",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "nametag",
+        "label": "頭上の名前",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "knockback_mob",
+    "label": "ノックバック棒のモブ",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "抽選間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 600,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "chance",
+        "label": "発生確率 (%)",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "mob_type",
+        "label": "モブの種類",
+        "type": "TEXT",
+        "initial": "minecraft:zombie",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "knockback",
+        "label": "ノックバックレベル",
+        "type": "INTEGER",
+        "initial": 100,
+        "min": 1,
+        "max": 255
+      },
+      {
+        "key": "minimum_distance",
+        "label": "最短出現距離",
+        "type": "INTEGER",
+        "initial": 12,
+        "min": 2,
+        "max": 128
+      },
+      {
+        "key": "maximum_distance",
+        "label": "最長出現距離",
+        "type": "INTEGER",
+        "initial": 24,
+        "min": 2,
+        "max": 128
+      },
+      {
+        "key": "world_limit",
+        "label": "同時出現数の上限",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 128
+      },
+      {
+        "key": "night_only",
+        "label": "夜だけ出現",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "drop_chance",
+        "label": "装備ドロップ確率 (%)",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "fake_creeper",
+    "label": "背後の偽クリーパー音",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "抽選間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 300,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "chance",
+        "label": "発生確率 (%)",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "distance",
+        "label": "背後までの距離",
+        "type": "DECIMAL",
+        "initial": 3,
+        "min": 0,
+        "max": 64
+      },
+      {
+        "key": "volume",
+        "label": "音量",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0,
+        "max": 10
+      }
+    ]
+  },
+  {
+    "id": "sleep_advancement",
+    "label": "睡眠で進捗解除",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "解除確率 (%)",
+        "type": "INTEGER",
+        "initial": 100,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "fake_only",
+        "label": "通知だけを表示",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "fake_seconds",
+        "label": "通知のみモードの表示時間 (秒)",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 60
+      },
+      {
+        "key": "namespaces",
+        "label": "対象の名前空間",
+        "type": "LIST",
+        "initial": "minecraft",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "sheep_red",
+    "label": "羊で赤い画面",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "seconds",
+        "label": "赤くなる時間 (秒)",
+        "type": "INTEGER",
+        "initial": 3,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "opacity",
+        "label": "不透明度",
+        "type": "DECIMAL",
+        "initial": 0.85,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "include_pets",
+        "label": "飼い慣らしモブの殺害も対象",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "death_message",
+    "label": "デス画面の文言",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "text",
+        "label": "表示文言",
+        "type": "TEXT",
+        "initial": "You Suck",
+        "min": 0,
+        "max": 160
+      }
+    ]
+  },
+  {
+    "id": "recipe_viewers",
+    "label": "レシピビューア無効化",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "起動ごとの確率 (%)",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "target_mods",
+        "label": "対象Mod",
+        "type": "LIST",
+        "initial": "jei,roughlyenoughitems,emi,tmrv",
+        "min": 0,
+        "max": 4096
+      }
+    ]
+  },
+  {
+    "id": "youtube",
+    "label": "MCEF YouTube",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "url",
+        "label": "開始URL",
+        "type": "TEXT",
+        "initial": "https://www.youtube.com/",
+        "min": 0,
+        "max": 2048
+      },
+      {
+        "key": "width",
+        "label": "表示幅 (GUIピクセル)",
+        "type": "INTEGER",
+        "initial": 180,
+        "min": 80,
+        "max": 800
+      },
+      {
+        "key": "height",
+        "label": "表示高さ (GUIピクセル)",
+        "type": "INTEGER",
+        "initial": 180,
+        "min": 60,
+        "max": 800
+      },
+      {
+        "key": "volume",
+        "label": "音量 (%)",
+        "type": "DECIMAL",
+        "initial": 50,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "stop_on_close",
+        "label": "画面を閉じたら停止",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "random_urls",
+        "label": "ランダム動画URL一覧",
+        "type": "LIST",
+        "initial": "",
+        "min": 0,
+        "max": 8192
+      },
+      {
+        "key": "random_video",
+        "label": "一覧からランダム再生",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "advertisements",
+    "label": "MCEF 広告",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "広告間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 60,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "skip_after",
+        "label": "閉じられるまで (秒)",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 0,
+        "max": 600
+      },
+      {
+        "key": "urls",
+        "label": "広告ページURL一覧",
+        "type": "LIST",
+        "initial": "sum1rem0d:default_ad",
+        "min": 0,
+        "max": 8192
+      },
+      {
+        "key": "volume",
+        "label": "音量 (%)",
+        "type": "DECIMAL",
+        "initial": 50,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "camera_lock",
+    "label": "カメラの後方固定",
+    "implemented": false,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "interval",
+        "label": "抽選間隔 (秒)",
+        "type": "INTEGER",
+        "initial": 300,
+        "min": 1,
+        "max": 86400
+      },
+      {
+        "key": "chance",
+        "label": "発生確率 (%)",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "seconds",
+        "label": "固定時間 (秒)",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 3600
+      },
+      {
+        "key": "angle",
+        "label": "回転角度",
+        "type": "DECIMAL",
+        "initial": 180,
+        "min": -360,
+        "max": 360
+      }
+    ]
+  }
+]

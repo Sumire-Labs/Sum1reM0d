@@ -1,0 +1,36 @@
+apply plugin: 'java-library'
+group = 'net.dimaskama'
+version = '0.3.3-sumire.1'
+ext.mcefLoader = project.name.endsWith('-fabric') ? 'fabric' : 'neoforge'
+ext.mcefMinecraft = project.name in ['mcef-fabric', 'mcef-neoforge'] ? '26.3' : project.name.substring(5, project.name.lastIndexOf('-'))
+def pins = new Properties()
+rootProject.file("versions/$mcefMinecraft/gradle.properties").withInputStream { pins.load(it) }
+ext.mcefPins = pins
+apply from: rootProject.file('gradle/scripts/compatibility.gradle')
+base.archivesName = mcefMinecraft == '26.3' ? "mcef-modern-$mcefLoader" : "mcef-modern-$mcefMinecraft-$mcefLoader"
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+java.withSourcesJar()
+repositories { mavenCentral() }
+def generatedJava = tasks.register('adaptMinecraftSources', Sync) {
+    into layout.buildDirectory.dir('generated/compatibility/java')
+    from(rootProject.file('integrations/mcef/src/main/java'))
+    from(rootProject.file("integrations/mcef/src/$mcefLoader/java"))
+    inputs.property('minecraftVersion', mcefMinecraft)
+    inputs.file(rootProject.file('gradle/scripts/compatibility.gradle'))
+    filter { String line -> adaptMinecraftSource(line, mcefMinecraft) }
+}
+sourceSets.main.java.setSrcDirs([files(layout.buildDirectory.dir('generated/compatibility/java')).builtBy(generatedJava)])
+sourceSets.main.resources.srcDirs = [rootProject.file('integrations/mcef/src/main/resources'), rootProject.file("integrations/mcef/src/$mcefLoader/resources")]
+tasks.named('processResources') {
+    filesMatching('fabric.mod.json') { filter { line -> line.replace('"minecraft":"26.3"', '"minecraft":"' + mcefMinecraft + '"') } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }
+['jar', 'sourcesJar'].each { archiveTask -> tasks.named(archiveTask) {
+    from(rootProject.file('integrations/mcef/LICENSE')) { rename { 'LICENSE-MCEF-LGPL-2.1.txt' } }
+    from(rootProject.file('integrations/mcef/UPSTREAM.md'))
+    from(rootProject.file('integrations/mcef/JCEFMAVEN-LICENSE-APACHE-2.0.txt'))
+} }
+dependencies {
+    api 'me.friwi:jcef-api:jcef-d3de827+cef-146.0.10+g8219561+chromium-146.0.7680.179'
+    implementation 'me.friwi:jcefmaven:146.0.10'
+}

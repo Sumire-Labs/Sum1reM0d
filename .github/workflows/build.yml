@@ -1,0 +1,81 @@
+name: Build
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+jobs:
+  targets:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.select.outputs.build }}
+      merge: ${{ steps.select.outputs.merge }}
+      has_merge: ${{ steps.select.outputs.has_merge }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+      - id: select
+        run: python3 .github/scripts/matrix.py
+  build:
+    needs: targets
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJson(needs.targets.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build one target
+        run: |
+          chmod +x gradlew
+          ./gradlew buildAll --console=plain -Ptargets=${{ matrix.target }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.target }}
+          path: versions/${{ matrix.target }}/build/libs/*-${{ matrix.target }}.jar
+          if-no-files-found: error
+  forgix:
+    needs: targets
+    if: needs.targets.outputs.has_merge == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJson(needs.targets.outputs.merge) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v6
+      - run: |
+          chmod +x gradlew
+          ./gradlew mergeJars --console=plain -Ptargets=${{ matrix.targets }} -Pforgix_minecraft_version=${{ matrix.minecraft }} -Penable_forgix=true
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.minecraft }}-merged
+          path: build/forgix/*.jar
+          if-no-files-found: error

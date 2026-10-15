@@ -1,0 +1,11 @@
+{
+  "sources": [
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/hero_of_the_village","sprite":"sum1rem0d:mob_effect/vegan"},
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/weakness","sprite":"sum1rem0d:mob_effect/influenza"},
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/mining_fatigue","sprite":"sum1rem0d:mob_effect/headache"},
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/bad_omen","sprite":"sum1rem0d:mob_effect/environment_group"},
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/poison","sprite":"sum1rem0d:mob_effect/environment_anger"},
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/hunger","sprite":"sum1rem0d:mob_effect/sleep_hunger"},
+    {"type":"minecraft:single","resource":"minecraft:mob_effect/slowness","sprite":"sum1rem0d:mob_effect/sleep_slowness"}
+  ]
+}

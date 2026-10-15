@@ -1,0 +1,97 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://maven.kikugie.dev/snapshots'; content { includeGroupAndSubgroups('dev.kikugie') } }
+        maven { url = 'https://maven.kikugie.dev/releases'; content { includeGroupAndSubgroups('dev.kikugie') } }
+        maven { url = 'https://maven.cleanroommc.com' }
+        maven { url = 'https://maven.fabricmc.net' }
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven {
+            url = 'https://maven.taumc.org/releases'
+            content {
+                includeGroupAndSubgroups('org.taumc')
+                includeGroupAndSubgroups('net.neoforged')
+            }
+        }
+        maven { url = 'https://maven.neoforged.net/releases' }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    plugins {
+        id 'dev.kikugie.stonecutter' version providers.gradleProperty('stonecutter_version').get()
+        id 'com.cleanroommc.tokenenvoy' version providers.gradleProperty('tokenenvoy_version').get()
+        id 'com.cleanroommc.versioning' version providers.gradleProperty('versioning_version').get()
+        id 'io.github.pacifistmc.forgix' version providers.gradleProperty('forgix_version').get()
+        id 'net.fabricmc.fabric-loom-remap' version providers.gradleProperty('loom_version').get()
+        id 'net.fabricmc.fabric-loom' version providers.gradleProperty('loom_version').get()
+        id 'org.taumc.moddev' version providers.gradleProperty('tau_moddev_version').get()
+        id 'org.taumc.moddev.legacyforge' version providers.gradleProperty('tau_moddev_version').get()
+        id 'org.gradle.toolchains.foojay-resolver-convention' version providers.gradleProperty('foojay_version').get()
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention'
+    id 'dev.kikugie.stonecutter'
+}
+
+rootProject.name = 'Sum1reM0d'
+include 'mcef-fabric', 'mcef-neoforge'
+project(':mcef-fabric').projectDir = file('integrations/mcef/fabric')
+project(':mcef-neoforge').projectDir = file('integrations/mcef/neoforge')
+def support = new Properties()
+file('versions/support.properties').withInputStream { support.load(it) }
+def supportedVersions = support.getProperty('minecraft_versions').split(',').collect { it.trim() }
+def available = supportedVersions.collectMany { mc ->
+    if (!stonecutter.eval(mc, '>=1.16.5')) throw new GradleException("Only Minecraft 1.16.5 and newer are supported: $mc")
+    def pins = new Properties()
+    file("versions/$mc/gradle.properties").withInputStream { pins.load(it) }
+    pins.getProperty('loaders').split(',').collect { loader ->
+        loader = loader.trim()
+        if (!(loader in ['fabric', 'forge', 'neoforge'])) throw new GradleException("Unknown loader for $mc: $loader")
+        if (loader == 'forge' && stonecutter.eval(mc, '>1.20.1')) throw new GradleException("The legacy Forge backend supports versions through 1.20.1: $mc")
+        "$mc-$loader".toString()
+    }
+}
+def csv = { String key -> providers.gradleProperty(key).get().split(',').collect { it.trim() } }
+def selected
+if (providers.gradleProperty('targets').isPresent()) {
+    selected = csv('targets')
+    def unknown = selected - available
+    if (unknown) throw new GradleException("Unknown targets: $unknown. See versions/support.properties and the per-version loader lists.")
+} else {
+    def versions = csv('target_versions')
+    def loaders = csv('target_loaders')
+    if (!versions.contains('all') && (versions - available.collect { it.substring(0, it.lastIndexOf('-')) }.unique())) {
+        throw new GradleException("Unknown Minecraft version in target_versions=$versions")
+    }
+    if (!loaders.contains('all') && (loaders - ['forge','fabric','neoforge'])) {
+        throw new GradleException("Unknown loader in target_loaders=$loaders")
+    }
+    selected = available.findAll {
+        def dash = it.lastIndexOf('-')
+        (versions.contains('all') || versions.contains(it.substring(0, dash))) &&
+            (loaders.contains('all') || loaders.contains(it.substring(dash + 1)))
+    }
+}
+if (selected.isEmpty()) throw new GradleException('No published targets match the requested filters.')
+gradle.ext.targetCatalog = available
+gradle.ext.selectedTargets = selected.unique()
+selected.findAll { !it.startsWith('26.3-') }.each { target ->
+    def loader = target.substring(target.lastIndexOf('-') + 1)
+    def module = "mcef-$target"
+    include module
+    project(":$module").projectDir = file("integrations/mcef/$target")
+    project(":$module").buildFileName = "../$loader/build.gradle"
+}
+stonecutter {
+    create(rootProject) {
+        centralScript = 'build.gradle'
+        kotlinController = false
+        selected.each { target ->
+            def dash = target.lastIndexOf('-')
+            def mc = target.substring(0, dash)
+            def loader = target.substring(dash + 1)
+            version(target, mc).buildscript = loader == 'fabric' ? 'gradle/build.fabric.gradle' : 'build.gradle'
+        }
+    }
+}

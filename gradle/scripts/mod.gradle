@@ -1,0 +1,119 @@
+// Shared settings applied by every backend after its Minecraft plugin.
+apply plugin: 'java-library'
+apply plugin: 'com.cleanroommc.tokenenvoy'
+
+def dash = project.name.lastIndexOf('-')
+ext.minecraftVersion = project.name.substring(0, dash)
+ext.modLoader = project.name.substring(dash + 1)
+ext.mcefProjectPath = minecraftVersion == '26.3' ? ":mcef-$modLoader" : ":mcef-$minecraftVersion-$modLoader"
+apply from: rootProject.file('gradle/scripts/compatibility.gradle')
+def targetProperties = new Properties()
+rootProject.file("versions/$minecraftVersion/gradle.properties").withInputStream { targetProperties.load(it) }
+ext.targetProperties = targetProperties
+ext.targetJava = targetProperties.java_version.toInteger()
+base.archivesName = mod_archive_name
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJava)
+    if (generate_sources_jar.toBoolean()) withSourcesJar()
+}
+// 0.10-alpha.12 can append both shared and generated sources after active selection.
+// Always compile the generated tree so every node follows the same preprocessing path.
+def adaptedSources = tasks.register('adaptMinecraftSources', Sync) {
+    dependsOn tasks.named('stonecutterGenerate')
+    from layout.buildDirectory.dir('generated/stonecutter/main/java')
+    into layout.buildDirectory.dir('generated/compatibility/java')
+    inputs.property('minecraftVersion', minecraftVersion)
+    inputs.file(rootProject.file('gradle/scripts/compatibility.gradle'))
+    filter { String line -> adaptMinecraftSource(line, minecraftVersion) }
+}
+afterEvaluate {
+    sourceSets.main.java.setSrcDirs([
+        files(layout.buildDirectory.dir('generated/compatibility/java')).builtBy(adaptedSources)
+    ])
+    sourceSets.main.resources.setSrcDirs([
+        files(layout.buildDirectory.dir('generated/stonecutter/main/resources')).builtBy(tasks.named('stonecutterGenerate'))
+    ])
+}
+// All metadata lives in src/main/resources; ship only the selected loader's descriptor.
+tasks.named('processResources') {
+    if (modLoader != 'fabric') exclude 'fabric.mod.json'
+    if (modLoader != 'forge') exclude 'META-INF/mods.toml'
+    if (modLoader != 'neoforge') exclude 'META-INF/neoforge.mods.toml'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+
+dependencies {
+    testImplementation 'com.google.code.gson:gson:2.14.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
+}
+// Optional real viewer jars are development inputs, never bundled in the distribution.
+if (providers.gradleProperty('viewer_mod').isPresent()) {
+    def viewer = providers.gradleProperty('viewer_mod').get()
+    if (!(viewer in ['jei', 'rei', 'emi'])) throw new GradleException('viewer_mod must be jei, rei or emi')
+    def viewerDirectory = minecraftVersion == '26.3' ? ".research/viewers/$modLoader-$viewer" : ".research/viewers/$minecraftVersion-$modLoader-$viewer"
+    dependencies { runtimeOnly fileTree(rootProject.file(viewerDirectory)) { include '*.jar' } }
+}
+tasks.withType(Test).configureEach { useJUnitPlatform() }
+tasks.withType(JavaExec).configureEach {
+    if (name == 'runServer' && providers.gradleProperty('multi_verify').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.multiVerify=true'
+    if (name == 'runClient' && providers.gradleProperty('multi_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.multiSmoke=true'
+    if (name == 'runClient' && providers.gradleProperty('viewer_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.viewerSmoke=true', "-Dsum1rem0d.viewer=${providers.gradleProperty('viewer_mod').getOrElse('jei')}"
+    if (name == 'runServer') standardInput = System.in
+    if (name == 'runClient' && ['client_smoke', 'network_smoke', 'browser_smoke', 'toast_smoke', 'viewer_smoke', 'multi_smoke'].any { providers.gradleProperty(it).map { value -> value.toBoolean() }.orElse(false).get() }) {
+        environment 'SDL_WINDOW_ACTIVATE_WHEN_SHOWN', '0'
+        environment 'SDL_WINDOW_ACTIVATE_WHEN_RAISED', '0'
+    }
+    def reportModes = name == 'runServer' ? [server_verify: 'run/world/sum1rem0d-verification.json', toast_verify: 'run/world/sum1rem0d-toast-verification.json', multi_verify: 'run/world/sum1rem0d-multiplayer-verification.json']
+        : name == 'runClient' ? [client_smoke: 'run/sum1rem0d-client-verification.json', network_smoke: 'run/sum1rem0d-network-verification.json', browser_smoke: 'run/sum1rem0d-browser-verification.json', toast_smoke: 'run/sum1rem0d-toast-verification.json', viewer_smoke: 'run/sum1rem0d-viewer-verification.json', multi_smoke: 'run/sum1rem0d-multiplayer-verification.json'] : [:]
+    if (name == 'runClient' && providers.gradleProperty('viewer_mod').getOrElse('jei') == 'emi') reportModes.viewer_smoke = 'run/sum1rem0d-emi-verification.json'
+    def activeModes = reportModes.findAll { key, value -> providers.gradleProperty(key).map { it.toBoolean() }.orElse(false).get() }
+    if (name == 'runClient' && providers.gradleProperty('client_run_dir').isPresent()) activeModes = activeModes.collectEntries { key, value -> [(key): providers.gradleProperty('client_run_dir').get() + value.substring(3)] }
+    if (activeModes.size() > 1) throw new GradleException('Run one native verification mode at a time.')
+    String reportPath = activeModes.values().find()
+    if (reportPath != null) {
+        doFirst { java.nio.file.Files.deleteIfExists(file(reportPath).toPath()) }
+        doLast {
+            def report = file(reportPath)
+            if (!report.exists()) throw new GradleException("Verification report missing: $report")
+            def result = new groovy.json.JsonSlurper().parse(report)
+            if (result.success != true) throw new GradleException("Native verification failed: ${result.failure}")
+            logger.lifecycle("Verified ${result.passed != null ? result.passed.size() : result.screenshots.size()} native checks: $report")
+        }
+    }
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+tasks.named('jar', Jar) {
+    archiveClassifier = "$minecraftVersion-$modLoader-dev"
+    from(rootProject.file('LICENSE.md'))
+    from(rootProject.file('licenses')) { into 'licenses' }
+    manifest.attributes('Implementation-Title': mod_name, 'Implementation-Version': project.version.toString())
+}
+
+def json = { value ->
+    def encoded = groovy.json.JsonOutput.toJson(value.toString())
+    encoded.substring(1, encoded.length() - 1)
+}
+def authors = mod_authors.split(',').collect { it.trim() }.findAll { it }.collect { groovy.json.JsonOutput.toJson(it) }.join(', ')
+tokenEnvoy {
+    set 'MOD_ID', mod_id
+    set 'MOD_NAME', mod_name
+    set 'MOD_NAME_JSON', json(mod_name)
+    set 'MOD_VERSION', project.version.toString()
+    set 'MOD_DESCRIPTION', json(mod_description)
+    set 'MOD_AUTHORS', authors
+    set 'MOD_AUTHORS_JSON_STRINGS', authors ? authors.substring(1, authors.length() - 1) : ''
+    set 'MOD_AUTHORS_TEXT', json(mod_authors)
+    set 'MOD_LICENSE', json(mod_license)
+    set 'MOD_URL', json(mod_url)
+    set 'MOD_SOURCES_URL', json(mod_sources_url)
+    set 'MOD_ISSUE_TRACKER', json(mod_issue_tracker)
+    set 'MOD_PACKAGE', mod_package
+    set 'MINECRAFT_VERSION', minecraftVersion
+    set 'JAVA_VERSION', targetJava.toString()
+    set 'FABRIC_LOADER_VERSION', targetProperties.getProperty('fabric_loader_version', '')
+    set 'LOADER_MAJOR', targetProperties.getProperty("${modLoader}_version", '0').tokenize('.')[0]
+}

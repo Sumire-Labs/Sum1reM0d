@@ -1,0 +1,58 @@
+// Distribution includes the complete editable project, including the separately
+// licensed modified MCEF module. Git's ignore rules keep local worlds/caches out.
+def sourceSnapshot = tasks.register('sourceSnapshot', Zip) {
+    group = 'distribution'
+    archiveFileName = "sum1rem0d-${rootProject.resolvedModVersion}-project-sources.zip"
+    destinationDirectory = layout.buildDirectory.dir('distribution')
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    from({
+        def listing = providers.exec {
+            workingDir rootProject.projectDir
+            commandLine 'git', 'ls-files', '--cached', '--others', '--exclude-standard', '-z'
+        }.standardOutput.asText.get()
+        def paths = listing.split('\u0000').findAll { it && rootProject.file(it).isFile() }.sort()
+        rootProject.fileTree(rootProject.projectDir) {
+            paths.each { include it }
+            // Exclude generated local state even when a checkout has staged it.
+            exclude '**/.eclipse/**', '**/.settings/**', '**/.classpath', '**/.project'
+            exclude '.git/**', '**/.gradle/**', '**/build/**', '**/run/**', '**/run-data/**', '.research/**', 'dist/**'
+        }
+    })
+}
+
+def bundle = tasks.register('distributionBundle', Zip) {
+    group = 'distribution'
+    description = 'Builds loader jars, modified MCEF sources and the full editable project source snapshot.'
+    dependsOn tasks.named('buildAll'), sourceSnapshot
+    def versionsLabel = rootProject.selectedTargets.collect { it.substring(0, it.lastIndexOf('-')) }.unique().join('_')
+    archiveFileName = "sum1rem0d-${rootProject.resolvedModVersion}-${versionsLabel}-distribution.zip"
+    destinationDirectory = rootProject.layout.projectDirectory.dir('dist')
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    from(sourceSnapshot) { into 'sources' }
+    rootProject.selectedTargets.each { target ->
+        def p = project(":$target")
+        from(p.ext.distributionJar) { into 'mods' }
+        from(p.tasks.named('sourcesJar')) { into "sources/$target" }
+    }
+    rootProject.selectedTargets.collect { project(":$it").mcefProjectPath }.unique().each { module ->
+        from(project(module).tasks.named('sourcesJar')) { into 'sources/mcef' }
+    }
+    from(rootProject.file('docs/distribution.md')) { rename { 'INSTALL.md' } }
+    from(rootProject.file('docs/configuration.md')) { rename { 'CONFIGURATION.md' } }
+    from(rootProject.file('LICENSE.md'))
+    from(rootProject.file('licenses')) { into 'licenses' }
+}
+bundle.configure {
+    doLast {
+        def archive = archiveFile.get().asFile
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        archive.withInputStream { stream ->
+            byte[] buffer = new byte[65536]
+            int length
+            while ((length = stream.read(buffer)) != -1) digest.update(buffer, 0, length)
+        }
+        new File(archive.parentFile, archive.name + '.sha256').text = digest.digest().encodeHex().toString() + '  ' + archive.name + '\n'
+    }
+}

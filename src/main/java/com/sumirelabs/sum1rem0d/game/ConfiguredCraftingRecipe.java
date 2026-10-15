@@ -1,0 +1,70 @@
+package com.sumirelabs.sum1rem0d.game;
+
+import com.mojang.serialization.Codec;
+import java.util.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Level;
+
+/** Recipe inputs and outputs come from the same live, synchronized config as the UI. */
+public final class ConfiguredCraftingRecipe extends CustomRecipe {
+    public static final RecipeSerializer<ConfiguredCraftingRecipe> SERIALIZER = new RecipeSerializer<>(
+        Codec.STRING.fieldOf("feature").xmap(ConfiguredCraftingRecipe::new, recipe -> recipe.feature),
+        StreamCodec.ofMember((recipe, buffer) -> buffer.writeUtf(recipe.feature, 64), buffer -> new ConfiguredCraftingRecipe(buffer.readUtf(64))));
+    private final String feature;
+    public ConfiguredCraftingRecipe(String feature) {
+        if (!feature.equals("grass_coal") && !feature.equals("cleanliness")) throw new IllegalArgumentException("Unknown configured recipe");
+        this.feature = feature;
+    }
+    /** Reject impossible outputs instead of silently changing the configured quantity. */
+    public static void validateConfig(com.google.gson.JsonObject candidate) {
+        var features = candidate.getAsJsonObject("features");
+        var grass = features.getAsJsonObject("grass_coal");
+        if (grass.get("enabled").getAsBoolean()) {
+            requireItem(grass.get("input_item").getAsString());
+            var output = requireItem(grass.get("output_item").getAsString());
+            // 26.3 binds item components when world data packs load. The title
+            // screen can validate registered IDs, but not the final stack cap.
+            // ServerLifecycleMixin validates again after the world is loaded.
+            if (output.builtInRegistryHolder().areComponentsBound()) {
+                int maximum = output.getDefaultInstance().getMaxStackSize();
+                if (grass.get("output_count").getAsInt() > maximum)
+                    throw new IllegalArgumentException("草から石炭: 出力数はこのアイテムのスタック上限 " + maximum + " 以下にしてください。");
+            }
+        }
+        var soap = features.getAsJsonObject("cleanliness");
+        if (soap.get("enabled").getAsBoolean())
+            for (String material : com.sumirelabs.sum1rem0d.config.ConfigSchema.split(soap.get("soap_materials").getAsString())) requireItem(material);
+    }
+    private static Item requireItem(String name) {
+        var id = Rules.id(name);
+        var item = id == null ? Items.AIR : BuiltInRegistries.ITEM.getOptional(id).orElse(Items.AIR);
+        if (item == Items.AIR) throw new IllegalArgumentException("クラフト材料／出力のアイテムが存在しません: " + name);
+        return item;
+    }
+    @Override public boolean matches(CraftingInput input, Level level) {
+        if (!Rules.on(feature) || assemble(input).isEmpty()) return false;
+        List<String> required;
+        if (feature.equals("cleanliness")) required = new ArrayList<>(Rules.list(feature, "soap_materials"));
+        else required = new ArrayList<>(Collections.nCopies(Rules.i(feature, "input_count"), Rules.s(feature, "input_item")));
+        if (required.isEmpty() || input.ingredientCount() != required.size()) return false;
+        for (ItemStack stack : input.items()) if (!stack.isEmpty()) {
+            String item = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            if (!required.remove(item)) return false;
+        }
+        return required.isEmpty();
+    }
+    @Override public ItemStack assemble(CraftingInput input) {
+        if (!Rules.on(feature)) return ItemStack.EMPTY;
+        if (feature.equals("cleanliness")) return new ItemStack(ModContent.soap(), Rules.i(feature, "soap_output"));
+        var id = Rules.id(Rules.s(feature, "output_item"));
+        if (id == null) return ItemStack.EMPTY;
+        Item item = BuiltInRegistries.ITEM.getOptional(id).orElse(Items.AIR);
+        int count = Rules.i(feature, "output_count");
+        return item == Items.AIR || count > item.getDefaultInstance().getMaxStackSize() ? ItemStack.EMPTY : new ItemStack(item, count);
+    }
+    @Override public RecipeSerializer<? extends CustomRecipe> getSerializer() { return SERIALIZER; }
+}

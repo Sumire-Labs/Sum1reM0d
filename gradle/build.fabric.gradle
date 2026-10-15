@@ -1,0 +1,38 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' apply false
+    id 'net.fabricmc.fabric-loom' apply false
+}
+def mc = project.name.substring(0, project.name.lastIndexOf('-'))
+def needsRemapping = stonecutter.eval(mc, '<26.1')
+apply plugin: (needsRemapping ? 'net.fabricmc.fabric-loom-remap' : 'net.fabricmc.fabric-loom')
+apply from: rootProject.file('gradle/scripts/mod.gradle')
+dependencies {
+    minecraft "com.mojang:minecraft:$minecraftVersion"
+    if (needsRemapping) {
+        mappings loom.officialMojangMappings()
+        modImplementation "net.fabricmc:fabric-loader:${targetProperties.fabric_loader_version}"
+    } else {
+        implementation "net.fabricmc:fabric-loader:${targetProperties.fabric_loader_version}"
+        implementation "net.fabricmc.fabric-api:fabric-api:${targetProperties.fabric_api_version}"
+        implementation project(mcefProjectPath)
+        include project(mcefProjectPath)
+    }
+}
+loom.runs {
+    client {
+        if (providers.gradleProperty('client_run_dir').isPresent()) runDir providers.gradleProperty('client_run_dir').get()
+        programArg '--username'; programArg minecraft_username
+        if (providers.gradleProperty('client_smoke').map { it.toBoolean() }.orElse(false).get()) vmArg '-Dsum1rem0d.clientSmoke=true'
+        if (providers.gradleProperty('network_smoke').map { it.toBoolean() }.orElse(false).get()) vmArg '-Dsum1rem0d.networkSmoke=true'
+        if (providers.gradleProperty('browser_smoke').map { it.toBoolean() }.orElse(false).get()) vmArg '-Dsum1rem0d.browserSmoke=true'
+        if (providers.gradleProperty('toast_smoke').map { it.toBoolean() }.orElse(false).get()) vmArg '-Dsum1rem0d.toastSmoke=true'
+        if (providers.gradleProperty('network_address').isPresent()) vmArg "-Dsum1rem0d.networkAddress=${providers.gradleProperty('network_address').get()}"
+    }
+    server {
+        programArg '--nogui'
+        if (providers.gradleProperty('server_verify').map { it.toBoolean() }.orElse(false).get()) vmArg '-Dsum1rem0d.serverVerify=true'
+        if (providers.gradleProperty('toast_verify').map { it.toBoolean() }.orElse(false).get()) vmArg '-Dsum1rem0d.toastVerify=true'
+    }
+}
+ext.distributionJar = tasks.named(needsRemapping ? 'remapJar' : 'jar')
+distributionJar.configure { archiveClassifier = "$minecraftVersion-fabric" }

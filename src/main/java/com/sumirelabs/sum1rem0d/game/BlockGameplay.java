@@ -20,6 +20,7 @@ import net.minecraft.world.phys.*;
 public final class BlockGameplay {
     private BlockGameplay() {}
     public static List<ItemStack> drops(BlockState state, ServerLevel level, Entity entity, ItemStack tool, List<ItemStack> original) {
+        original = NetherChanges.loot(state, level, tool, original);
         if (Rules.on("log_loss") && entity instanceof ServerPlayer && Rules.matches(state, Rules.list("log_loss", "target_blocks")) && Rules.roll(level.getRandom(), "log_loss")) return List.of();
         if (!Rules.on("ore_drops") || Rules.b("ore_drops", "silk_original") && Gameplay.silk(level, tool)) return original;
         String block = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();

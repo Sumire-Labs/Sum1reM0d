@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.*;
 public abstract class OreBlockNameMixin {
     @Inject(method = "getName", at = @At("HEAD"), cancellable = true)
     private void sum1rem0d$name(CallbackInfoReturnable<MutableComponent> cir) {
+        var name=com.sumirelabs.sum1rem0d.client.NetherNames.name(BuiltInRegistries.BLOCK.getKey((Block)(Object)this));
+        if(name!=null) { cir.setReturnValue(name.copy()); return; }
         if (!ClientGameState.daily("diamond_disguise")) return;
         Block original = (Block) (Object) this;
         var id = Rules.id(ClientRules.text("diamond_disguise", "replacement"));

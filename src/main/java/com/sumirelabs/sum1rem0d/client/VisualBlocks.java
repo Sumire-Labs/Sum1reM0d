@@ -11,6 +11,7 @@ public final class VisualBlocks {
     private VisualBlocks() {}
     public static BlockState replace(BlockState state) {
         if (!ClientGameState.received()) return state;
+        if (ClientGameState.daily("sideways_nylium") && (state.is(Blocks.WARPED_NYLIUM) || state.is(Blocks.CRIMSON_NYLIUM))) return BuiltInRegistries.BLOCK.getValue(ModContent.id("sideways_" + BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath())).defaultBlockState();
         if (state.is(Blocks.GRASS_BLOCK) && ClientGameState.daily("upside_down_grass")) return ModContent.upsideDownGrass().defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.SNOWY, state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.SNOWY));
         if (ClientGameState.daily("diamond_disguise") && Rules.matches(state, ClientRules.list("diamond_disguise", "target_blocks"))) {
             var id = Rules.id(ClientRules.text("diamond_disguise", "replacement"));

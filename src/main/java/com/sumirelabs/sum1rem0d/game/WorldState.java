@@ -61,7 +61,7 @@ public final class WorldState {
     public static boolean serverThread() { var server = currentServer; return server != null && server.isSameThread(); }
     public static MinecraftServer validationServer() { var server = currentServer; return server != null && server.isSameThread() ? server : null; }
     public static void saveIfLoaded(MinecraftServer server) { var state = ACTIVE.get(server); if (state != null) state.save(); }
-    public static void unload(MinecraftServer server) { RedstoneRefresh.close(server); saveIfLoaded(server); ACTIVE.remove(server); if (currentServer == server) currentServer = null; }
+    public static void unload(MinecraftServer server) { CraftingMaterialSwap.close(server); RedstoneRefresh.close(server); saveIfLoaded(server); ACTIVE.remove(server); if (currentServer == server) currentServer = null; }
     public PlayerData player(ServerPlayer player) { return data.players.computeIfAbsent(player.getUUID().toString(), key -> { var p = new PlayerData(); p.cleanliness = Rules.n("cleanliness", "maximum"); return p; }); }
     public Map<String, JsonObject> coinInventories() { if (data.coinInventories == null) data.coinInventories = new LinkedHashMap<>(); return data.coinInventories; }
     public boolean markCoinBlock(net.minecraft.server.level.ServerLevel level, net.minecraft.core.BlockPos pos) {

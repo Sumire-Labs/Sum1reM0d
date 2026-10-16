@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.*;
 public abstract class OreItemNameMixin {
     @Inject(method = "getHoverName", at = @At("HEAD"), cancellable = true)
     private void sum1rem0d$oreName(CallbackInfoReturnable<Component> cir) {
+        var name = com.sumirelabs.sum1rem0d.client.NetherNames.name(BuiltInRegistries.ITEM.getKey(((ItemStack)(Object)this).getItem()));
+        if (name != null) { cir.setReturnValue(name); return; }
         if (!ClientGameState.daily("diamond_disguise") || !ClientRules.bool("diamond_disguise", "items")) return;
         if (((ItemStack) (Object) this).getItem() instanceof BlockItem block && Rules.matches(block.getBlock().defaultBlockState(), ClientRules.list("diamond_disguise", "target_blocks"))) {
             var id = Rules.id(ClientRules.text("diamond_disguise", "replacement"));

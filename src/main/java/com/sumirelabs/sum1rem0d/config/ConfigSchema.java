@@ -71,7 +71,7 @@ public final class ConfigSchema {
             catch (IllegalArgumentException exception) { valid = false; }
         } else if (key.equals("moon_phases")) valid = entry.matches("[0-7]");
         else if (key.equals("target_mods") || key.equals("namespaces")) valid = entry.matches("[a-z0-9_.-]+");
-        else valid = resourceId(entry, option.kind() == Kind.LIST && !key.equals("soap_materials") && !key.equals("mud_materials") && !key.equals("dimensions") && !key.equals("candidate_blocks"));
+        else valid = resourceId(entry, option.kind() == Kind.LIST && !key.equals("soap_materials") && !key.equals("mud_materials") && !key.equals("dimensions") && !key.equals("candidate_blocks") && !key.equals("excluded_recipes"));
         if (!valid) throw new IllegalArgumentException(option.label() + ": 値の形式を確認してください: " + entry);
     }
     private static boolean resourceId(String value, boolean tags) { return value.matches((tags ? "#?" : "") + "[a-z0-9_.-]+:[a-z0-9_./-]+"); }

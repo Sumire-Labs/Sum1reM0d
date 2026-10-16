@@ -27,6 +27,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 public final class ModEntrypoint {
     public ModEntrypoint(IEventBus bus) {
         Sum1reM0d.initialize(FMLPaths.CONFIGDIR.get());
+        com.sumirelabs.sum1rem0d.game.NaturalFlipData.register(bus);
         bus.addListener(PlatformNetwork::register);
         bus.addListener(ModEntrypoint::registerContent);
     }
@@ -39,6 +40,8 @@ public final class ModEntrypoint {
         event.register(Registries.ITEM, helper -> { for (String name : java.util.List.of("coin", "coin_roll")) helper.register(ModContent.id(name),ModContent.createCoin(name)); });
         event.register(Registries.MENU, helper -> helper.register(ModContent.id("trade"),com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE));
         event.register(Registries.BLOCK, helper -> helper.register(ModContent.id("upside_down_grass"), ModContent.createGrass()));
+        event.register(Registries.BLOCK, helper -> { for (String name : ModContent.VISUAL_NYLIUM) helper.register(ModContent.id("sideways_" + name), ModContent.createVisualNylium(name)); });
+        event.register(Registries.POINT_OF_INTEREST_TYPE, helper -> helper.register(com.sumirelabs.sum1rem0d.game.PathFarmer.ID, com.sumirelabs.sum1rem0d.game.PathFarmer.create()));
         event.register(Registries.BLOCK, helper -> {
             for (String name : java.util.List.of("furnace", "blast_furnace", "smoker")) helper.register(ModContent.id("visual_" + name), ModContent.createVisualFurnace(name));
         });

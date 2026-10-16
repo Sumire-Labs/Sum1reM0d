@@ -21,5 +21,22 @@
   "toast.sum1rem0d.trade.title": "取引依頼",
   "toast.sum1rem0d.trade.sender": "%s から依頼が届きました",
   "toast.sum1rem0d.trade.hint": "財布 / 取引画面を開いて確認",
-  "item.sum1rem0d.mud_ball": "泥だんご"
+  "item.sum1rem0d.mud_ball": "泥だんご",
+  "sum1rem0d.disguise.ardite_ore": "アーダイト鉱石",
+  "sum1rem0d.disguise.ardite_ingot": "アーダイトインゴット",
+  "sum1rem0d.disguise.manyullyn_ingot": "マニュリンインゴット",
+  "sum1rem0d.disguise.manyullyn_block": "マニュリンブロック",
+  "sum1rem0d.disguise.manyullyn_sword": "マニュリンの剣",
+  "sum1rem0d.disguise.manyullyn_pickaxe": "マニュリンのツルハシ",
+  "sum1rem0d.disguise.manyullyn_axe": "マニュリンの斧",
+  "sum1rem0d.disguise.manyullyn_shovel": "マニュリンのシャベル",
+  "sum1rem0d.disguise.manyullyn_hoe": "マニュリンのクワ",
+  "sum1rem0d.disguise.manyullyn_helmet": "マニュリンのヘルメット",
+  "sum1rem0d.disguise.manyullyn_chestplate": "マニュリンのチェストプレート",
+  "sum1rem0d.disguise.manyullyn_leggings": "マニュリンのレギンス",
+  "sum1rem0d.disguise.manyullyn_boots": "マニュリンのブーツ",
+  "sum1rem0d.disguise.manyullyn_spear": "マニュリンの槍",
+  "sum1rem0d.disguise.manyullyn_horse_armor": "マニュリンの馬鎧",
+  "sum1rem0d.disguise.manyullyn_nautilus_armor": "マニュリンのオウムガイの鎧",
+  "sum1rem0d.disguise.manyullyn_upgrade_smithing_template": "マニュリンの強化用鍛冶型"
 }

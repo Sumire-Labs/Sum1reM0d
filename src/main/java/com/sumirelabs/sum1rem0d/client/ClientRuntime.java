@@ -19,7 +19,7 @@ public final class ClientRuntime {
         ClientRules.accept(payload);
         var after = ClientRules.snapshot().getAsJsonObject("features");
         var mc = Minecraft.getInstance();
-        if (mc.level != null && java.util.List.of("upside_down_grass", "diamond_disguise", "furnace_textures").stream().anyMatch(id -> !before.get(id).equals(after.get(id))))
+        if (mc.level != null && java.util.List.of("upside_down_grass", "diamond_disguise", "furnace_textures", "sideways_nylium").stream().anyMatch(id -> !before.get(id).equals(after.get(id))))
             mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
     }
     public static void accept(GameStatePayload payload) {
@@ -27,6 +27,7 @@ public final class ClientRuntime {
         applyState(payload);
     }
     static void applyState(GameStatePayload payload) {
+        boolean nylium = ClientGameState.daily("sideways_nylium");
         boolean grass = ClientGameState.daily("upside_down_grass"), ore = ClientGameState.daily("diamond_disguise");
         int permutation = (int) ClientGameState.number("furnacePermutation", -1);
         ClientGameState.accept(payload);
@@ -37,10 +38,12 @@ public final class ClientRuntime {
             lockedYaw = (float) ClientGameState.number("cameraYaw", 0); lockedPitch = (float) ClientGameState.number("cameraPitch", 0);
         }
         var mc = Minecraft.getInstance();
-        if (mc.level != null && (grass != ClientGameState.daily("upside_down_grass") || ore != ClientGameState.daily("diamond_disguise") || permutation != (int) ClientGameState.number("furnacePermutation", -1))) mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
+        if (mc.level != null && (nylium != ClientGameState.daily("sideways_nylium") || grass != ClientGameState.daily("upside_down_grass") || ore != ClientGameState.daily("diamond_disguise") || permutation != (int) ClientGameState.number("furnacePermutation", -1))) mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
     }
     public static void tick() {
         var mc = Minecraft.getInstance();
+        if (!Boolean.getBoolean("sum1rem0d.netherSmoke")) DailyTextures.tick(mc);
+        NetherChangesSmoke.tick(mc);
         ClientSmoke.tick(mc);
         NetworkSmoke.tick(mc);
         BrowserSmoke.tick(mc);

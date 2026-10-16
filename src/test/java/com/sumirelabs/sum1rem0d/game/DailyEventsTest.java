@@ -12,7 +12,7 @@ class DailyEventsTest {
             assertTrue(result.isEmpty() || DailyEvents.FEATURES.contains(result));
             assertEquals(result, DailyEvents.choose(91, day, 80, weights)); reached.add(result);
         }
-        assertEquals(9, reached.size());
+        assertEquals(DailyEvents.FEATURES.size() + 1, reached.size());
     }
     @Test void zeroChanceEmptyPoolAndZeroWeightsCannotSelectAnEvent() {
         assertEquals("", DailyEvents.choose(1, 0, 0, Map.of("vegan", 100.0)));

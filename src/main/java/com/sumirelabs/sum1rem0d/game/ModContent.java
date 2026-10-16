@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public final class ModContent {
     public static final List<String> EFFECTS = List.of("vegan", "influenza", "headache", "environment_group", "environment_anger", "sleep_hunger", "sleep_slowness");
+    public static final List<String> VISUAL_NYLIUM = List.of("warped_nylium", "crimson_nylium");
+    public static Block createVisualNylium(String name) { return new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERRACK).setId(ResourceKey.create(Registries.BLOCK, id("sideways_" + name)))); }
     private ModContent() {}
     public static Identifier id(String name) { return Identifier.fromNamespaceAndPath(Sum1reM0d.MOD_ID, name); }
     public static Holder<MobEffect> effect(String name) { return BuiltInRegistries.MOB_EFFECT.getOrThrow(ResourceKey.create(Registries.MOB_EFFECT, id(name))); }
@@ -49,6 +51,8 @@ public final class ModContent {
         for (String name : List.of("coin", "coin_roll")) Registry.register(BuiltInRegistries.ITEM,id(name),createCoin(name));
         Registry.register(BuiltInRegistries.MENU,id("trade"),TradeMenu.TYPE);
         Registry.register(BuiltInRegistries.BLOCK, id("upside_down_grass"), createGrass());
+        for (String name : VISUAL_NYLIUM) Registry.register(BuiltInRegistries.BLOCK, id("sideways_" + name), createVisualNylium(name));
+        PathFarmer.registerFabric();
         for (String name : List.of("furnace", "blast_furnace", "smoker")) Registry.register(BuiltInRegistries.BLOCK, id("visual_" + name), createVisualFurnace(name));
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id("configured_crafting"), ConfiguredCraftingRecipe.SERIALIZER);
         Registry.register(BuiltInRegistries.MENU, id("fletching"), FletchingMenu.TYPE);

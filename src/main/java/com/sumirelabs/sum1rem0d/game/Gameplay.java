@@ -32,6 +32,7 @@ public final class Gameplay {
         var state = WorldState.get(server);
         boolean newDay = state.updateDay();
         RedstoneRefresh.tick(server);
+        CraftingMaterialSwap.tick(server);
         Economy.tick(server);
         CoinServicesMultiplayerVerification.tick(server);
         EconomyMultiplayerVerification.tick(server);

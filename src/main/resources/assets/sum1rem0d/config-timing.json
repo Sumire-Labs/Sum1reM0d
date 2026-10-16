@@ -289,6 +289,51 @@
       "options": {
         "enabled": "次の使用・クラフトから適用。登録済みアイテムはセーブ互換性のため残ります。"
       }
+    },
+    "sideways_nylium": {
+      "default": "有効化は当日の保存済み抽選を利用、無効化は表示を解除。見た目の切替時にリソースを再読み込み",
+      "options": {
+        "chance": "翌朝の排他的抽選から反映"
+      }
+    },
+    "retro_netherrack": {
+      "default": "有効化は当日の保存済み抽選を利用、無効化は表示を解除。見た目の切替時にリソースを再読み込み",
+      "options": {
+        "chance": "翌朝の排他的抽選から反映"
+      }
+    },
+    "ardite_disguise": {
+      "default": "有効化は当日の保存済み抽選を利用、無効化は表示を解除。見た目の切替時にリソースを再読み込み",
+      "options": {
+        "chance": "翌朝の排他的抽選から反映"
+      }
+    },
+    "passable_tinted_glass": {
+      "default": "適用後、次の対象処理から反映。生成済みの結果は維持"
+    },
+    "iron_barter": {
+      "default": "適用後、次の対象処理から反映。生成済みの結果は維持"
+    },
+    "paper_leather_swap": {
+      "default": "次の材料判定から反映。次のサーバーtickでレシピブックと開いているクラフト画面を再同期"
+    },
+    "nether_gold_blocks": {
+      "default": "適用後、次の対象処理から反映。生成済みの結果は維持"
+    },
+    "netherrack_shears": {
+      "default": "適用後、次の対象処理から反映。生成済みの結果は維持"
+    },
+    "extended_bane": {
+      "default": "適用後、次の対象処理から反映。生成済みの結果は維持"
+    },
+    "dinnerbone_mobs": {
+      "default": "確率は次の自然スポーンから反映。無効化は既存の反転表示も解除。判定は保存され再抽選しない"
+    },
+    "path_farmer": {
+      "default": "次の職業・職業ブロックの探索から反映。取引済みの職業は維持。道のPOI登録は常時存在"
+    },
+    "enchanted_leaf_apple": {
+      "default": "適用後、次の対象処理から反映。生成済みの結果は維持"
     }
   }
 }

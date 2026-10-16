@@ -2892,5 +2892,273 @@
         "max": 64
       }
     ]
+  },
+  {
+    "id": "sideways_nylium",
+    "label": "ナイリウム横倒し",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "chance",
+        "label": "抽選の重み",
+        "type": "DECIMAL",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "retro_netherrack",
+    "label": "旧ネザーラック",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "chance",
+        "label": "抽選の重み",
+        "type": "DECIMAL",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "ardite_disguise",
+    "label": "アーダイトとマニュリン",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "chance",
+        "label": "抽選の重み",
+        "type": "DECIMAL",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "passable_tinted_glass",
+    "label": "遮光ガラスすり抜け",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "iron_barter",
+    "label": "鉄でピグリン取引",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "paper_leather_swap",
+    "label": "紙と革の材料交換",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "excluded_recipes",
+        "label": "材料交換から除外するレシピID",
+        "type": "LIST",
+        "initial": "",
+        "min": 0,
+        "max": 65536
+      }
+    ]
+  },
+  {
+    "id": "nether_gold_blocks",
+    "label": "ネザー金鉱石の金ブロック",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "netherrack_shears",
+    "label": "ネザーラックはハサミ",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "shears_speed",
+        "label": "ハサミの採掘速度",
+        "type": "DECIMAL",
+        "initial": 15,
+        "min": 0.1,
+        "max": 100
+      },
+      {
+        "key": "other_speed",
+        "label": "その他の採掘速度",
+        "type": "DECIMAL",
+        "initial": 0.2,
+        "min": 0.01,
+        "max": 10
+      }
+    ]
+  },
+  {
+    "id": "extended_bane",
+    "label": "虫特効の対象追加",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "damage_per_level",
+        "label": "レベルごとの追加ダメージ",
+        "type": "DECIMAL",
+        "initial": 2.5,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "players",
+        "label": "プレイヤーも対象",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "dragon",
+        "label": "エンドラも対象",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "dinnerbone_mobs",
+    "label": "モブ上下反転",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "chance",
+        "label": "自然スポーン時の確率（％）",
+        "type": "DECIMAL",
+        "initial": 30,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "path_farmer",
+    "label": "農民の職業ブロックは土の道",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "enchanted_leaf_apple",
+    "label": "葉からエンチャ金リンゴ",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "chance",
+        "label": "追加ドロップ確率（％）",
+        "type": "DECIMAL",
+        "initial": 0.001,
+        "min": 0,
+        "max": 100
+      }
+    ]
   }
 ]

@@ -55,7 +55,19 @@
     "NoChatReportsSendMixin",
     "NoChatReportsServerMixin",
     "NoChatReportsStatusMixin",
-    "NoChatReportsDeliveryMixin"
+    "NoChatReportsDeliveryMixin",
+    "TintedGlassCollisionMixin",
+    "IronBarterMixin",
+    "NetherrackMiningMixin",
+    "ExtendedBaneMixin",
+    "PaperLeatherIngredientMixin",
+    "NaturalFlipMixin",
+    "PathPoiAccess",
+    "PathFarmerProfessionMixin",
+    "CraftingMaterialMapMixin",
+    "CraftingMaterialMatchMixin",
+    "MaterialRecipePlacementMixin",
+    "MaterialRecipeDisplayMixin"
   ],
   "client": [
     "MenuScreenMixin",
@@ -95,7 +107,9 @@
     "CoinAnvilScreenMixin",
     "CoinEnchantingScreenMixin",
     "NoChatReportsKeysMixin",
-    "NoChatReportsClientMixin"
+    "NoChatReportsClientMixin",
+    "NaturalFlipRendererMixin",
+    "DailyTextureResourcesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

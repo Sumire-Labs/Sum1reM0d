@@ -21,5 +21,22 @@
   "toast.sum1rem0d.trade.title": "Trade request",
   "toast.sum1rem0d.trade.sender": "%s wants to trade",
   "toast.sum1rem0d.trade.hint": "Open Wallet / Trading to respond",
-  "item.sum1rem0d.mud_ball": "Mud Ball"
+  "item.sum1rem0d.mud_ball": "Mud Ball",
+  "sum1rem0d.disguise.ardite_ore": "Ardite Ore",
+  "sum1rem0d.disguise.ardite_ingot": "Ardite Ingot",
+  "sum1rem0d.disguise.manyullyn_ingot": "Manyullyn Ingot",
+  "sum1rem0d.disguise.manyullyn_block": "Manyullyn Block",
+  "sum1rem0d.disguise.manyullyn_sword": "Manyullyn Sword",
+  "sum1rem0d.disguise.manyullyn_pickaxe": "Manyullyn Pickaxe",
+  "sum1rem0d.disguise.manyullyn_axe": "Manyullyn Axe",
+  "sum1rem0d.disguise.manyullyn_shovel": "Manyullyn Shovel",
+  "sum1rem0d.disguise.manyullyn_hoe": "Manyullyn Hoe",
+  "sum1rem0d.disguise.manyullyn_helmet": "Manyullyn Helmet",
+  "sum1rem0d.disguise.manyullyn_chestplate": "Manyullyn Chestplate",
+  "sum1rem0d.disguise.manyullyn_leggings": "Manyullyn Leggings",
+  "sum1rem0d.disguise.manyullyn_boots": "Manyullyn Boots",
+  "sum1rem0d.disguise.manyullyn_spear": "Manyullyn Spear",
+  "sum1rem0d.disguise.manyullyn_horse_armor": "Manyullyn Horse Armor",
+  "sum1rem0d.disguise.manyullyn_nautilus_armor": "Manyullyn Nautilus Armor",
+  "sum1rem0d.disguise.manyullyn_upgrade_smithing_template": "Manyullyn Upgrade Smithing Template"
 }

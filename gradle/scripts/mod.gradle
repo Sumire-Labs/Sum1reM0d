@@ -72,6 +72,12 @@ if (providers.gradleProperty('viewer_mod').isPresent()) {
     def viewerDirectory = minecraftVersion == '26.3' ? ".research/viewers/$modLoader-$viewer" : ".research/viewers/$minecraftVersion-$modLoader-$viewer"
     dependencies { runtimeOnly fileTree(rootProject.file(viewerDirectory)) { include '*.jar' } }
 }
+// Renderer compatibility jars are local verification inputs only.
+if (providers.gradleProperty('renderer_mod').isPresent()) {
+    def renderer = providers.gradleProperty('renderer_mod').get()
+    if (renderer != 'sodium') throw new GradleException('renderer_mod must be sodium')
+    dependencies { runtimeOnly fileTree(rootProject.file(".research/renderers/${project.name}-$renderer")) { include '*.jar' } }
+}
 tasks.withType(Test).configureEach { useJUnitPlatform() }
 tasks.withType(JavaExec).configureEach {
     if (name == 'runClient' && providers.gradleProperty('artwork_preview').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.artworkPreview=true'

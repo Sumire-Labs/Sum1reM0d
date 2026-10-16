@@ -23,6 +23,15 @@ final class RemainingVisualChecks {
    var source=mc.getBlockColors().getTintSource(block,0);require(source!=null && source.colorInWorld(block,world,pos)==0xFF13579B,"Exact native textile tint "+name);entity.color(0xBC6731);require(source.colorInWorld(block,world,pos)==0xFFBC6731,"Updated native textile tint "+name);
   }
   passed.accept("Native wool and bed block renderer tints read exact changing 24bit colors");
+  for(String name:List.of("mixed_concrete","mixed_wool","mixed_bed")){
+   var stack=new ItemStack(name.equals("mixed_concrete")?MixedConcrete.item():ExtraContent.item(name));
+   stack.set(net.minecraft.core.component.DataComponents.DYED_COLOR,new net.minecraft.world.item.component.DyedItemColor(0x13579B));
+   var tints=new ArrayList<Integer>();
+   var tintedCollector=(SubmitNodeCollector)Proxy.newProxyInstance(SubmitNodeCollector.class.getClassLoader(),new Class<?>[]{SubmitNodeCollector.class},(proxy,method,args)->{if(method.getName().equals("order"))return proxy;if(method.getName().equals("submitItem"))for(int tint:(int[])args[5])tints.add(tint);return null;});
+   var tintedState=new ItemStackRenderState();mc.getItemModelResolver().updateForTopItem(tintedState,stack,ItemDisplayContext.GUI,mc.level,mc.player,0);tintedState.submit(new PoseStack(),tintedCollector,0,0,0);
+   require(tints.contains(0xFF13579B),"Actual item render submission preserves exact RGB "+name);
+  }
+  passed.accept("Concrete, wool and bed actual item render submissions preserve their dyed component RGB");
   var lights=new ArrayList<Integer>();var collector=(SubmitNodeCollector)Proxy.newProxyInstance(SubmitNodeCollector.class.getClassLoader(),new Class<?>[]{SubmitNodeCollector.class},(proxy,method,args)->{if(method.getName().equals("order"))return proxy;if(method.getName().equals("submitItem"))lights.add((Integer)args[2]);return null;});var state=new ItemStackRenderState();
   mc.getItemModelResolver().updateForTopItem(state,new ItemStack(ExtraContent.item("redstone_pickaxe")),ItemDisplayContext.GUI,mc.level,mc.player,0);state.submit(new PoseStack(),collector,0,0,0);require(!lights.isEmpty() && lights.stream().allMatch(i->i==0xF000F0),"Native redstone item submits full-bright quads");
   lights.clear();mc.getItemModelResolver().updateForTopItem(state,new ItemStack(Items.IRON_PICKAXE),ItemDisplayContext.GUI,mc.level,mc.player,0);state.submit(new PoseStack(),collector,0,0,0);require(!lights.isEmpty() && lights.stream().allMatch(i->i==0),"Reused item state clears glow for ordinary items");

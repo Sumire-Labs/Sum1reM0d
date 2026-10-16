@@ -38,6 +38,7 @@ final class RemainingSmoke {
    if(!EquipmentDefaultsClient.received || mc.player==null || !ClientRules.received() || !ClientGameState.received() || !ClientRules.enabled("sumzon"))return;ticks++;
    switch(stage){
     case 0->{
+     if(!MixedColorLiveChecks.tick(mc,passed::add))return;
      if(!ArtworkPreview.tick(mc,passed::add))return;
      require(new ItemStack(ExtraContent.item("redstone_pickaxe")).getMaxDamage()==32,"Server defaults replace intentionally mismatched client durability");passed.add("Authoritative registered equipment defaults replace differing client settings");
      RemainingVisualChecks.verify(mc,passed::add);

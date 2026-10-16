@@ -18,6 +18,8 @@ public final class WorldState {
         public long awakeTicks;
         public long coins;
         public boolean walletInitialized;
+        public JsonObject services=new JsonObject();
+        public transient long lastServiceRequest=Long.MIN_VALUE,lastServiceFailure=Long.MIN_VALUE;
         public int sleepTicks, exposureTicks, influenzaTicks, environmentTicks, angerTicks;
         public int explosionCooldown, damageCooldown, bedrockCooldown, bedCooldown;
         public int afkTicks, redTicks, cameraTicks, lightningTicks;
@@ -40,7 +42,7 @@ public final class WorldState {
         Map<String, PlayerData> players = new LinkedHashMap<>();
         Map<String, String> aliases = new LinkedHashMap<>();
         int furnacePermutation;
-        long nextZeus, nextNames, nextMob;
+        long nextZeus, nextNames, nextMob, serviceTick;
     }
     private final Path path;
     private final MinecraftServer server;
@@ -68,7 +70,7 @@ public final class WorldState {
         if (data.coinBlocks == null) data.coinBlocks = new HashSet<>();
         return !data.coinBlocks.add(level.dimension().identifier() + ":" + pos.asLong());
     }
-    public boolean daily(String feature) { return Rules.on("daily_events") && Rules.on(feature) && data.daily.getOrDefault(feature, false); }
+    public boolean daily(String feature) { return DailyEvents.FEATURES.contains(feature) && Rules.on("daily_events") && Rules.on(feature) && data.daily.getOrDefault(feature, false); }
     public double fuelEfficiency() { return daily("daily_fuel") ? data.fuelMultiplier : 1; }
     public double fuelMultiplier() { return FuelAccounting.consumptionMultiplier(fuelEfficiency()); }
     public void fuelEfficiency(double value) { FuelAccounting.consumptionMultiplier(value); data.fuelMultiplier = value; data.daily.put("daily_fuel", true); }
@@ -77,6 +79,8 @@ public final class WorldState {
     // Native verification restores the complete saved state after temporary fixtures.
     JsonObject checkpoint() { return GSON.toJsonTree(data).getAsJsonObject(); }
     void restore(JsonObject checkpoint) { data = GSON.fromJson(checkpoint, Data.class); }
+    public long serviceTime(){return data.serviceTick;}
+    public void advanceServices(){data.serviceTick=Math.addExact(data.serviceTick,1);}
     public long day() { return data.day; }
     public long exchangedDay() { return data.moonExchangeDay; }
     public void exchangedDay(long day) { data.moonExchangeDay = day; }

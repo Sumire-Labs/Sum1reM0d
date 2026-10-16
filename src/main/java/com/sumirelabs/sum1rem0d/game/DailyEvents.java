@@ -4,7 +4,7 @@ import java.util.*;
 
 /** A single weighted draw, with a separate chance of no event. */
 public final class DailyEvents {
-    public static final List<String> FEATURES = List.of("vegan", "daily_fuel", "upside_down_grass", "diamond_disguise", "hardness_swap", "furnace_textures", "inventory_swap", "growth_sleep", "sideways_nylium", "retro_netherrack", "ardite_disguise");
+    public static final List<String> FEATURES = List.of("vegan", "daily_fuel", "upside_down_grass", "diamond_disguise", "hardness_swap", "furnace_textures", "inventory_swap", "growth_sleep", "sideways_nylium", "retro_netherrack");
     private DailyEvents() {}
     public static String choose(long seed, long day, double chance, Map<String, Double> weights) {
         var random = new Random(seed ^ day * 0x9E3779B97F4A7C15L ^ 0x15C7DA894B26E30FL);

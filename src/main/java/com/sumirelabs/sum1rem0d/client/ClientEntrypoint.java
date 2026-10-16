@@ -20,13 +20,16 @@ public final class ClientEntrypoint implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ConfigStatePayload.TYPE,
             (state, context) -> ClientRuntime.acceptRules(state));
         ClientPlayNetworking.registerGlobalReceiver(GameStatePayload.TYPE, (state, context) -> ClientRuntime.accept(state));
+        ClientPlayNetworking.registerGlobalReceiver(com.sumirelabs.sum1rem0d.network.ShopStatePayload.TYPE,(state,context)->ShopClient.accept(state));
+        ClientPlayNetworking.registerGlobalReceiver(com.sumirelabs.sum1rem0d.network.EquipmentStatePayload.TYPE,(state,context)->EquipmentDefaultsClient.accept(state));
         ClientPlayNetworking.registerGlobalReceiver(FakeAdvancementPayload.TYPE, (state, context) -> FakeAdvancementToast.receive(state));
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            ClientRules.clear();
+            ClientRules.clear(); ShopClient.clear(); EquipmentDefaultsClient.clear();
             ClientGameState.clear(); TradeInvitationToast.clear();
+            EquipmentDefaultsClient.mismatchForVerification();
             PlatformClientNetwork.refresh();
         });
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { ClientRules.clear(); ClientGameState.clear(); TradeInvitationToast.clear(); });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { ClientRules.clear(); ShopClient.clear(); EquipmentDefaultsClient.clear(); ClientGameState.clear(); TradeInvitationToast.clear(); });
     }
 }
 //?} elif neoforge {
@@ -51,14 +54,17 @@ public final class ClientEntrypoint {
     private static void register(RegisterClientPayloadHandlersEvent event) {
         event.register(ConfigStatePayload.TYPE, (state, context) -> ClientRuntime.acceptRules(state));
         event.register(GameStatePayload.TYPE, (state, context) -> ClientRuntime.accept(state));
+        event.register(com.sumirelabs.sum1rem0d.network.ShopStatePayload.TYPE,(state,context)->ShopClient.accept(state));
+        event.register(com.sumirelabs.sum1rem0d.network.EquipmentStatePayload.TYPE,(state,context)->EquipmentDefaultsClient.accept(state));
         event.register(FakeAdvancementPayload.TYPE, (state, context) -> FakeAdvancementToast.receive(state));
     }
     private static void screens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) { event.register(com.sumirelabs.sum1rem0d.game.FletchingMenu.TYPE, FletchingScreen::new); event.register(com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE, TradeScreen::new); }
     private static void login(ClientPlayerNetworkEvent.LoggingIn event) {
-        ClientRules.clear();
+        ClientRules.clear(); ShopClient.clear(); EquipmentDefaultsClient.clear();
         ClientGameState.clear(); TradeInvitationToast.clear();
-        PlatformClientNetwork.refresh();
+        EquipmentDefaultsClient.mismatchForVerification();
+            PlatformClientNetwork.refresh();
     }
-    private static void logout(ClientPlayerNetworkEvent.LoggingOut event) { ClientRules.clear(); ClientGameState.clear(); TradeInvitationToast.clear(); }
+    private static void logout(ClientPlayerNetworkEvent.LoggingOut event) { ClientRules.clear(); ShopClient.clear(); EquipmentDefaultsClient.clear(); ClientGameState.clear(); TradeInvitationToast.clear(); }
 }
 *///?}

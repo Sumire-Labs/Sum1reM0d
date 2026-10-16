@@ -21,3 +21,9 @@ Authors: Aizistral and No Chat Reports contributors; original system-message con
 License: WTFPL version 2 (see licenses/No-Chat-Reports-WTFPL.txt).
 
 Sum1reM0d adapts the system-chat conversion, profile-key suppression, secure-profile override and NCR server-discovery convention. It uses its own configurable implementation and does not bundle the full upstream mod or its encrypted-chat feature. Native send callbacks and Minecraft content filtering are preserved. Sum1reM0d's own license remains BlueOak-1.0.0.
+
+## Minecraft asset references
+
+The vanilla-shaped equipment PNGs preserve Minecraft's native pixel layouts, alpha masks and shading patterns. Their material palettes were produced with the built-in image generation tool and exported as modified PNGs. Original Minecraft asset designs belong to Mojang/Microsoft; the code license does not relicense those underlying designs. Unmodified vanilla reference files are read from the local Minecraft installation during artwork preparation and are not bundled as artwork sources.
+
+The dedicated book, ingots, template, material tiles and piston/wiring artwork were generated separately. Production prompts and export provenance are recorded under art/.

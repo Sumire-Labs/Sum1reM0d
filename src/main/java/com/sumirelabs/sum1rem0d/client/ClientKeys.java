@@ -8,7 +8,7 @@ import net.minecraft.client.*;
 
 /** Vanilla Controls bindings; default unbound so existing controls do not conflict. */
 public final class ClientKeys {
-  private static KeyMapping wiki, config, wallet;
+  private static KeyMapping wiki, config, wallet, shop;
 
   private ClientKeys() {}
 
@@ -20,6 +20,7 @@ public final class ClientKeys {
     registrar.accept(wiki);
     registrar.accept(config);
     registrar.accept(wallet);
+    shop=new KeyMapping("key.sum1rem0d.shop",InputConstants.UNKNOWN.getValue(),category);registrar.accept(shop);
   }
 
   //? if neoforge {
@@ -30,6 +31,7 @@ public final class ClientKeys {
     while (wiki.consumeClick())
       if (available(mc) && WikiRuntime.enabled()) mc.gui.setScreen(new WikiScreen(null));
     while (config.consumeClick()) if (available(mc)) mc.gui.setScreen(new ConfigScreen(null));
+    while(shop.consumeClick())if(available(mc))mc.gui.setScreen(new ShopScreen(null));
     while (wallet.consumeClick())
       if (available(mc)
           && ClientRules.enabled("economy")

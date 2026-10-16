@@ -31,7 +31,7 @@ final class HudKeysVerification {
             .toList();
     var saved = new ArrayList<com.mojang.blaze3d.platform.InputConstants.Key>();
     try {
-      require(keys.size() == 3, "Three actions are registered in vanilla Controls");
+      require(keys.size() == 4, "Four actions are registered in vanilla Controls");
       for (var k : keys) {
         require(
             k.getDefaultKey().equals(InputConstants.UNKNOWN), "Shortcut defaults are unassigned");

@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "sum1rem0d:block/piston_base",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "sum1rem0d:block/piston_base",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "sum1rem0d:block/piston_base"
+    },
+    "facing=south": {
+      "model": "sum1rem0d:block/piston_base",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "sum1rem0d:block/piston_base",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "sum1rem0d:block/piston_base",
+      "y": 270
+    }
+  }
+}

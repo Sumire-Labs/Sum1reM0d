@@ -29,9 +29,14 @@ public final class ModEntrypoint {
         Sum1reM0d.initialize(FMLPaths.CONFIGDIR.get());
         com.sumirelabs.sum1rem0d.game.NaturalFlipData.register(bus);
         bus.addListener(PlatformNetwork::register);
+        bus.addListener(com.sumirelabs.sum1rem0d.game.ExtraContent::setupNeo);
         bus.addListener(ModEntrypoint::registerContent);
     }
     private static void registerContent(RegisterEvent event) {
+        event.register(Registries.BLOCK,helper->{for(var name:com.sumirelabs.sum1rem0d.game.ExtraContent.BLOCKS)helper.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.ExtraContent.createBlock(name));});
+        event.register(Registries.BLOCK_ENTITY_TYPE,helper->{for(var name:com.sumirelabs.sum1rem0d.game.ExtraContent.BLOCK_ENTITIES)helper.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.ExtraContent.createType(name));});
+        event.register(Registries.ITEM,helper->{for(var name:com.sumirelabs.sum1rem0d.game.ExtraContent.ITEMS)helper.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.ExtraContent.createItem(name));});
+        event.register(Registries.RECIPE_SERIALIZER,helper->helper.register(ModContent.id("extra_crafting"),com.sumirelabs.sum1rem0d.game.ExtraCraftingRecipe.SERIALIZER));
         event.register(Registries.BLOCK,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcrete.createBlock()));
         event.register(Registries.BLOCK_ENTITY_TYPE,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcrete.createType()));
         event.register(Registries.ITEM,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcrete.createItem()));

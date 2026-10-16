@@ -40,4 +40,12 @@ public final class PlatformClientNetwork {
         if (connection != null && connection.hasChannel(ActivityPayload.TYPE)) ClientPacketDistributor.sendToServer(new ActivityPayload());
         *///?}
     }
+    public static void shop(com.sumirelabs.sum1rem0d.network.ShopRequestPayload request) {
+        //? if fabric {
+        if(net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.canSend(com.sumirelabs.sum1rem0d.network.ShopRequestPayload.TYPE))net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(request);
+        //?} elif neoforge {
+        /*var listener=net.minecraft.client.Minecraft.getInstance().getConnection();if(listener!=null && listener.hasChannel(com.sumirelabs.sum1rem0d.network.ShopRequestPayload.TYPE))net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(request);
+        *///?}
+    }
+
 }

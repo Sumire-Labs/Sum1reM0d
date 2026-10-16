@@ -45,6 +45,7 @@ public final class ModContent {
         return effect;
     }
     public static void registerFabric() {
+        ExtraContent.registerFabric();
         for (String name : EFFECTS) Registry.register(BuiltInRegistries.MOB_EFFECT, id(name), createEffect(name));
         Registry.register(BuiltInRegistries.BLOCK,id("mixed_concrete"),MixedConcrete.createBlock());
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("mixed_concrete"),MixedConcrete.createType());

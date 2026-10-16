@@ -70,7 +70,7 @@ public final class BrowserOverlays {
         var mc = Minecraft.getInstance();
         if (owner != null && owner != mc.gui.screen()) changed(mc.gui.screen());
         if (youtube != null && (!ClientRules.enabled("youtube") || mc.level == null)) { youtube.close(); youtube = null; }
-        if (ad != null && (!ClientRules.enabled("advertisements") || mc.level == null || !advertisementScreen(mc.gui.screen()))) closeAd();
+        if (ad != null && (!ClientRules.enabled("advertisements") || ShopClient.adPremium() || mc.level == null || !advertisementScreen(mc.gui.screen()))) closeAd();
         if (youtube != null) youtube.updateVolume(PersonalConfig.store().integer("youtube", "volume"));
         if (ad != null) ad.updateVolume(PersonalConfig.store().integer("advertisements", "volume"));
         String url = PersonalConfig.store().text("youtube", "url");
@@ -96,14 +96,14 @@ public final class BrowserOverlays {
             }
         }
         long now = System.nanoTime();
-        if (advertisementScreen(screen) && ClientRules.enabled("advertisements") && now >= nextAd && ad == null) {
+        if (advertisementScreen(screen) && ClientRules.enabled("advertisements") && !ShopClient.adPremium() && now >= nextAd && ad == null) {
             var urls = ClientRules.list("advertisements", "urls");
             String url = urls.isEmpty() ? "https://www.youtube.com/" : urls.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(urls.size()));
             ad = new BrowserSession(url.equals("sum1rem0d:default_ad") ? defaultAd() : safe(url, defaultAd()));
             adOpened = now; nextAd = now + (long) ClientRules.number("advertisements", "interval") * 1_000_000_000L;
         }
         if (ad != null) {
-            if (!ClientRules.enabled("advertisements")) { closeAd(); return; }
+            if (!ClientRules.enabled("advertisements") || ShopClient.adPremium()) { closeAd(); return; }
             adWidth = Math.min(500, screen.width - 24); adHeight = Math.min(300, screen.height - 70);
             adX = (screen.width - adWidth) / 2; adY = (screen.height - adHeight) / 2 + 8;
             graphics.fill(0, 0, screen.width, screen.height, 0xB8000000);

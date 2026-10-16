@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 final class NetherChangesSmoke {
  private static int stage;
  private static CompletableFuture<?> reload;
- private static JsonObject rules,state;
+ private static JsonObject rules,state,fixture;
  private static long revision;
  private static boolean editable;
  private static byte[] rack,ingot,armor;
@@ -32,7 +32,8 @@ final class NetherChangesSmoke {
    switch(stage) {
     case 0 -> {
      rules=ClientRules.snapshot();state=ClientGameState.snapshot();revision=ClientRules.revision;editable=ClientRules.editable;
-     var fixture=rules.deepCopy();for(String id:List.of("sideways_nylium","retro_netherrack","ardite_disguise")) fixture.getAsJsonObject("features").getAsJsonObject(id).addProperty("enabled",true);
+     fixture=rules.deepCopy();for(String id:List.of("sideways_nylium","retro_netherrack","ardite_disguise")) fixture.getAsJsonObject("features").getAsJsonObject(id).addProperty("enabled",true);
+     fixture.getAsJsonObject("features").getAsJsonObject("ardite_disguise").addProperty("enabled",false);
      ClientRules.accept(new ConfigStatePayload(revision,editable,fixture.toString(),"",0,false));
      rack=texture(mc,"textures/block/netherrack.png");ingot=texture(mc,"textures/item/netherite_ingot.png");armor=texture(mc,"textures/entity/equipment/humanoid/netherite.png");
      daily("sideways_nylium");
@@ -43,7 +44,7 @@ final class NetherChangesSmoke {
     case 1 -> {
      require(Arrays.equals(DailyTextures.programmerArtTexture(),texture(mc,"textures/block/netherrack.png")),"Exact built-in Programmer Art texture is used without enabling the whole pack");
      require(Arrays.equals(ingot,texture(mc,"textures/item/netherite_ingot.png")),"Other event does not leak");passed.add("Retro texture loaded without manyullyn overlap");
-     daily("ardite_disguise");reload=DailyTextures.verifyReload(mc,2);stage=2;
+     fixture.getAsJsonObject("features").getAsJsonObject("ardite_disguise").addProperty("enabled",true);ClientRules.accept(new ConfigStatePayload(revision,editable,fixture.toString(),"",0,false));daily("");reload=DailyTextures.verifyReload(mc,2);stage=2;
     }
     case 2 -> {
      require(Arrays.equals(rack,texture(mc,"textures/block/netherrack.png")),"Retro texture restored");
@@ -51,8 +52,16 @@ final class NetherChangesSmoke {
      require(NetherNames.name(BuiltInRegistries.ITEM.getKey(Items.ANCIENT_DEBRIS)).equals(net.minecraft.network.chat.Component.translatable("sum1rem0d.disguise.ardite_ore")),"Ore name");
      require(NetherNames.name(BuiltInRegistries.ITEM.getKey(Items.NETHERITE_SCRAP)).equals(net.minecraft.network.chat.Component.translatable("sum1rem0d.disguise.ardite_ingot")),"Scrap name");
      require(NetherNames.name(BuiltInRegistries.ITEM.getKey(Items.NETHERITE_SWORD)).equals(net.minecraft.network.chat.Component.translatable("sum1rem0d.disguise.manyullyn_sword")),"Sword name");
+     for(String part:List.of("sword","pickaxe","axe","shovel","hoe","helmet","chestplate","leggings","boots","horse_armor","nautilus_armor","spear","spear_in_hand","ingot","upgrade_smithing_template")){
+      String nativePath="textures/item/netherite_"+part+".png";if(mc.getResourceManager().getResource(net.minecraft.resources.Identifier.withDefaultNamespace(nativePath)).isEmpty())continue;
+      try(var in=mc.getResourceManager().getResource(com.sumirelabs.sum1rem0d.game.ModContent.id("textures/item/manyullyn_"+part+".png")).orElseThrow().open()){require(Arrays.equals(in.readAllBytes(),texture(mc,nativePath)),"Dedicated Manyullyn file supplies "+part);}
+     }
+     for(String layer:List.of("humanoid","humanoid_leggings","humanoid_baby","horse_body","nautilus_body")){
+      String nativePath="textures/entity/equipment/"+layer+"/netherite.png";if(mc.getResourceManager().getResource(net.minecraft.resources.Identifier.withDefaultNamespace(nativePath)).isEmpty())continue;
+      try(var in=mc.getResourceManager().getResource(com.sumirelabs.sum1rem0d.game.ModContent.id("textures/entity/equipment/"+layer+"/manyullyn.png")).orElseThrow().open()){require(Arrays.equals(in.readAllBytes(),texture(mc,nativePath)),"Dedicated worn Manyullyn file supplies "+layer);}
+     }
      passed.add("Ardite/manyullyn item names and item/equipment textures");
-     daily("");reload=DailyTextures.verifyReload(mc,0);stage=3;
+     fixture.getAsJsonObject("features").getAsJsonObject("ardite_disguise").addProperty("enabled",false);ClientRules.accept(new ConfigStatePayload(revision,editable,fixture.toString(),"",0,false));daily("");reload=DailyTextures.verifyReload(mc,0);stage=3;
     }
     case 3 -> {
      require(Arrays.equals(rack,texture(mc,"textures/block/netherrack.png")) && Arrays.equals(ingot,texture(mc,"textures/item/netherite_ingot.png")) && Arrays.equals(armor,texture(mc,"textures/entity/equipment/humanoid/netherite.png")),"All original resources restored");

@@ -34,6 +34,8 @@ public final class Gameplay {
         RedstoneRefresh.tick(server);
         CraftingMaterialSwap.tick(server);
         Economy.tick(server);
+        ShopServices.tick(server);
+        RemainingLiveVerification.tick(server);
         CoinServicesMultiplayerVerification.tick(server);
         EconomyMultiplayerVerification.tick(server);
         long gameTime = server.overworld().getGameTime();
@@ -369,6 +371,7 @@ public final class Gameplay {
         json.addProperty("redTicks", p.redTicks); json.addProperty("cameraTicks", p.cameraTicks); json.addProperty("cameraYaw", p.cameraYaw); json.addProperty("cameraPitch", p.cameraPitch);
         json.addProperty("originalYaw", p.originalYaw); json.addProperty("originalPitch", p.originalPitch);
         json.add("economy", Economy.state(player));
+        json.add("services",ShopServices.summary(player));
         PlatformNetwork.send(player, new GameStatePayload(json.toString()));
     }
 }

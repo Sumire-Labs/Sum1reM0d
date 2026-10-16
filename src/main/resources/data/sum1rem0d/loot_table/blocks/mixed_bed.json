@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "sum1rem0d:mixed_bed",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "source": "block_entity",
+              "include": [
+                "minecraft:dyed_color"
+              ]
+            }
+          ],
+          "modifier": {
+            "type": "minecraft:copy_components",
+            "source": "block_entity",
+            "include": [
+              "minecraft:dyed_color"
+            ]
+          },
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "sum1rem0d:mixed_bed",
+              "properties": {
+                "part": "head"
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "sum1rem0d:mixed_bed",
+            "state": {
+              "part": "head"
+            }
+          }
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    }
+  ]
+}

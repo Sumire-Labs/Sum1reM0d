@@ -35,6 +35,7 @@ public final class WalletScreen extends Screen {
         button("閉じる",left+208,top+202,84,this::onClose);
         var bank=button("XP銀行",left+80,top+202,120,()->minecraft.gui.setScreen(new BankScreen(this)));bank.active=ClientRules.enabled("xp_bank")&&state().has("xpPoints");
         lastPlayers=players.toString()+state.has("inviteRevision")+(state.has("inviteRevision")?state.get("inviteRevision"):"");
+        button("Sumzon",left+208,top+24,84,()->minecraft.gui.setScreen(new ShopScreen(this)));
         updateWalletButtons(); request("refresh","",0,0);
     }
     private String modeReason(){if(minecraft.player==null||!minecraft.player.isAlive()||minecraft.player.isSpectator())return "現在の状態では入出金できません";if(minecraft.player.isCreative()&&!ClientRules.bool("economy","allow_creative_wallet"))return "クリエ入出金はサーバー設定で許可できます";if(minecraft.player.containerMenu!=minecraft.player.inventoryMenu)return "取引・作業画面を閉じてください";return "";}
@@ -42,7 +43,7 @@ public final class WalletScreen extends Screen {
     private Button button(String label,int x,int y,int w,Runnable action){return addRenderableWidget(Button.builder(Component.literal(label),b->action.run()).bounds(x,y,w,20).build());}
     private void withdraw(String denomination){try{request("withdraw",denomination,Long.parseLong(amount.getValue()),0);}catch(NumberFormatException ignored){}}
     @Override public void tick(){updateWalletButtons();var s=state();String current=(s.has("players")?s.get("players").toString():"[]")+s.has("inviteRevision")+(s.has("inviteRevision")?s.get("inviteRevision"):"");if(!current.equals(lastPlayers))rebuildWidgets();if(!ClientRules.enabled("economy"))onClose();}
-    @Override public void extractBackground(GuiGraphicsExtractor g,int x,int y,float tick){super.extractBackground(g,x,y,tick);VanillaGuiParts.panel(g,left,top,300,230);g.text(font,title,left+8,top+8,0xFF404040,false);g.item(new net.minecraft.world.item.ItemStack(com.sumirelabs.sum1rem0d.game.ModContent.coin()),left+8,top+24);g.text(font,"残高: "+number(state(),"balance"),left+28,top+27,0xFF604000,false);if(!modeReason().isEmpty())g.text(font,font.plainSubstrByWidth(modeReason(),284),left+8,top+38,0xFF904040,false);g.text(font,state().has("inviteName")?state().get("inviteName").getAsString()+" からの依頼":"取引依頼はここに届きます",left+8,top+99,0xFF404040,false);g.text(font,"近くのプレイヤー（"+(page+1)+"）",left+8,top+139,0xFF404040,false);}
+    @Override public void extractBackground(GuiGraphicsExtractor g,int x,int y,float tick){super.extractBackground(g,x,y,tick);VanillaGuiParts.panel(g,left,top,300,230);g.text(font,title,left+8,top+8,0xFF404040,false);g.item(new net.minecraft.world.item.ItemStack(com.sumirelabs.sum1rem0d.game.ModContent.coin()),left+8,top+24);g.text(font,"残高: "+number(state(),"balance"),left+28,top+27,0xFF604000,false);if(!modeReason().isEmpty())g.text(font,font.plainSubstrByWidth(modeReason(),194),left+8,top+38,0xFF904040,false);g.text(font,state().has("inviteName")?state().get("inviteName").getAsString()+" からの依頼":"取引依頼はここに届きます",left+8,top+99,0xFF404040,false);g.text(font,"近くのプレイヤー（"+(page+1)+"）",left+8,top+139,0xFF404040,false);}
     @Override public void onClose(){minecraft.gui.setScreen(parent);}
     @Override public boolean isPauseScreen(){return false;}
 }

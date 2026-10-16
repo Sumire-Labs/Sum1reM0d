@@ -66,6 +66,7 @@ public final class ServerVerification {
             MudBallVerification.verify(server, ServerVerification::passed);
             NetherChangesVerification.verify(server, ServerVerification::passed);
             CombatConcreteVerification.verify(server, ServerVerification::passed);
+            RemainingVerification.verify(server, ServerVerification::passed);
             report.addProperty("success", true);
             Sum1reM0d.LOGGER.info("SERVER_VERIFY: all {} checks passed", PASSED.size());
         } catch (Throwable failure) {

@@ -24,6 +24,7 @@ public final class RegisteredConfigValidation {
             if (!values.get("enabled").getAsBoolean()) continue;
             for (var option : feature.options()) {
                 String key = option.key(), label = feature.label() + " / " + option.label();
+                if(key.equals("prices")){for(String entry:ConfigSchema.split(values.get(key).getAsString()))check(BuiltInRegistries.ITEM,entry.split("=",2)[0],label,server!=null);continue;}
                 if (feature.id().equals("ore_drops") && key.equals("mapping")) {
                     for (String entry : ConfigSchema.split(values.get(key).getAsString())) {
                         var pair = entry.split("=", 2); check(BuiltInRegistries.BLOCK, pair[0], label, server != null); check(BuiltInRegistries.ITEM, pair[1], label, server != null);
@@ -31,7 +32,7 @@ public final class RegisteredConfigValidation {
                     continue;
                 }
                 Registry<?> registry = switch (key) {
-                    case "target_items", "forbidden_items", "allowed_items", "input_item", "output_item", "soap_materials", "mud_materials", "fuel_items" -> BuiltInRegistries.ITEM;
+                    case "excluded_items", "material_item", "target_items", "forbidden_items", "allowed_items", "input_item", "output_item", "soap_materials", "mud_materials", "fuel_items" -> BuiltInRegistries.ITEM;
                     case "target_blocks", "excluded_blocks", "candidate_blocks", "replacement", "first_block", "second_block" -> BuiltInRegistries.BLOCK;
                     case "buff_effects", "debuff_effects" -> BuiltInRegistries.MOB_EFFECT;
                     case "mob_type" -> BuiltInRegistries.ENTITY_TYPE;

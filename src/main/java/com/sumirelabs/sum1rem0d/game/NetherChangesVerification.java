@@ -106,12 +106,12 @@ final class NetherChangesVerification {
 passed.accept("Natural flip persisted and synchronized; command spawns excluded");
    fs.getAsJsonObject("daily_events").addProperty("enabled",true);fs.getAsJsonObject("daily_events").addProperty("chance",100);
    var world=WorldState.get(server);var checkpoint=world.checkpoint();
-   try { for(String id:List.of("sideways_nylium","retro_netherrack","ardite_disguise")) {
+   try { for(String id:List.of("sideways_nylium","retro_netherrack")) {
     for(String f:DailyEvents.FEATURES) fs.getAsJsonObject(f).addProperty("enabled",f.equals(id));store.update(draft,store.revision());
     var force=world.checkpoint();force.addProperty("day",Long.MIN_VALUE);world.restore(force);world.updateDay();
     require(world.daily(id) && DailyEvents.FEATURES.stream().filter(world::daily).count()==1,"New daily event must be exclusive: "+id);
    }} finally {world.restore(checkpoint);}
-   passed.accept("All three new morning events use the saved exclusive draw");
+   passed.accept("Both Nether morning events use the saved exclusive draw");
   } finally {store.update(original,store.revision());player.discard();piglin.discard();zombie.discard();dragon.discard();}
  }
 }

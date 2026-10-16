@@ -56,7 +56,9 @@ public final class ConfigSchema {
     public static void validateEntry(Option option, String entry) {
         String key = option.key();
         boolean valid;
-        if (option.kind() == Kind.MAP) {
+        if (key.equals("prices")) {
+            String[] pair=entry.split("=",-1);valid=pair.length==2 && resourceId(pair[0],false) && pair[1].matches("[0-9]{1,10}");if(valid){try{long price=Long.parseLong(pair[1]);valid=price>=1 && price<=1000000000L;}catch(NumberFormatException e){valid=false;}}
+        } else if (option.kind() == Kind.MAP) {
             String[] pair = entry.split("=", -1);
             valid = pair.length == 2 && resourceId(pair[0], false) && resourceId(pair[1], false);
         } else if (key.equals("hud_label")) {

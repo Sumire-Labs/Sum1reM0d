@@ -70,7 +70,14 @@
     "MaterialRecipeDisplayMixin",
     "SwordGuardItemMixin",
     "SwordGuardDamageMixin",
-    "ProtectionWeaponMixin"
+    "ProtectionWeaponMixin",
+    "FireRegistrationAccess",
+    "DyedBedPoiMixin",
+    "ExtraCreativeMixin",
+    "GlowDustUseMixin",
+    "PermanentMaterialNamesMixin",
+    "SeparateWireConnectionMixin",
+    "EquipmentDefaultsJoinMixin"
   ],
   "client": [
     "MenuScreenMixin",
@@ -113,7 +120,14 @@
     "NoChatReportsClientMixin",
     "NaturalFlipRendererMixin",
     "DailyTextureResourcesMixin",
-    "MixedConcreteColorsMixin"
+    "MixedConcreteColorsMixin",
+    "BookEditAccess",
+    "MultilineTextAccess",
+    "ScribblingBookMixin",
+    "RadiantItemResolverMixin",
+    "RadiantItemRenderMixin",
+    "RadiantArmorMixin",
+    "CreativeCacheAccess"
   ],
   "injectors": {
     "defaultRequire": 1

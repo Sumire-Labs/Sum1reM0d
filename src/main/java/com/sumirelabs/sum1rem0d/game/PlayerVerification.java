@@ -521,7 +521,7 @@ final class PlayerVerification {
                 state.save(); var loaded = new WorldState(server);
                 require(loaded.day() == 0 && loaded.daily(selected) && DailyEvents.FEATURES.stream().filter(loaded::daily).count() == 1 && !loaded.updateDay(), "Actual disk reload preserves one exclusive event");
             }
-            passed.accept("all eleven morning candidates select exclusively, neutral fuel/appearance outside their event, no same-day reroll and actual disk persistence");
+            passed.accept("all ten morning candidates select exclusively, neutral fuel/appearance outside their event, no same-day reroll and actual disk persistence");
             for (String id : DailyEvents.FEATURES) features.getAsJsonObject(id).addProperty("chance", id.equals("growth_sleep") ? 100 : 0);
             group.addProperty("chance", 0); config.update(draft, config.revision());
             gameplayAt(server, level, 24000, 40);

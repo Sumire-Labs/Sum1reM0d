@@ -1,0 +1,1028 @@
+[
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_sword.png",
+    "sha256": "200cbcc290c8fad0429e12d628aa9a055cd46863d660f8f0d1bfada00c585707",
+    "width": 16,
+    "palette": [
+      2,
+      45,
+      22,
+      7,
+      87,
+      57,
+      175,
+      249,
+      216
+    ],
+    "path": "textures/item/emerald_sword.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_pickaxe.png",
+    "sha256": "4ca5b3fed5aaad883a605916ee1c88d5e2f153e01b37c30398b2c7a80741a05e",
+    "width": 16,
+    "palette": [
+      2,
+      54,
+      21,
+      3,
+      89,
+      39,
+      146,
+      250,
+      182
+    ],
+    "path": "textures/item/emerald_pickaxe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_axe.png",
+    "sha256": "32bd832a375b25eb742acfff7e6caa50619679b2b3cfa56bc6d92699a038740d",
+    "width": 16,
+    "palette": [
+      1,
+      38,
+      22,
+      35,
+      151,
+      89,
+      171,
+      245,
+      197
+    ],
+    "path": "textures/item/emerald_axe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_shovel.png",
+    "sha256": "40f33b492747ca53e566496e11eca3a00dfb341a19a9259d406889197936d5d0",
+    "width": 16,
+    "palette": [
+      7,
+      33,
+      21,
+      10,
+      147,
+      73,
+      100,
+      247,
+      168
+    ],
+    "path": "textures/item/emerald_shovel.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_hoe.png",
+    "sha256": "057925871a7c73686d99a79ac2931e14315fb9dd1dd8b42c3818126dc4da8d80",
+    "width": 16,
+    "palette": [
+      1,
+      45,
+      22,
+      2,
+      73,
+      36,
+      157,
+      238,
+      185
+    ],
+    "path": "textures/item/emerald_hoe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_helmet.png",
+    "sha256": "72dfe6c4010ffeec24d8579bf608ad104daa1033e4a9beab63adbb3a7f34ccb4",
+    "width": 16,
+    "palette": [
+      4,
+      47,
+      28,
+      16,
+      126,
+      63,
+      163,
+      247,
+      198
+    ],
+    "path": "textures/item/emerald_helmet.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_chestplate.png",
+    "sha256": "19c7e78977ad2af5db8f5616cb4817fa7925f3677c0775017542678b2bf5ff4e",
+    "width": 16,
+    "palette": [
+      2,
+      36,
+      18,
+      42,
+      166,
+      102,
+      126,
+      226,
+      163
+    ],
+    "path": "textures/item/emerald_chestplate.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_leggings.png",
+    "sha256": "03f16fc12db6a57eea9a8e75cd64838cddb63ffde53ff6212b5e01cf1e9c5fb1",
+    "width": 16,
+    "palette": [
+      1,
+      40,
+      23,
+      3,
+      122,
+      69,
+      145,
+      245,
+      190
+    ],
+    "path": "textures/item/emerald_leggings.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_boots.png",
+    "sha256": "14f553329eba4504f020b57dfdeb972c9927af011acbd2f023a216771700f4a9",
+    "width": 16,
+    "palette": [
+      2,
+      39,
+      22,
+      2,
+      116,
+      69,
+      185,
+      249,
+      216
+    ],
+    "path": "textures/item/emerald_boots.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid/iron.png",
+    "sha256": "cdffe4081d277f169bf2fc4265dfc6b4882fd3c127e0963f57a69a0896048322",
+    "width": 64,
+    "palette": [
+      2,
+      36,
+      18,
+      42,
+      166,
+      102,
+      126,
+      226,
+      163
+    ],
+    "path": "textures/entity/equipment/humanoid/emerald.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid_leggings/iron.png",
+    "sha256": "fb634fdecfb2c7244a7dfae03f693b3a902920fb06fddf760325ce61e104e93b",
+    "width": 64,
+    "palette": [
+      2,
+      36,
+      18,
+      42,
+      166,
+      102,
+      126,
+      226,
+      163
+    ],
+    "path": "textures/entity/equipment/humanoid_leggings/emerald.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 64,
+    "native": "textures/entity/equipment/humanoid_baby/iron.png",
+    "sha256": "517c3a6e28807272b8fe680ae7426f4050af51443974a5be3c846211ddf205be",
+    "width": 64,
+    "palette": [
+      2,
+      36,
+      18,
+      42,
+      166,
+      102,
+      126,
+      226,
+      163
+    ],
+    "path": "textures/entity/equipment/humanoid_baby/emerald.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_sword.png",
+    "sha256": "c0de40c54383bf8945eb5577942fc0a96e9a9ccf270f562d255e3b2b4cd7b8de",
+    "width": 16,
+    "palette": [
+      82,
+      0,
+      12,
+      50,
+      33,
+      11,
+      251,
+      114,
+      126
+    ],
+    "path": "textures/item/redstone_sword.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_pickaxe.png",
+    "sha256": "80284d0c8a2cf4eac256371ae6283f4dc323e619ae76080033fedf6ddcdc0674",
+    "width": 16,
+    "palette": [
+      57,
+      0,
+      6,
+      154,
+      3,
+      13,
+      154,
+      112,
+      44
+    ],
+    "path": "textures/item/redstone_pickaxe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_axe.png",
+    "sha256": "23c524fde1b11a466cea277779d2b2a359e32561263c5e86cffeb8b757b6ffd1",
+    "width": 16,
+    "palette": [
+      42,
+      0,
+      5,
+      105,
+      1,
+      11,
+      255,
+      92,
+      61
+    ],
+    "path": "textures/item/redstone_axe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_shovel.png",
+    "sha256": "bcd41c51bc360f077216bb5eba1d86653fb813e8eae3bef1d3d030e80daa55b9",
+    "width": 16,
+    "palette": [
+      60,
+      0,
+      10,
+      160,
+      4,
+      10,
+      179,
+      132,
+      53
+    ],
+    "path": "textures/item/redstone_shovel.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_hoe.png",
+    "sha256": "739be65711c4cd826f40bc6969e95d5c0d48ed1eb5eb361ff3716a67e5e2381b",
+    "width": 16,
+    "palette": [
+      61,
+      1,
+      7,
+      50,
+      37,
+      17,
+      162,
+      122,
+      49
+    ],
+    "path": "textures/item/redstone_hoe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_helmet.png",
+    "sha256": "5d0f6a2a63d0320cf49c44c3885ed98fc083f63246da3eba5de608a5873a99f4",
+    "width": 16,
+    "palette": [
+      56,
+      0,
+      4,
+      104,
+      1,
+      12,
+      212,
+      20,
+      27
+    ],
+    "path": "textures/item/redstone_helmet.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_chestplate.png",
+    "sha256": "f49ab3705ceb47eb1fc0fb4f0fc052fcc3bd4e3bc4b873923f7ac34134c33090",
+    "width": 16,
+    "palette": [
+      47,
+      4,
+      11,
+      129,
+      7,
+      19,
+      203,
+      30,
+      33
+    ],
+    "path": "textures/item/redstone_chestplate.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_leggings.png",
+    "sha256": "7ed84bf8b9666f8edc912dc63faad052dc562edf0e2b75c32f4f36aced308863",
+    "width": 16,
+    "palette": [
+      66,
+      3,
+      6,
+      129,
+      13,
+      16,
+      242,
+      65,
+      62
+    ],
+    "path": "textures/item/redstone_leggings.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_boots.png",
+    "sha256": "620b8ac38cadef9a6016ce0a24372205037b8286e34bdaa970af5352fd408171",
+    "width": 16,
+    "palette": [
+      43,
+      1,
+      2,
+      83,
+      5,
+      9,
+      251,
+      71,
+      71
+    ],
+    "path": "textures/item/redstone_boots.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid/iron.png",
+    "sha256": "ef1377236c34f78ab109bde14d28948ae5deb5ae900eaf4319d7b911c1f987f5",
+    "width": 64,
+    "palette": [
+      47,
+      4,
+      11,
+      129,
+      7,
+      19,
+      203,
+      30,
+      33
+    ],
+    "path": "textures/entity/equipment/humanoid/redstone.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid_leggings/iron.png",
+    "sha256": "bc40a88c0d6b5f8c7c5371253fce3df99349ba219d6606e5d5291e0a6e83104e",
+    "width": 64,
+    "palette": [
+      47,
+      4,
+      11,
+      129,
+      7,
+      19,
+      203,
+      30,
+      33
+    ],
+    "path": "textures/entity/equipment/humanoid_leggings/redstone.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 64,
+    "native": "textures/entity/equipment/humanoid_baby/iron.png",
+    "sha256": "2016bfc7a54c8b3be173538a9f188c6e14c7b85d6421d68a42a6bedaa9402f33",
+    "width": 64,
+    "palette": [
+      47,
+      4,
+      11,
+      129,
+      7,
+      19,
+      203,
+      30,
+      33
+    ],
+    "path": "textures/entity/equipment/humanoid_baby/redstone.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_sword.png",
+    "sha256": "223b015a0f64f51718803d8ad0487fd5d8a1a4724c00052c01cafcea41288fe7",
+    "width": 16,
+    "palette": [
+      0,
+      22,
+      71,
+      2,
+      40,
+      122,
+      126,
+      159,
+      248
+    ],
+    "path": "textures/item/lapis_sword.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_pickaxe.png",
+    "sha256": "e89264d30f86306da11fd2ee492848ee800d2cf56052b4383d875bfa958ae3f3",
+    "width": 16,
+    "palette": [
+      0,
+      22,
+      85,
+      0,
+      29,
+      106,
+      126,
+      165,
+      251
+    ],
+    "path": "textures/item/lapis_pickaxe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_axe.png",
+    "sha256": "f3c7c82e490ff0b85c5058bad1634355caba44224a6a4172558130c648ce2e80",
+    "width": 16,
+    "palette": [
+      4,
+      26,
+      76,
+      27,
+      74,
+      188,
+      127,
+      164,
+      252
+    ],
+    "path": "textures/item/lapis_axe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_shovel.png",
+    "sha256": "51eb089e59695963e5881f0d9eda5acb2e479d043ad9b9f54867d50674d0456a",
+    "width": 16,
+    "palette": [
+      0,
+      24,
+      89,
+      13,
+      65,
+      179,
+      34,
+      102,
+      246
+    ],
+    "path": "textures/item/lapis_shovel.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_hoe.png",
+    "sha256": "6635ff0f78fc25889b4103fa4eced404579b35f3c4b165f969734c27fa269f82",
+    "width": 16,
+    "palette": [
+      1,
+      21,
+      80,
+      9,
+      40,
+      134,
+      105,
+      145,
+      251
+    ],
+    "path": "textures/item/lapis_hoe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_helmet.png",
+    "sha256": "952c805c0e467144d12a6318e81adb412423a84bb303b3fd7cb9f39f81a55189",
+    "width": 16,
+    "palette": [
+      7,
+      20,
+      49,
+      7,
+      58,
+      160,
+      72,
+      127,
+      249
+    ],
+    "path": "textures/item/lapis_helmet.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_chestplate.png",
+    "sha256": "71a41978fb48f8d97b0ffa06d7d494ff648f4e47e5900b6c92b4079c52d9b431",
+    "width": 16,
+    "palette": [
+      0,
+      29,
+      97,
+      14,
+      80,
+      217,
+      95,
+      146,
+      252
+    ],
+    "path": "textures/item/lapis_chestplate.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_leggings.png",
+    "sha256": "b999b19f693248e6940ac0a83831b6a8c6bc8e5ed90866ddfd6e1fba0330605f",
+    "width": 16,
+    "palette": [
+      3,
+      25,
+      79,
+      13,
+      56,
+      156,
+      61,
+      123,
+      244
+    ],
+    "path": "textures/item/lapis_leggings.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/iron_boots.png",
+    "sha256": "bbaac736d7f9783bbdecc61891ad1b01d49718690e6273992a57cb4461f99b4f",
+    "width": 16,
+    "palette": [
+      0,
+      18,
+      66,
+      0,
+      44,
+      148,
+      122,
+      155,
+      251
+    ],
+    "path": "textures/item/lapis_boots.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid/iron.png",
+    "sha256": "553f03757d4244590d5ef14b5ac672ee6922696e2c1d7b302e7aa33933a45256",
+    "width": 64,
+    "palette": [
+      0,
+      29,
+      97,
+      14,
+      80,
+      217,
+      95,
+      146,
+      252
+    ],
+    "path": "textures/entity/equipment/humanoid/lapis.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid_leggings/iron.png",
+    "sha256": "fa33358ca6e82292d10afeeec37ca4b36f0bfd4824ee715ce612f0d3003a98ce",
+    "width": 64,
+    "palette": [
+      0,
+      29,
+      97,
+      14,
+      80,
+      217,
+      95,
+      146,
+      252
+    ],
+    "path": "textures/entity/equipment/humanoid_leggings/lapis.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 64,
+    "native": "textures/entity/equipment/humanoid_baby/iron.png",
+    "sha256": "789e372e7cabd8017878a73c99767f9b1b007d0190d5e5971426153609299d5b",
+    "width": 64,
+    "palette": [
+      0,
+      29,
+      97,
+      14,
+      80,
+      217,
+      95,
+      146,
+      252
+    ],
+    "path": "textures/entity/equipment/humanoid_baby/lapis.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_sword.png",
+    "sha256": "9e025969cc6a912bda8e7d3a378b03803f66d9024d27d2c10569b8ac903d7dbd",
+    "width": 16,
+    "palette": [
+      46,
+      24,
+      49,
+      71,
+      33,
+      74,
+      187,
+      143,
+      225
+    ],
+    "path": "textures/item/manyullyn_sword.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_pickaxe.png",
+    "sha256": "065167aa0bb7998f112d542eb452710098a580faa6739c45980e80bba7b4f3e2",
+    "width": 16,
+    "palette": [
+      45,
+      8,
+      50,
+      83,
+      26,
+      103,
+      192,
+      142,
+      225
+    ],
+    "path": "textures/item/manyullyn_pickaxe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_axe.png",
+    "sha256": "d47a71e9d4a2f06db02518415ec2e8be098c71e5ddc2e2c8b749c01211845f17",
+    "width": 16,
+    "palette": [
+      39,
+      15,
+      46,
+      77,
+      35,
+      88,
+      204,
+      163,
+      247
+    ],
+    "path": "textures/item/manyullyn_axe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_shovel.png",
+    "sha256": "01daf2d3045a993206099033e24b1b5a3280473f78592919f3ff1def5e1d81f7",
+    "width": 16,
+    "palette": [
+      42,
+      12,
+      47,
+      95,
+      57,
+      118,
+      184,
+      128,
+      224
+    ],
+    "path": "textures/item/manyullyn_shovel.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_hoe.png",
+    "sha256": "d9eefe2f0a69ba55fe49fb0885d44a88504f5bed69c2b91708af81bef9378a55",
+    "width": 16,
+    "palette": [
+      41,
+      13,
+      48,
+      79,
+      29,
+      89,
+      179,
+      119,
+      229
+    ],
+    "path": "textures/item/manyullyn_hoe.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_helmet.png",
+    "sha256": "3cc52c64e4396b3251dac264da823d70a60382faa5e416f060ee4e432a0864ff",
+    "width": 16,
+    "palette": [
+      43,
+      12,
+      47,
+      87,
+      34,
+      103,
+      146,
+      84,
+      186
+    ],
+    "path": "textures/item/manyullyn_helmet.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_chestplate.png",
+    "sha256": "ecb265f5bae6769de89ebee30b0b06b60ec29a91afee7a51097e5aa20bc33afe",
+    "width": 16,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/item/manyullyn_chestplate.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_leggings.png",
+    "sha256": "71e37ee6fe6195a1f3a44e756c2f33cf431b1c94c9399bf8d71032b017add985",
+    "width": 16,
+    "palette": [
+      37,
+      11,
+      43,
+      75,
+      30,
+      93,
+      167,
+      107,
+      209
+    ],
+    "path": "textures/item/manyullyn_leggings.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_boots.png",
+    "sha256": "cfc3ca7034da595cb09a146e1fc176a4177b214750de48f376f01f02fcf03707",
+    "width": 16,
+    "palette": [
+      42,
+      16,
+      51,
+      61,
+      26,
+      74,
+      177,
+      125,
+      225
+    ],
+    "path": "textures/item/manyullyn_boots.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid/netherite.png",
+    "sha256": "ab603f9378ee9291b1181050a717f1dc3abc5b1ae7beb7e86261a23f61a3a321",
+    "width": 64,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/entity/equipment/humanoid/manyullyn.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/entity/equipment/humanoid_leggings/netherite.png",
+    "sha256": "a5bdd5e035d7f6dbfe96e1c9fb8ca8854c48b8874ec79aa41c95ab08ec56c849",
+    "width": 64,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/entity/equipment/humanoid_leggings/manyullyn.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 64,
+    "native": "textures/entity/equipment/humanoid_baby/netherite.png",
+    "sha256": "62f06d074fedc5ed9bdd34849b6b3e3edc37623152005040c62c3a15c10b3deb",
+    "width": 64,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/entity/equipment/humanoid_baby/manyullyn.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_horse_armor.png",
+    "sha256": "0121366447d2cf4987fc27e8669a160df3284ec6bf5e5254f0fc9c6b571d21e9",
+    "width": 16,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/item/manyullyn_horse_armor.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_nautilus_armor.png",
+    "sha256": "d5c604ea6f5cb9a340937fa7611e988297929437a5338c47348a615cc45c169b",
+    "width": 16,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/item/manyullyn_nautilus_armor.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 16,
+    "native": "textures/item/netherite_spear.png",
+    "sha256": "1d1c5fb7ea468cb6352ac896cd7d0828137eba246645ddf2a771a966dd0f7a49",
+    "width": 16,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/item/manyullyn_spear.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 32,
+    "native": "textures/item/netherite_spear_in_hand.png",
+    "sha256": "f81c8e3485585a7d14bb600b7dfcb5b7132e313fb3b5ef7f3ede10ff9ebc9cee",
+    "width": 32,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/item/manyullyn_spear_in_hand.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 64,
+    "native": "textures/entity/equipment/horse_body/netherite.png",
+    "sha256": "5a69fafb5345e4218942bbbc4646ad3f42438bf77a498e266059c77c55ddee2d",
+    "width": 64,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/entity/equipment/horse_body/manyullyn.png"
+  },
+  {
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
+    "height": 128,
+    "native": "textures/entity/equipment/nautilus_body/netherite.png",
+    "sha256": "3671395aa815653df1c90ca8b479801568ed280d615606b846b80c0f2c221381",
+    "width": 128,
+    "palette": [
+      42,
+      13,
+      49,
+      88,
+      39,
+      108,
+      167,
+      104,
+      207
+    ],
+    "path": "textures/entity/equipment/nautilus_body/manyullyn.png"
+  }
+]

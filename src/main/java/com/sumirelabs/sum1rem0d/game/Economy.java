@@ -98,6 +98,14 @@ public final class Economy {
         } catch (RuntimeException failure) { state.restore(before); throw new IllegalStateException("保存できないため取引を取り消しました",failure); }
         for (var entry:inventories.entrySet()) { apply(entry.getKey(),entry.getValue()); var xp=experience.get(entry.getKey()); if(xp!=null) {xp.apply(entry.getKey());xp.send(entry.getKey());} ((CoinInventoryRevision)entry.getKey()).sum1rem0d$coinRevision(revision); }
     }
+    static boolean isTrading(ServerPlayer p){return SESSIONS.containsKey(p.getUUID());}
+    static ItemStack[] deliveryInventory(ServerPlayer p){return inventory(p);}
+    static void deliverServices(ServerPlayer p,ItemStack[] items,JsonObject nextServices){
+        var state=WorldState.get(p.level().getServer());var before=state.checkpoint();
+        try{state.player(p).services=nextServices;commitInventories(Map.of(p,items),Map.of(p,balance(p)));}
+        catch(RuntimeException failure){state.restore(before);throw failure;}
+        saved(p);
+    }
     public static void recover(ServerPlayer p) {
         var record=WorldState.get(p.level().getServer()).coinInventories().get(p.getUUID().toString()); if(record==null)return;
         String revision=record.get("revision").getAsString(); var marker=(CoinInventoryRevision)p;

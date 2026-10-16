@@ -2951,14 +2951,6 @@
         "initial": true,
         "min": 0,
         "max": 1
-      },
-      {
-        "key": "chance",
-        "label": "抽選の重み",
-        "type": "DECIMAL",
-        "initial": 20,
-        "min": 0,
-        "max": 100
       }
     ]
   },
@@ -3268,6 +3260,730 @@
         "initial": 8,
         "min": 1,
         "max": 8
+      }
+    ]
+  },
+  {
+    "id": "piston_base",
+    "label": "ピストンの根本",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "クラフト可能",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "destroy_block_entities",
+        "label": "中身のあるブロックも消滅",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "excluded_blocks",
+        "label": "消滅させないブロック",
+        "type": "LIST",
+        "initial": "minecraft:nether_portal,minecraft:end_portal,minecraft:end_gateway",
+        "min": 0,
+        "max": 65536
+      }
+    ]
+  },
+  {
+    "id": "scribbling_book",
+    "label": "勝手に書く本と羽根ペン",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "interval",
+        "label": "追記間隔（tick）",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 1,
+        "max": 1200
+      },
+      {
+        "key": "characters",
+        "label": "1回の文字数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 32
+      },
+      {
+        "key": "text",
+        "label": "追記する文字の候補",
+        "type": "TEXT",
+        "initial": "abcdefghijklmnopqrstuvwxyzあいうえおすみれ",
+        "min": 0,
+        "max": 1024
+      }
+    ]
+  },
+  {
+    "id": "tamed_book",
+    "label": "調教済みの本と羽根ペン",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "クラフト可能",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "mixed_wool",
+    "label": "自由色の羊毛",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "混色クラフトを有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "maximum_dyes",
+        "label": "最大染料枠",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 1,
+        "max": 8
+      }
+    ]
+  },
+  {
+    "id": "mixed_bed",
+    "label": "自由色のベッド",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "クラフト・再染色可能",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "allow_mixed_wool",
+        "label": "異なる色の羊毛を混ぜて作成",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "maximum_dyes",
+        "label": "再染色の最大染料枠",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 1,
+        "max": 8
+      }
+    ]
+  },
+  {
+    "id": "emerald_equipment",
+    "label": "エメラルドのツールと防具",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "クラフト可能",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "material_item",
+        "label": "クラフト材料",
+        "type": "TEXT",
+        "initial": "minecraft:emerald",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "tool_durability",
+        "label": "ツール耐久",
+        "type": "INTEGER",
+        "initial": 250,
+        "min": 1,
+        "max": 100000
+      },
+      {
+        "key": "tool_speed",
+        "label": "採掘速度",
+        "type": "DECIMAL",
+        "initial": 8,
+        "min": 0.1,
+        "max": 100
+      },
+      {
+        "key": "attack_bonus",
+        "label": "攻撃力の材質ボーナス",
+        "type": "DECIMAL",
+        "initial": 4,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "armor_durability",
+        "label": "防具耐久倍率",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 1,
+        "max": 1000
+      },
+      {
+        "key": "helmet_defense",
+        "label": "ヘルメット防御",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "chestplate_defense",
+        "label": "チェスト防御",
+        "type": "INTEGER",
+        "initial": 9,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "leggings_defense",
+        "label": "レギンス防御",
+        "type": "INTEGER",
+        "initial": 7,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "boots_defense",
+        "label": "ブーツ防御",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "toughness",
+        "label": "防具強靭さ",
+        "type": "DECIMAL",
+        "initial": 3,
+        "min": 0,
+        "max": 20
+      },
+      {
+        "key": "enchantability",
+        "label": "エンチャント適性",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "redstone_equipment",
+    "label": "レッドストーンのツールと防具",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "クラフト可能",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "material_item",
+        "label": "クラフト材料",
+        "type": "TEXT",
+        "initial": "minecraft:redstone",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "tool_durability",
+        "label": "ツール耐久",
+        "type": "INTEGER",
+        "initial": 32,
+        "min": 1,
+        "max": 100000
+      },
+      {
+        "key": "tool_speed",
+        "label": "採掘速度",
+        "type": "DECIMAL",
+        "initial": 8,
+        "min": 0.1,
+        "max": 100
+      },
+      {
+        "key": "attack_bonus",
+        "label": "攻撃力の材質ボーナス",
+        "type": "DECIMAL",
+        "initial": 0,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "armor_durability",
+        "label": "防具耐久倍率",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 1000
+      },
+      {
+        "key": "helmet_defense",
+        "label": "ヘルメット防御",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "chestplate_defense",
+        "label": "チェスト防御",
+        "type": "INTEGER",
+        "initial": 3,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "leggings_defense",
+        "label": "レギンス防御",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "boots_defense",
+        "label": "ブーツ防御",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "toughness",
+        "label": "防具強靭さ",
+        "type": "DECIMAL",
+        "initial": 0,
+        "min": 0,
+        "max": 20
+      },
+      {
+        "key": "enchantability",
+        "label": "エンチャント適性",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 1,
+        "max": 100
+      },
+      {
+        "key": "glow_enabled",
+        "label": "装備とツールの発光",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "lapis_equipment",
+    "label": "ラピスラズリのツールと防具",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "クラフト可能",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "material_item",
+        "label": "クラフト材料",
+        "type": "TEXT",
+        "initial": "minecraft:lapis_lazuli",
+        "min": 0,
+        "max": 256
+      },
+      {
+        "key": "tool_durability",
+        "label": "ツール耐久",
+        "type": "INTEGER",
+        "initial": 190,
+        "min": 1,
+        "max": 100000
+      },
+      {
+        "key": "tool_speed",
+        "label": "採掘速度",
+        "type": "DECIMAL",
+        "initial": 5,
+        "min": 0.1,
+        "max": 100
+      },
+      {
+        "key": "attack_bonus",
+        "label": "攻撃力の材質ボーナス",
+        "type": "DECIMAL",
+        "initial": 1.5,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "armor_durability",
+        "label": "防具耐久倍率",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 1,
+        "max": 1000
+      },
+      {
+        "key": "helmet_defense",
+        "label": "ヘルメット防御",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "chestplate_defense",
+        "label": "チェスト防御",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "leggings_defense",
+        "label": "レギンス防御",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "boots_defense",
+        "label": "ブーツ防御",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "toughness",
+        "label": "防具強靭さ",
+        "type": "DECIMAL",
+        "initial": 0,
+        "min": 0,
+        "max": 20
+      },
+      {
+        "key": "enchantability",
+        "label": "エンチャント適性",
+        "type": "INTEGER",
+        "initial": 12,
+        "min": 1,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "glow_wire",
+    "label": "グロウストーン配線",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "opposite_redstone",
+        "label": "赤石配線の反転設定と逆にする",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "inverted",
+        "label": "上の設定OFF時の反転",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "wire_limit",
+        "label": "一度に計算する最大配線数",
+        "type": "INTEGER",
+        "initial": 4096,
+        "min": 64,
+        "max": 65536
+      }
+    ]
+  },
+  {
+    "id": "sumzon",
+    "label": "Sumzon 通販",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "新規注文を許可",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "base_price",
+        "label": "基本価格",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 1000000000
+      },
+      {
+        "key": "block_price",
+        "label": "ブロック基本価格",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 1,
+        "max": 1000000000
+      },
+      {
+        "key": "food_price",
+        "label": "食品基本価格",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 1,
+        "max": 1000000000
+      },
+      {
+        "key": "equipment_price",
+        "label": "装備基本価格",
+        "type": "INTEGER",
+        "initial": 250,
+        "min": 1,
+        "max": 1000000000
+      },
+      {
+        "key": "rare_price",
+        "label": "レア品基本価格",
+        "type": "INTEGER",
+        "initial": 1000,
+        "min": 1,
+        "max": 1000000000
+      },
+      {
+        "key": "prices",
+        "label": "個別価格（ID=コイン）",
+        "type": "LIST",
+        "initial": "minecraft:diamond=500,minecraft:emerald=50,minecraft:netherite_ingot=1500,minecraft:netherite_scrap=400,minecraft:netherite_sword=3000,minecraft:enchanted_golden_apple=5000,minecraft:elytra=10000,minecraft:totem_of_undying=3000",
+        "min": 0,
+        "max": 65536
+      },
+      {
+        "key": "shipping",
+        "label": "通常送料（1注文）",
+        "type": "INTEGER",
+        "initial": 25,
+        "min": 0,
+        "max": 1000000000
+      },
+      {
+        "key": "delivery_hours",
+        "label": "通常配送（ゲーム内時間）",
+        "type": "DECIMAL",
+        "initial": 24,
+        "min": 0,
+        "max": 2400
+      },
+      {
+        "key": "maximum_quantity",
+        "label": "1商品あたりの最大個数",
+        "type": "INTEGER",
+        "initial": 64,
+        "min": 1,
+        "max": 4096
+      },
+      {
+        "key": "maximum_lines",
+        "label": "カートの最大商品種類",
+        "type": "INTEGER",
+        "initial": 16,
+        "min": 1,
+        "max": 64
+      },
+      {
+        "key": "maximum_orders",
+        "label": "未受取注文の最大数",
+        "type": "INTEGER",
+        "initial": 64,
+        "min": 1,
+        "max": 256
+      },
+      {
+        "key": "history_limit",
+        "label": "受取済み履歴の保存数",
+        "type": "INTEGER",
+        "initial": 128,
+        "min": 1,
+        "max": 512
+      },
+      {
+        "key": "allow_technical",
+        "label": "管理用・技術用アイテムも販売",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "allow_creative",
+        "label": "クリエでの購入・受取を許可",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "excluded_items",
+        "label": "販売しないアイテム",
+        "type": "LIST",
+        "initial": "minecraft:command_block,minecraft:chain_command_block,minecraft:repeating_command_block,minecraft:structure_block,minecraft:jigsaw,minecraft:barrier,minecraft:light,minecraft:structure_void,minecraft:debug_stick,minecraft:bedrock,minecraft:spawner,minecraft:end_portal_frame",
+        "min": 0,
+        "max": 65536
+      },
+      {
+        "key": "notify_ready",
+        "label": "配達完了を通知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "request_interval",
+        "label": "操作の最短間隔（tick）",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "ad_premium",
+    "label": "超高級広告プレミアム",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "契約・更新を許可",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "price",
+        "label": "契約料金",
+        "type": "INTEGER",
+        "initial": 1000,
+        "min": 0,
+        "max": 1000000000
+      },
+      {
+        "key": "days",
+        "label": "契約期間（ゲーム内日）",
+        "type": "DECIMAL",
+        "initial": 7,
+        "min": 0.001,
+        "max": 3650
+      }
+    ]
+  },
+  {
+    "id": "sumzon_prime",
+    "label": "Sumzon Prime",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "契約・更新を許可",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "price",
+        "label": "契約料金",
+        "type": "INTEGER",
+        "initial": 500,
+        "min": 0,
+        "max": 1000000000
+      },
+      {
+        "key": "days",
+        "label": "契約期間（ゲーム内日）",
+        "type": "DECIMAL",
+        "initial": 7,
+        "min": 0.001,
+        "max": 3650
+      },
+      {
+        "key": "delivery_hours",
+        "label": "Prime配送（ゲーム内時間）",
+        "type": "DECIMAL",
+        "initial": 2,
+        "min": 0,
+        "max": 2400
       }
     ]
   }

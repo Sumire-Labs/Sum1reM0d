@@ -19,6 +19,7 @@ public final class ServerConfigHandler {
         send(player, message, 0, false);
     }
     private static void send(ServerPlayer player, String message, long requestId, boolean applied) {
+        com.sumirelabs.sum1rem0d.game.EquipmentDefaults.send(player);
         var store = Sum1reM0d.config();
         PlatformNetwork.send(player, new ConfigStatePayload(store.revision(), canEdit(player), store.snapshot().toString(), message, requestId, applied));
     }

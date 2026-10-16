@@ -1,0 +1,81 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_dot"
+      }
+    },
+    {
+      "when": {
+        "north": "side|up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "north": "up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "east": "side|up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "side|up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "south": "up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "side|up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "up"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up",
+        "y": 270
+      }
+    }
+  ]
+}

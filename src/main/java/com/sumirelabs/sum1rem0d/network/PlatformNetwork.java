@@ -12,6 +12,10 @@ public final class PlatformNetwork {
         PayloadTypeRegistry.serverboundPlay().register(ConfigRequestPayload.TYPE, ConfigRequestPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(ActivityPayload.TYPE, ActivityPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(EconomyRequestPayload.TYPE, EconomyRequestPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ShopRequestPayload.TYPE,ShopRequestPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ShopStatePayload.TYPE,ShopStatePayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(EquipmentStatePayload.TYPE,EquipmentStatePayload.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(ShopRequestPayload.TYPE,(request,context)->com.sumirelabs.sum1rem0d.game.ShopServices.handle(request,context.player()));
         ServerPlayNetworking.registerGlobalReceiver(EconomyRequestPayload.TYPE,(request,context)->com.sumirelabs.sum1rem0d.game.Economy.handle(request,context.player()));
         PayloadTypeRegistry.clientboundPlay().register(ConfigStatePayload.TYPE, ConfigStatePayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(GameStatePayload.TYPE, GameStatePayload.CODEC);
@@ -27,6 +31,14 @@ public final class PlatformNetwork {
     public static void send(ServerPlayer player, GameStatePayload state) {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;
         if (ServerPlayNetworking.canSend(player, GameStatePayload.TYPE)) ServerPlayNetworking.send(player, state);
+    }
+    public static void send(ServerPlayer player, EquipmentStatePayload state) {
+        if(player.connection==null || !player.connection.isAcceptingMessages())return;
+        if(ServerPlayNetworking.canSend(player,EquipmentStatePayload.TYPE))ServerPlayNetworking.send(player,state);
+    }
+    public static void send(ServerPlayer player, ShopStatePayload state) {
+        if(player.connection==null || !player.connection.isAcceptingMessages())return;
+        if(ServerPlayNetworking.canSend(player,ShopStatePayload.TYPE))ServerPlayNetworking.send(player,state);
     }
     public static void send(ServerPlayer player, FakeAdvancementPayload state) {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;
@@ -44,6 +56,9 @@ public final class PlatformNetwork {
         registrar.playToServer(ConfigRequestPayload.TYPE, ConfigRequestPayload.CODEC,
             (request, context) -> ServerConfigHandler.handle(request, (ServerPlayer) context.player()));
         registrar.playToServer(EconomyRequestPayload.TYPE, EconomyRequestPayload.CODEC,(request,context)->com.sumirelabs.sum1rem0d.game.Economy.handle(request,(ServerPlayer)context.player()));
+        registrar.playToServer(ShopRequestPayload.TYPE,ShopRequestPayload.CODEC,(request,context)->com.sumirelabs.sum1rem0d.game.ShopServices.handle(request,(ServerPlayer)context.player()));
+        registrar.playToClient(ShopStatePayload.TYPE,ShopStatePayload.CODEC);
+        registrar.playToClient(EquipmentStatePayload.TYPE,EquipmentStatePayload.CODEC);
         registrar.playToServer(ActivityPayload.TYPE, ActivityPayload.CODEC, (request, context) -> ((ServerPlayer) context.player()).resetLastActionTime());
         registrar.playToClient(ConfigStatePayload.TYPE, ConfigStatePayload.CODEC);
         registrar.playToClient(GameStatePayload.TYPE, GameStatePayload.CODEC);
@@ -56,6 +71,14 @@ public final class PlatformNetwork {
     public static void send(ServerPlayer player, GameStatePayload state) {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;
         if (player.connection.hasChannel(GameStatePayload.TYPE)) PacketDistributor.sendToPlayer(player, state);
+    }
+    public static void send(ServerPlayer player, EquipmentStatePayload state) {
+        if(player.connection==null || !player.connection.isAcceptingMessages())return;
+        if(player.connection.hasChannel(EquipmentStatePayload.TYPE))PacketDistributor.sendToPlayer(player,state);
+    }
+    public static void send(ServerPlayer player, ShopStatePayload state) {
+        if(player.connection==null || !player.connection.isAcceptingMessages())return;
+        if(player.connection.hasChannel(ShopStatePayload.TYPE))PacketDistributor.sendToPlayer(player,state);
     }
     public static void send(ServerPlayer player, FakeAdvancementPayload state) {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;

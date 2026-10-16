@@ -1,0 +1,393 @@
+{
+  "direction": "Vanilla equipment geometry, texture pattern and per-pixel brightness retained; only material colors differ. Other dedicated sprites use original GPT artwork.",
+  "materialAssets": [
+    {
+      "asset": "emerald_sword",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron sword, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_sword.png",
+      "source": "source/vanilla-color-2026/emerald_sword-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_pickaxe",
+      "prompt": "Use case: precise-object-edit. The attached image is the EDIT TARGET, a native 16x16 Minecraft iron pickaxe. Preserve the exact 16x16 pixel grid, every pixel's occupied/transparent position, exact silhouette, head shape, handle shape, dimensions, margins, texture pattern and shading positions. Change ONLY the gray iron head pixels into a restrained emerald-green material palette. Preserve all brown wooden handle pixels unchanged. Keep the modern Minecraft shading and contrast of the original. No added detail, decorations, bindings, outlines, pixels, perspective changes, repositioning, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Transparent pixels must remain transparent. Show the same sixteen-pixel square canvas enlarged as exact uniform square pixel blocks, not a newly redesigned pickaxe. This is solely a material-palette edit.",
+      "reference": "minecraft:textures/item/iron_pickaxe.png",
+      "source": "source/vanilla-color-2026/emerald_pickaxe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_axe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron axe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_axe.png",
+      "source": "source/vanilla-color-2026/emerald_axe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_shovel",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron shovel, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_shovel.png",
+      "source": "source/vanilla-color-2026/emerald_shovel-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_hoe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron hoe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_hoe.png",
+      "source": "source/vanilla-color-2026/emerald_hoe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_helmet",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron helmet, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_helmet.png",
+      "source": "source/vanilla-color-2026/emerald_helmet-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_chestplate",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron chestplate, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_chestplate.png",
+      "source": "source/vanilla-color-2026/emerald_chestplate-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_leggings",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron leggings, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_leggings.png",
+      "source": "source/vanilla-color-2026/emerald_leggings-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "emerald_boots",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron boots, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained emerald jade green with soft mint highlight and deep forest-green shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_boots.png",
+      "source": "source/vanilla-color-2026/emerald_boots-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_sword",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron sword, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_sword.png",
+      "source": "source/vanilla-color-2026/redstone_sword-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_pickaxe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron pickaxe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_pickaxe.png",
+      "source": "source/vanilla-color-2026/redstone_pickaxe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_axe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron axe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_axe.png",
+      "source": "source/vanilla-color-2026/redstone_axe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_shovel",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron shovel, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_shovel.png",
+      "source": "source/vanilla-color-2026/redstone_shovel-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_hoe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron hoe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_hoe.png",
+      "source": "source/vanilla-color-2026/redstone_hoe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_helmet",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron helmet, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_helmet.png",
+      "source": "source/vanilla-color-2026/redstone_helmet-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_chestplate",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron chestplate, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_chestplate.png",
+      "source": "source/vanilla-color-2026/redstone_chestplate-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_leggings",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron leggings, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_leggings.png",
+      "source": "source/vanilla-color-2026/redstone_leggings-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "redstone_boots",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron boots, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained redstone crimson red with soft warm-red highlight and deep burgundy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_boots.png",
+      "source": "source/vanilla-color-2026/redstone_boots-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_sword",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron sword, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_sword.png",
+      "source": "source/vanilla-color-2026/lapis_sword-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_pickaxe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron pickaxe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_pickaxe.png",
+      "source": "source/vanilla-color-2026/lapis_pickaxe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_axe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron axe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_axe.png",
+      "source": "source/vanilla-color-2026/lapis_axe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_shovel",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron shovel, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_shovel.png",
+      "source": "source/vanilla-color-2026/lapis_shovel-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_hoe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron hoe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_hoe.png",
+      "source": "source/vanilla-color-2026/lapis_hoe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_helmet",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron helmet, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_helmet.png",
+      "source": "source/vanilla-color-2026/lapis_helmet-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_chestplate",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron chestplate, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_chestplate.png",
+      "source": "source/vanilla-color-2026/lapis_chestplate-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_leggings",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron leggings, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_leggings.png",
+      "source": "source/vanilla-color-2026/lapis_leggings-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "lapis_boots",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft iron boots, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained lapis lazuli blue with soft cornflower-blue highlight and navy shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/iron_boots.png",
+      "source": "source/vanilla-color-2026/lapis_boots-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_sword",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite sword, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_sword.png",
+      "source": "source/vanilla-color-2026/manyullyn_sword-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_pickaxe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite pickaxe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_pickaxe.png",
+      "source": "source/vanilla-color-2026/manyullyn_pickaxe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_axe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite axe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_axe.png",
+      "source": "source/vanilla-color-2026/manyullyn_axe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_shovel",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite shovel, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_shovel.png",
+      "source": "source/vanilla-color-2026/manyullyn_shovel-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_hoe",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite hoe, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the metal material pixel colors; preserve every brown wood handle pixel unchanged into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_hoe.png",
+      "source": "source/vanilla-color-2026/manyullyn_hoe-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_helmet",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite helmet, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_helmet.png",
+      "source": "source/vanilla-color-2026/manyullyn_helmet-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_chestplate",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite chestplate, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_chestplate.png",
+      "source": "source/vanilla-color-2026/manyullyn_chestplate-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_leggings",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite leggings, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_leggings.png",
+      "source": "source/vanilla-color-2026/manyullyn_leggings-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    },
+    {
+      "asset": "manyullyn_boots",
+      "prompt": "Use case: precise-object-edit. Attached image is the EDIT TARGET: vanilla Minecraft netherite boots, native 16x16. Preserve EXACT pixel occupancy, silhouette, all shapes, every shading-cluster boundary, texture pattern, dimensions and margins of the reference. Change ONLY the armor material pixel colors into restrained manyullyn amethyst purple with soft lavender highlight and plum shadow. This is exclusively a material palette replacement. Sixteen logical square pixels across each dimension; if enlarged, use uniform square pixels with nearest-neighbor appearance. Real transparent background identical to the reference. NO new pixels, features, trim, straps, decorations, outline changes, shape changes, repositioning, perspective changes, gradients, smoothing, antialiasing, blur, noise, dithering, glow, shadows or text. Same modern vanilla equipment, only its material color changes.",
+      "reference": "minecraft:textures/item/netherite_boots.png",
+      "source": "source/vanilla-color-2026/manyullyn_boots-ai.png",
+      "tool": "built-in image_gen",
+      "role": "material palette edit; vanilla geometry preserved by export"
+    }
+  ],
+  "standalone": [
+    {
+      "asset": "ardite_ingot",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: one Minecraft inventory ingot, a small compact beveled metal bar in three-quarter inventory view, made of warm burnt-orange ardite with gentle amber highlights and reddish-brown shadows. Single item centered inside a 14x14 logical-pixel area on genuinely transparent 16x16 canvas. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. One asset only.",
+      "source": "source/dedicated-2026/ardite_ingot-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "manyullyn_ingot",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: one Minecraft inventory ingot, a small compact beveled metal bar in three-quarter inventory view, made of muted amethyst-purple manyullyn with gentle lavender highlights and plum shadows. Single item centered inside a 14x14 logical-pixel area on genuinely transparent 16x16 canvas. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. One asset only.",
+      "source": "source/dedicated-2026/manyullyn_ingot-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "manyullyn_upgrade_smithing_template",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: one Minecraft inventory smithing template, a compact tan stone tablet with a single muted purple upward arrow inlay and understated beveled stone edges. Single item centered inside a 14x14 logical-pixel area on genuinely transparent 16x16 canvas. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. One asset only.",
+      "source": "source/dedicated-2026/manyullyn_upgrade_smithing_template-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "piston_base",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: one Minecraft inventory piston base without the moving head, a squat gray stone-and-iron cube with muted brown wooden braces and a dark recessed square mechanical socket, seen in standard inventory three-quarter view. Single item centered inside a 14x14 logical-pixel area on genuinely transparent 16x16 canvas. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. One asset only.",
+      "source": "source/dedicated-2026/piston_base-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "mixed_wool",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: a seamless full-square neutral white wool block texture, soft connected tufts in only white and three very pale neutral gray shades; gentle woven wool surface, no decorative pattern; pure grayscale so it can be dyed. Flat orthographic texture tile completely filling the square, no transparency, no margins, no perspective, no display mockup. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. No cube illustration, only the surface tile.",
+      "source": "source/dedicated-2026/mixed_wool-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "mixed_concrete",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: a seamless full-square neutral white concrete block texture, nearly smooth mineral surface, understated broad tone variation in white and three very pale neutral gray shades; no seams or borders; pure grayscale so it can be dyed. Flat orthographic texture tile completely filling the square, no transparency, no margins, no perspective, no display mockup. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. No cube illustration, only the surface tile.",
+      "source": "source/dedicated-2026/mixed_concrete-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "ardite_ore",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: a seamless full-square Minecraft ardite ore texture: a muted warm dark brown nether stone matrix with four small connected burnt-orange mineral clusters, each with gentle amber highlight and rust shadow; clear low-noise ore design, no cracks crossing the whole block. Flat orthographic texture tile completely filling the square, no transparency, no margins, no perspective, no display mockup. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. No cube illustration, only the surface tile.",
+      "source": "source/dedicated-2026/ardite_ore-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "manyullyn_block",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: a seamless full-square Minecraft manyullyn metal block texture: a solid muted amethyst-purple metal panel with a restrained darker one-pixel rim and two soft lavender edge highlights, simple sturdy metal surface, no rivets, letters, gems or decorative motifs. Flat orthographic texture tile completely filling the square, no transparency, no margins, no perspective, no display mockup. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. No cube illustration, only the surface tile.",
+      "source": "source/dedicated-2026/manyullyn_block-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "piston_base_side",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: a full-square Minecraft mechanical piston base side texture: warm gray stone and iron center, muted brown wood braces at the top and bottom, simple square mechanical parts; restrained gentle shading. Flat orthographic texture tile completely filling the square, no transparency, no margins, no perspective, no display mockup. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. No cube illustration, only the surface tile.",
+      "source": "source/dedicated-2026/piston_base_side-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "piston_base_front",
+      "prompt": "Use case: stylized-concept. Production Minecraft texture asset, newly drawn: a full-square Minecraft piston base front texture: muted warm gray iron square frame with a small dark square recessed socket at the center, subtle brown wood corner fittings; no rod or moving piston head. Flat orthographic texture tile completely filling the square, no transparency, no margins, no perspective, no display mockup. EXACTLY 16 logical square-pixel columns and 16 rows, enlarged uniformly with nearest-neighbor. Current Minecraft Jappa-like clean connected color clusters, restrained natural palette, gentle coherent shading and readable material. Design expressly for actual 16x16 use. No black outline, noise, random speckles, dithering, fine-grained grit, blur, gradients, antialiasing, glow, external shadows, text, labels, watermark, grid lines. No cube illustration, only the surface tile.",
+      "source": "source/dedicated-2026/piston_base_front-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "bed_wood",
+      "prompt": "Use case: stylized-concept. One production Minecraft texture tile: a seamless oak-like wooden plank surface for a Minecraft bed frame, warm muted medium brown with gentle connected wood grain, three broad horizontal boards, simple low-contrast current Minecraft texture. EXACTLY 16 logical pixel columns by 16 rows, enlarged as uniform crisp square pixels. Flat top-down texture only, modern Jappa-like controlled color clusters and soft restrained shading. Opaque full-square seamless surface, fill the canvas with no margins. No border decoration, no text, no labels, no grid lines, no photographed sample, no perspective cube, no noise, dithering, antialiasing, gradients, blur, glow or cast shadows.",
+      "source": "source/dedicated-2026/bed_wood-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "glow_wire_dot",
+      "prompt": "Use case: stylized-concept. One production Minecraft texture tile: a small centered cross-shaped pile of pale neutral-white mineral dust on transparent background, occupies the central 8 by 8 pixels of a 16 by 16 square; irregular but clean connected grains in three light gray shades, suitable for the center node of a Minecraft dust wire. EXACTLY 16 logical pixel columns by 16 rows, enlarged as uniform crisp square pixels. Flat top-down texture only, modern Jappa-like controlled color clusters and soft restrained shading. Genuinely transparent background, retain the full square canvas and specified placement. No border decoration, no text, no labels, no grid lines, no photographed sample, no perspective cube, no noise, dithering, antialiasing, gradients, blur, glow or cast shadows.",
+      "source": "source/dedicated-2026/glow_wire_dot-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "glow_wire_line",
+      "prompt": "Use case: stylized-concept. One production Minecraft texture tile: a straight vertical trail of pale neutral-white mineral dust on transparent background, precisely centered at columns 6 through 9 of a 16 by 16 square; extends continuously from the top edge to the bottom edge without any end margin, gentle powder clusters in three neutral gray shades, Minecraft dust wiring texture. EXACTLY 16 logical pixel columns by 16 rows, enlarged as uniform crisp square pixels. Flat top-down texture only, modern Jappa-like controlled color clusters and soft restrained shading. Genuinely transparent background, retain the full square canvas and specified placement. No border decoration, no text, no labels, no grid lines, no photographed sample, no perspective cube, no noise, dithering, antialiasing, gradients, blur, glow or cast shadows.",
+      "source": "source/dedicated-2026/glow_wire_line-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork"
+    },
+    {
+      "asset": "tamed_book",
+      "source": "source/dedicated-2026/tamed_book-ai.png",
+      "tool": "built-in image_gen",
+      "role": "new artwork",
+      "prompt": "Use case: stylized-concept. A single production Minecraft inventory sprite: a TAMED WRITABLE BOOK, redesigned from scratch for a modern Minecraft mod. Transparent background. This is a native 16x16 pixel-art icon, shown as enlarged uniform square pixels: EXACTLY SIXTEEN pixel columns and SIXTEEN pixel rows across the entire square canvas, including a one-pixel transparent margin. The diagonal closed book has a restrained muted violet leather cover, a visible ivory paper edge, a tiny brass clasp suggesting order and taming, and a small ivory quill laid across the cover so it is recognizably a writable book. Clear silhouette, modest perspective matching modern Minecraft inventory books, balanced connected color clusters, soft gentle Jappa-like shading with just 3 violet shades, 2 ivory shades, 2 brass/brown shades. Design must stay readable at an actual 16 by 16 resolution. No black outline, no noisy speckles, no gritty old programmer art, no dithering, no blur, no antialiasing, no gradients, no glow, no cast shadow, no text or letters, no decorative extra objects, no grid lines, no watermark. Use simple intentional shapes rather than high-resolution art."
+    }
+  ]
+}

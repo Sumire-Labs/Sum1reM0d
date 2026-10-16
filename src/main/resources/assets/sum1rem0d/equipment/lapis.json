@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "sum1rem0d:lapis"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "sum1rem0d:lapis"
+      }
+    ]
+  }
+}

@@ -42,9 +42,11 @@ public final class ClientRuntime {
     }
     public static void tick() {
         var mc = Minecraft.getInstance();
+        EquipmentDefaultsClient.tick();
         if (!Boolean.getBoolean("sum1rem0d.netherSmoke")) DailyTextures.tick(mc);
         NetherChangesSmoke.tick(mc);
         CombatConcreteSmoke.tick(mc);
+        RemainingSmoke.tick(mc);
         ClientSmoke.tick(mc);
         NetworkSmoke.tick(mc);
         BrowserSmoke.tick(mc);

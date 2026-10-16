@@ -9,7 +9,7 @@ public final class CraftingMaterialSwap {
  private CraftingMaterialSwap() {}
  public static void close(net.minecraft.server.MinecraftServer server) {if(currentServer==server){currentServer=null;currentManager=null;currentOptions=null;} MATCHING.remove();}
  public static void tick(net.minecraft.server.MinecraftServer server) {
-  var manager=server.getRecipeManager();String options=com.sumirelabs.sum1rem0d.Sum1reM0d.config().snapshot().getAsJsonObject("features").get("paper_leather_swap").toString();
+  var manager=server.getRecipeManager();String options=com.sumirelabs.sum1rem0d.Sum1reM0d.config().snapshot().getAsJsonObject("features").get("paper_leather_swap").toString()+com.sumirelabs.sum1rem0d.Sum1reM0d.config().snapshot().getAsJsonObject("features").get("mixed_concrete").toString();
   if(currentServer!=server || currentManager!=manager) {currentServer=server;currentManager=manager;currentOptions=options;return;}
   if(options.equals(currentOptions)) return;
   currentOptions=options;manager.finalizeRecipeLoading(server.getWorldData().enabledFeatures());

@@ -32,6 +32,10 @@ public final class ModEntrypoint {
         bus.addListener(ModEntrypoint::registerContent);
     }
     private static void registerContent(RegisterEvent event) {
+        event.register(Registries.BLOCK,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcrete.createBlock()));
+        event.register(Registries.BLOCK_ENTITY_TYPE,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcrete.createType()));
+        event.register(Registries.ITEM,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcrete.createItem()));
+        event.register(Registries.RECIPE_SERIALIZER,helper -> helper.register(ModContent.id("mixed_concrete"),com.sumirelabs.sum1rem0d.game.MixedConcreteRecipe.SERIALIZER));
         event.register(Registries.MOB_EFFECT, helper -> {
             for (String name : ModContent.EFFECTS) helper.register(ModContent.id(name), ModContent.createEffect(name));
         });

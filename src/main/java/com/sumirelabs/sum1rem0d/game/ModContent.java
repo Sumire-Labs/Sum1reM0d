@@ -46,6 +46,10 @@ public final class ModContent {
     }
     public static void registerFabric() {
         for (String name : EFFECTS) Registry.register(BuiltInRegistries.MOB_EFFECT, id(name), createEffect(name));
+        Registry.register(BuiltInRegistries.BLOCK,id("mixed_concrete"),MixedConcrete.createBlock());
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("mixed_concrete"),MixedConcrete.createType());
+        Registry.register(BuiltInRegistries.ITEM,id("mixed_concrete"),MixedConcrete.createItem());
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("mixed_concrete"),MixedConcreteRecipe.SERIALIZER);
         Registry.register(BuiltInRegistries.ITEM, id("soap"), createSoap());
         Registry.register(BuiltInRegistries.ITEM, id("mud_ball"), createMudBall());
         for (String name : List.of("coin", "coin_roll")) Registry.register(BuiltInRegistries.ITEM,id(name),createCoin(name));

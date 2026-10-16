@@ -3160,5 +3160,115 @@
         "max": 100
       }
     ]
+  },
+  {
+    "id": "sword_guard",
+    "label": "ダメージ軽減武器と剣ガード",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "target_items",
+        "label": "付与できる武器",
+        "type": "LIST",
+        "initial": "#minecraft:enchantable/weapon",
+        "min": 0,
+        "max": 65536
+      },
+      {
+        "key": "attack_loss_per_level",
+        "label": "レベルごとの与ダメージ減少（％）",
+        "type": "DECIMAL",
+        "initial": 10,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "guard_per_level",
+        "label": "レベルごとのガード軽減（％）",
+        "type": "DECIMAL",
+        "initial": 15,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "maximum_guard",
+        "label": "ガード軽減の上限（％）",
+        "type": "DECIMAL",
+        "initial": 90,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "delay_ticks",
+        "label": "構えてから有効になるまで（tick）",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "angle",
+        "label": "前方のガード範囲（度）",
+        "type": "DECIMAL",
+        "initial": 180,
+        "min": 1,
+        "max": 180
+      },
+      {
+        "key": "durability_per_damage",
+        "label": "防いだダメージごとの耐久消費",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "offhand_priority",
+        "label": "使用可能なオフハンドを優先",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "damage_types",
+        "label": "防げるダメージ種別",
+        "type": "LIST",
+        "initial": "minecraft:player_attack,minecraft:mob_attack,minecraft:mob_attack_no_aggro,minecraft:arrow,minecraft:trident,minecraft:mob_projectile,minecraft:thrown",
+        "min": 0,
+        "max": 65536
+      }
+    ]
+  },
+  {
+    "id": "mixed_concrete",
+    "label": "自由色の混色コンクリート",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "混色クラフトを有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "maximum_dyes",
+        "label": "クラフトに使える染料の最大数",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 1,
+        "max": 8
+      }
+    ]
   }
 ]

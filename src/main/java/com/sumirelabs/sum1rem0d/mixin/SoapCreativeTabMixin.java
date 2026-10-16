@@ -14,6 +14,15 @@ public abstract class SoapCreativeTabMixin {
     @Shadow private Collection<ItemStack> displayItems;
     @Shadow private Set<ItemStack> displayItemsSearchTab;
     @Inject(method = "buildContents", at = @At("TAIL"))
+    private void sum1rem0d$concrete(CallbackInfo ci) {
+        var key=BuiltInRegistries.CREATIVE_MODE_TAB.getKey((CreativeModeTab)(Object)this);
+        if(key==null || !key.toString().equals("minecraft:building_blocks")) return;
+        var visible=ItemStackLinkedSet.createTypeAndComponentsSet();visible.addAll(displayItems);
+        var search=ItemStackLinkedSet.createTypeAndComponentsSet();search.addAll(displayItemsSearchTab);
+        for(var dye:DyeColor.values()){var stack=com.sumirelabs.sum1rem0d.game.MixedConcrete.stack(dye.getTextureDiffuseColor());visible.add(stack);search.add(stack);}
+        displayItems=visible;displayItemsSearchTab=search;
+    }
+    @Inject(method = "buildContents", at = @At("TAIL"))
     private void sum1rem0d$soap(CallbackInfo ci) {
         var key = BuiltInRegistries.CREATIVE_MODE_TAB.getKey((CreativeModeTab) (Object) this);
         if (key == null || !key.toString().equals("minecraft:tools_and_utilities")) return;

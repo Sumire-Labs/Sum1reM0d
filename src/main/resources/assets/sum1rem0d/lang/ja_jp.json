@@ -38,5 +38,7 @@
   "sum1rem0d.disguise.manyullyn_spear": "マニュリンの槍",
   "sum1rem0d.disguise.manyullyn_horse_armor": "マニュリンの馬鎧",
   "sum1rem0d.disguise.manyullyn_nautilus_armor": "マニュリンのオウムガイの鎧",
-  "sum1rem0d.disguise.manyullyn_upgrade_smithing_template": "マニュリンの強化用鍛冶型"
+  "sum1rem0d.disguise.manyullyn_upgrade_smithing_template": "マニュリンの強化用鍛冶型",
+  "block.sum1rem0d.mixed_concrete": "混色コンクリート",
+  "item.sum1rem0d.mixed_concrete": "混色コンクリート"
 }

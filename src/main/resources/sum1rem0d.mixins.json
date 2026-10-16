@@ -67,7 +67,10 @@
     "CraftingMaterialMapMixin",
     "CraftingMaterialMatchMixin",
     "MaterialRecipePlacementMixin",
-    "MaterialRecipeDisplayMixin"
+    "MaterialRecipeDisplayMixin",
+    "SwordGuardItemMixin",
+    "SwordGuardDamageMixin",
+    "ProtectionWeaponMixin"
   ],
   "client": [
     "MenuScreenMixin",
@@ -109,7 +112,8 @@
     "NoChatReportsKeysMixin",
     "NoChatReportsClientMixin",
     "NaturalFlipRendererMixin",
-    "DailyTextureResourcesMixin"
+    "DailyTextureResourcesMixin",
+    "MixedConcreteColorsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

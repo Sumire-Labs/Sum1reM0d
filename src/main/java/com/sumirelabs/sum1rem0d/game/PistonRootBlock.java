@@ -14,7 +14,12 @@ public final class PistonRootBlock extends Block {
   Direction.NORTH,Block.box(0,0,4,16,16,16),Direction.SOUTH,Block.box(0,0,0,16,16,12),
   Direction.WEST,Block.box(4,0,0,16,16,16),Direction.EAST,Block.box(0,0,0,12,16,16),
   Direction.UP,Block.box(0,0,0,16,12,16),Direction.DOWN,Block.box(0,4,0,16,16,16));
- public PistonRootBlock(Properties props){super(props);registerDefaultState(stateDefinition.any().setValue(BlockStateProperties.FACING,Direction.NORTH));}
+ // Copied piston predicates read EXTENDED, which this fixed extended-body block does not have.
+ //? if >=26.3 {
+ public PistonRootBlock(Properties props){super(props.isSuffocating((state,level,pos)->false).isViewBlocking((state,level,pos,box)->false));registerDefaultState(stateDefinition.any().setValue(BlockStateProperties.FACING,Direction.NORTH));}
+ //?} else {
+ /*public PistonRootBlock(Properties props){super(props.isSuffocating((state,level,pos)->false).isViewBlocking((state,level,pos)->false));registerDefaultState(stateDefinition.any().setValue(BlockStateProperties.FACING,Direction.NORTH));}
+ *///?}
  @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){builder.add(BlockStateProperties.FACING);}
  @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state,net.minecraft.world.level.BlockGetter level,BlockPos pos,net.minecraft.world.phys.shapes.CollisionContext context){return SHAPES.get(state.getValue(BlockStateProperties.FACING));}
  @Override public BlockState getStateForPlacement(BlockPlaceContext context){return defaultBlockState().setValue(BlockStateProperties.FACING,context.getNearestLookingDirection().getOpposite());}

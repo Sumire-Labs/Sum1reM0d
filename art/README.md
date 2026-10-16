@@ -27,3 +27,11 @@ The tamed book, ingots, smithing template, piston base, mixed-material source ti
 Sources: `source/vanilla-color-2026/` and `source/dedicated-2026/`. Exact final prompts: `prompts-dedicated-2026.json`. Export manifest: `manifest-vanilla-color-2026.json`. Actual exported equipment preview: `preview/vanilla-colors.png`.
 
 Run `prepare-equipment.ps1`, `prepare-dedicated.ps1`, and `preview-equipment.ps1` from a fresh PowerShell process to reproduce exports. Equipment export reads the local Minecraft client JAR; pass `-MinecraftJar` if its cache path differs. Geometry and texture patterns for the vanilla-shaped equipment derive from the Minecraft assets; their new material palettes were produced with the built-in image tool. Original Minecraft reference files are development-only inputs and are not bundled as artwork sources.
+
+## User-supplied hag artwork (2026-10-17)
+
+23 PNGs supplied by the user in Downloads/hag are copied byte-for-byte into runtime texture paths. Originals are preserved in source/hag; manifest-hag.json records filename mappings and SHA-256 hashes. The missing Manyullyn hoe, block and smithing template retain their previous textures. These supplied assets supersede generated exports: do not rerun prepare-assets/prepare-equipment/prepare-dedicated over them unless the user requests regeneration; reapply the manifest mappings from source/hag after any deliberate historical export.
+
+Piston base now inherits minecraft:block/piston_base for geometry and textures. Its inventory model uses the same extended body with vanilla block display transforms. Historical generated piston icon/tiles are no longer runtime resources.
+
+The additional user-supplied sum1reicon.png is preserved at 128x128 and copied unchanged to assets/sum1rem0d/icon.png. Wiki/preview rendering uses the full 128x128 source region. manifest-hag.json now records 24 supplied PNGs including the icon.

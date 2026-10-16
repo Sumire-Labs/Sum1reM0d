@@ -41,6 +41,12 @@ final class RemainingVerification {
    var root=new ExtraCraftingRecipe("piston_base");var rootInput=CraftingInput.of(3,2,List.of(item("cobblestone"),item("iron_ingot"),item("cobblestone"),item("cobblestone"),item("redstone"),item("cobblestone")));
    require(root.matches(rootInput,level) && root.assemble(rootInput).is(ExtraContent.item("piston_base")),"Piston lower two rows recipe");
    var pos=new BlockPos(1900,240,0);var block=(PistonRootBlock)ExtraContent.block("piston_base");var bs=block.defaultBlockState().setValue(BlockStateProperties.FACING,Direction.EAST);
+   for(var facing:Direction.values()){
+    var body=block.defaultBlockState().setValue(BlockStateProperties.FACING,facing);
+    var vanilla=Blocks.PISTON.defaultBlockState().setValue(BlockStateProperties.FACING,facing).setValue(BlockStateProperties.EXTENDED,true);
+    require(body.getShape(level,pos).bounds().equals(vanilla.getShape(level,pos).bounds()),"Native extended-body collision "+facing);
+    require(body.isSuffocating(level,pos)==vanilla.isSuffocating(level,pos) && body.isRedstoneConductor(level,pos)==vanilla.isRedstoneConductor(level,pos),"Safe native piston predicates without EXTENDED property "+facing);
+   }
    ServerVerification.place(level,pos,bs);ServerVerification.place(level,pos.east(),Blocks.BEDROCK.defaultBlockState());block.setPlacedBy(level,pos,bs,p,new ItemStack(block));require(level.getBlockState(pos.east()).isAir(),"Base deletes bedrock on placement");
    ServerVerification.place(level,pos.east(),Blocks.CHEST.defaultBlockState());block.setPlacedBy(level,pos,bs,p,new ItemStack(block));require(level.getBlockState(pos.east()).is(Blocks.CHEST),"Default preserves block entities");
    fs.getAsJsonObject("piston_base").addProperty("enabled",false);config.update(draft,config.revision());ServerVerification.place(level,pos.east(),Blocks.STONE.defaultBlockState());block.setPlacedBy(level,pos,bs,p,new ItemStack(block));require(level.getBlockState(pos.east()).is(Blocks.STONE) && root.assemble(rootInput).isEmpty(),"Piston OFF blocks recipe and deletion");passed.accept("Piston base native recipe, bedrock deletion, protected entities and live OFF");

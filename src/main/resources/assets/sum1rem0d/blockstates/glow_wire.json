@@ -3,78 +3,101 @@
     {
       "apply": {
         "model": "sum1rem0d:block/glow_wire_dot"
+      },
+      "when": {
+        "OR": [
+          {
+            "east": "none",
+            "north": "none",
+            "south": "none",
+            "west": "none"
+          },
+          {
+            "east": "side|up",
+            "north": "side|up"
+          },
+          {
+            "east": "side|up",
+            "south": "side|up"
+          },
+          {
+            "south": "side|up",
+            "west": "side|up"
+          },
+          {
+            "north": "side|up",
+            "west": "side|up"
+          }
+        ]
       }
     },
     {
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side0"
+      },
       "when": {
         "north": "side|up"
-      },
-      "apply": {
-        "model": "sum1rem0d:block/glow_wire_side",
-        "y": 0
       }
     },
     {
-      "when": {
-        "north": "up"
-      },
       "apply": {
-        "model": "sum1rem0d:block/glow_wire_up",
-        "y": 0
-      }
-    },
-    {
-      "when": {
-        "east": "side|up"
+        "model": "sum1rem0d:block/glow_wire_side_alt0"
       },
-      "apply": {
-        "model": "sum1rem0d:block/glow_wire_side",
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "east": "up"
-      },
-      "apply": {
-        "model": "sum1rem0d:block/glow_wire_up",
-        "y": 90
-      }
-    },
-    {
       "when": {
         "south": "side|up"
-      },
-      "apply": {
-        "model": "sum1rem0d:block/glow_wire_side",
-        "y": 180
       }
     },
     {
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side_alt1",
+        "y": 270
+      },
       "when": {
-        "south": "up"
-      },
-      "apply": {
-        "model": "sum1rem0d:block/glow_wire_up",
-        "y": 180
+        "east": "side|up"
       }
     },
     {
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_side1",
+        "y": 270
+      },
       "when": {
         "west": "side|up"
-      },
-      "apply": {
-        "model": "sum1rem0d:block/glow_wire_side",
-        "y": 270
       }
     },
     {
-      "when": {
-        "west": "up"
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up"
       },
+      "when": {
+        "north": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up",
+        "y": 90
+      },
+      "when": {
+        "east": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/glow_wire_up",
+        "y": 180
+      },
+      "when": {
+        "south": "up"
+      }
+    },
+    {
       "apply": {
         "model": "sum1rem0d:block/glow_wire_up",
         "y": 270
+      },
+      "when": {
+        "west": "up"
       }
     }
   ]

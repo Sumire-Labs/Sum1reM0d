@@ -27,6 +27,14 @@ public final class MixedColorFixture {
    player.getInventory().setItem(9+i,stack.copy());
   }
   player.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);
+  var wire=(GlowWireBlock)ExtraContent.block("glow_wire");
+  for(int x=-2;x<=1;x++)level.setBlock(new BlockPos(x,245,6),wire.defaultBlockState(),3);
+  level.setBlock(new BlockPos(-2,245,5),wire.defaultBlockState(),3);
+  for(int x=-2;x<=1;x++){var pos=new BlockPos(x,245,6);level.setBlock(pos,wire.connections(level,pos,level.getBlockState(pos)),3);}
+  var corner=new BlockPos(-2,245,5);level.setBlock(corner,wire.connections(level,corner,level.getBlockState(corner)),3);
+  // Render all six native extended-body orientations without triggering placement deletion.
+  var facings=Direction.values();
+  for(int i=0;i<facings.length;i++)level.setBlock(new BlockPos(-2+(i%3)*2,246,i<3?3:6),ExtraContent.block("piston_base").defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING,facings[i]),3);
  }
  public static void restore(ServerPlayer player){for(var pos:occupied)player.level().setBlock(pos,Blocks.AIR.defaultBlockState(),3);occupied.clear();}
 }

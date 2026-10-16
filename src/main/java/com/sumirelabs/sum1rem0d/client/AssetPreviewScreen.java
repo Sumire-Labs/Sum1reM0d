@@ -35,7 +35,7 @@ final class AssetPreviewScreen extends Screen {
             if (font.width(label) <= 112) g.centeredText(font,label,x,y+56,0xFFFFFFFF);
             else g.textWithWordWrap(font,label,x-56,y+56,112,0xFFFFFFFF);
         }
-        g.blit(RenderPipelines.GUI_TEXTURED,ModContent.id("icon.png"),left+256,top+40,0,0,48,48,16,16,16,16);
+        g.blit(RenderPipelines.GUI_TEXTURED,ModContent.id("icon.png"),left+256,top+40,0,0,48,48,128,128,128,128);
         g.centeredText(font,"Mod icon",left+280,top+96,0xFFFFFFFF);
     }
 }

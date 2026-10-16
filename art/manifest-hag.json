@@ -1,0 +1,122 @@
+[
+  {
+    "target": "textures/block/ardite_ore.png",
+    "sha256": "a2f7724aaf4b60232331f820fc210d45ad02c0c332585ebd10118cfe4afc8cee",
+    "source": "ardite_ore.png"
+  },
+  {
+    "target": "textures/item/mud_ball.png",
+    "sha256": "f1f4252b85ddd47961b068f861955d391e8979c7839eb1d255c3659d303fe62d",
+    "source": "dorodango.png"
+  },
+  {
+    "target": "textures/item/manyullyn_axe.png",
+    "sha256": "6ca851e0709bab6866e7fbc70d428a52cdb5056e4bf86367e8bcd3060bcf54fa",
+    "source": "manyullyn_axe.png"
+  },
+  {
+    "target": "textures/item/manyullyn_boots.png",
+    "sha256": "563cd2fc81d0be2b8c4eaf2c31001ba89a051e55594c8d3f5e930d7c8efdb3a3",
+    "source": "manyullyn_boots.png"
+  },
+  {
+    "target": "textures/item/manyullyn_chestplate.png",
+    "sha256": "3736aa8cd301c72ebfa36622997b0df96d6e65bb01af602eae5f65173ac74153",
+    "source": "manyullyn_chestplate.png"
+  },
+  {
+    "target": "textures/item/manyullyn_helmet.png",
+    "sha256": "b4b56c83c02d5cb5e101c1d680af1abad429510bd3f6b3f9414554f6d5125ff0",
+    "source": "manyullyn_helmet.png"
+  },
+  {
+    "target": "textures/item/manyullyn_horse_armor.png",
+    "sha256": "347066f2ed45b1b4df5cd4db5d8db333f49bc0ac695053589d51460d63da447c",
+    "source": "manyullyn_horse_armor.png"
+  },
+  {
+    "target": "textures/entity/equipment/horse_body/manyullyn.png",
+    "sha256": "027f3bf24e5c9bcc6bc208f5f5a3baa32f5bb4081a09283305eff7f5ece40c90",
+    "source": "manyullyn_horse.png"
+  },
+  {
+    "target": "textures/entity/equipment/humanoid_baby/manyullyn.png",
+    "sha256": "3f351811afc7c839f7ee21150e50f7595742468f7e6fce0fe690b4c8df047189",
+    "source": "manyullyn_humanoid_baby.png"
+  },
+  {
+    "target": "textures/entity/equipment/humanoid_leggings/manyullyn.png",
+    "sha256": "b5feb56222833cbf75552652cd3803d694b0914f4a0b1fe5f9c35ff096670fd5",
+    "source": "manyullyn_humanoid_leggings.png"
+  },
+  {
+    "target": "textures/entity/equipment/humanoid/manyullyn.png",
+    "sha256": "7e259413c0c14e7e098673d9b7a61c100fb381ab2fc656799aa2d30e2f8032fb",
+    "source": "manyullyn_humanoid.png"
+  },
+  {
+    "target": "textures/item/manyullyn_ingot.png",
+    "sha256": "cbe9efdcfef4b83423a581f681d4a448dde3b3c72dfa0260aeadfae08fdae14f",
+    "source": "manyullyn_ingot.png"
+  },
+  {
+    "target": "textures/item/manyullyn_leggings.png",
+    "sha256": "635ed694a6ebe20944fa7530deffc9dd862ce0072fb73066cc4fe24908eb61e6",
+    "source": "manyullyn_leggings.png"
+  },
+  {
+    "target": "textures/item/manyullyn_nautilus_armor.png",
+    "sha256": "a97c84edae00ae3d557b1f1d033a0b8214747b115779c139b1c7baa8cd6aacad",
+    "source": "manyullyn_nautilus_armor.png"
+  },
+  {
+    "target": "textures/entity/equipment/nautilus_body/manyullyn.png",
+    "sha256": "508d6a52f7571cf0e7f9ec60aa54601213afbfc26e418266744122acfa93b714",
+    "source": "manyullyn_nautilus.png"
+  },
+  {
+    "target": "textures/item/manyullyn_pickaxe.png",
+    "sha256": "20115bb8f872bc270d24ce2a1c3491fb44b94bd661483dfe2f7cd50590c5b7d8",
+    "source": "manyullyn_pickaxe.png"
+  },
+  {
+    "target": "textures/item/manyullyn_shovel.png",
+    "sha256": "eb8e2b38ee505918dfc32b186052f5d3b335e2af226024fdf94e5d37b0cf4592",
+    "source": "manyullyn_shovel.png"
+  },
+  {
+    "target": "textures/item/manyullyn_spear_in_hand.png",
+    "sha256": "ca1202e5dd64ac4c16c75462eea9ae859da010243b6ddcd30ad69aa7dc43bbe0",
+    "source": "manyullyn_spear_in_hand.png"
+  },
+  {
+    "target": "textures/item/manyullyn_spear.png",
+    "sha256": "eb07c0e768f256013544b7196ef5d4cfb8a3eefc79fa006bd4da4f939f5158d0",
+    "source": "manyullyn_spear.png"
+  },
+  {
+    "target": "textures/item/manyullyn_sword.png",
+    "sha256": "0a3aa3d6470a83f1fa5980ba8f063eae58c62a9f15573aa8d2f4994e5912572c",
+    "source": "manyullyn_sword.png"
+  },
+  {
+    "target": "textures/item/soap.png",
+    "sha256": "8545f21dc4237e510eb6430688bd1870fe7eb85e0496bbeb167e438eeaba6701",
+    "source": "soap.png"
+  },
+  {
+    "target": "textures/item/coin.png",
+    "sha256": "14d927d1f3a00d4a87aae5fb25705aae03d20a1819a25ccf56251e39086f660b",
+    "source": "sumirecoin.png"
+  },
+  {
+    "target": "textures/item/coin_roll.png",
+    "sha256": "b977abbb7f988f0934fbf61faae108974573cff29afddd4fbcfdcbd6ba5d4d7f",
+    "source": "sumiretaba.png"
+  },
+  {
+    "target": "icon.png",
+    "sha256": "37d45bff5431546886b3955b85c17f2e86dd957256c4b074d510b7f5bf51969f",
+    "source": "sum1reicon.png"
+  }
+]

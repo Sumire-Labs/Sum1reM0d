@@ -123,7 +123,7 @@ public final class WikiScreen extends Screen {
         else minecraft.gui.setScreen(parent);
     }
     @Override public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float tick) {
-        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, com.sumirelabs.sum1rem0d.game.ModContent.id("icon.png"), left + 4, 9, 0, 0, 16, 16, 16, 16, 16, 16);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, com.sumirelabs.sum1rem0d.game.ModContent.id("icon.png"), left + 4, 9, 0, 0, 16, 16, 128, 128, 128, 128);
         graphics.text(font, title, left + 24, 13, 0xFFFFFFFF, false);
         VanillaGuiParts.panel(graphics, left, top, navWidth, panelHeight); VanillaGuiParts.panel(graphics, right, top, contentWidth, panelHeight);
         // Draw native widgets over the panel frames.

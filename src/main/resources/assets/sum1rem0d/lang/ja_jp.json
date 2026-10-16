@@ -11,5 +11,15 @@
   "gui.sum1rem0d.fletching.input": "材料",
   "gui.sum1rem0d.fletching.output": "完成品",
   "item.sum1rem0d.coin": "Sum1reコ↑イン↓",
-  "item.sum1rem0d.coin_roll": "Sum1reコ↑イン↓ ×10"
+  "item.sum1rem0d.coin_roll": "Sum1re札↑たば↓",
+  "gui.sum1rem0d.coin_cost": "費用: %s コイン",
+  "gui.sum1rem0d.coin_requirement": "必要残高: %s コイン",
+  "key.category.sum1rem0d.controls": "Sum1reM0d",
+  "key.sum1rem0d.wiki": "Wikiを開く",
+  "key.sum1rem0d.config": "Configを開く",
+  "key.sum1rem0d.wallet": "財布 / 取引を開く",
+  "toast.sum1rem0d.trade.title": "取引依頼",
+  "toast.sum1rem0d.trade.sender": "%s から依頼が届きました",
+  "toast.sum1rem0d.trade.hint": "財布 / 取引画面を開いて確認",
+  "item.sum1rem0d.mud_ball": "泥だんご"
 }

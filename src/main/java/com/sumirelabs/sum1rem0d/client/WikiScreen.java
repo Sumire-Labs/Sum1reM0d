@@ -20,6 +20,7 @@ public final class WikiScreen extends Screen {
     private int left, top, navWidth, right, contentWidth, panelHeight, bodyY, rows;
     private long serverRevision, personalRevision;
     private EditBox search;
+    private SearchSuggestionPopup suggestions;
     private List<FormattedCharSequence> lines = List.of();
     public WikiScreen(Screen parent) { super(Component.literal("Sum1reM0d Wiki")); this.parent = parent; }
     String view() { return view; }
@@ -27,7 +28,7 @@ public final class WikiScreen extends Screen {
     int page() { return page; }
     int pages() { return pages; }
     private void navigate(String view, String category, String feature) { this.view = view; this.category = category; this.feature = feature; page = 0; rebuildWidgets(); }
-    private void article(String id) { navigate("article", WikiContent.categoryFor(id).id(), id); }
+    private void article(String id) { navigate("article", WikiContent.categoryFor(id).id(), id); suggestions.dismiss(); }
     private void category(String id) { query = ""; searchText = ""; navigate("category", id, null); }
     @Override protected void init() {
         int totalWidth = Math.min(760, width - 20);
@@ -35,7 +36,9 @@ public final class WikiScreen extends Screen {
         navWidth = Math.min(132, Math.max(104, totalWidth / 3)); right = left + navWidth + 6; contentWidth = totalWidth - navWidth - 6;
         serverRevision = ClientRules.revision; personalRevision = PersonalConfig.store().revision();
         search = addRenderableWidget(new EditBox(font, right, 8, Math.max(40, contentWidth - 52), 20, Component.literal("Wikiを検索")));
-        search.setMaxLength(80); search.setHint(Component.literal("機能名・説明を検索")); search.setValue(searchText); search.setResponder(value -> searchText = value);
+        search.setMaxLength(80); search.setHint(Component.literal("機能名・説明を検索")); search.setValue(searchText);
+        suggestions = new SearchSuggestionPopup(search, ConfigSchema.features().stream().map(feature -> new com.sumirelabs.sum1rem0d.wiki.SearchSuggestions.Entry(feature.id(), feature.label(), String.join(" ", WikiContent.article(feature.id()).paragraphs()))).toList(), height, this::article);
+        search.setResponder(value -> { searchText = value; suggestions.changed(value); }); suggestions.changed(searchText);
         addRenderableWidget(Button.builder(Component.literal("検索"), button -> submitSearch()).bounds(right + contentWidth - 48, 8, 48, 20).build());
         navButton("導入", top + 8, () -> navigate("intro", null, null), view.equals("intro"));
         navButton("カテゴリ一覧", top + 30, () -> navigate("categories", null, null), view.equals("categories"));
@@ -83,7 +86,7 @@ public final class WikiScreen extends Screen {
     private void navButton(String label, int y, Runnable action, boolean selected) {
         var button = addRenderableWidget(Button.builder(Component.literal(label), widget -> action.run()).bounds(left + 6, y, navWidth - 12, 18).build()); button.active = !selected;
     }
-    private void submitSearch() { query = searchText.strip(); navigate(query.isEmpty() ? "categories" : "search", null, null); }
+    private void submitSearch() { query = searchText.strip(); navigate(query.isEmpty() ? "categories" : "search", null, null); suggestions.dismiss(); }
     private boolean enabled(String id) { return PersonalConfig.personal(id, "enabled") ? PersonalConfig.store().enabled(id) : ClientRules.enabled(id); }
     private List<String> articleParagraphs() {
         var result = new ArrayList<>(WikiContent.article(feature).paragraphs()); result.add("現在の設定（説明中の数値は初期値の例です）");
@@ -105,8 +108,10 @@ public final class WikiScreen extends Screen {
         if (!WikiRuntime.enabled()) { minecraft.gui.setScreen(parent); return; }
         if (serverRevision != ClientRules.revision || personalRevision != PersonalConfig.store().revision()) rebuildWidgets();
     }
-    @Override public boolean mouseScrolled(double x, double y, double horizontal, double vertical) { if (vertical != 0) { turn(vertical < 0 ? 1 : -1); return true; } return super.mouseScrolled(x, y, horizontal, vertical); }
+    @Override public boolean mouseScrolled(double x, double y, double horizontal, double vertical) { if (suggestions.scroll(x,y,vertical)) return true; if (vertical != 0) { turn(vertical < 0 ? 1 : -1); return true; } return super.mouseScrolled(x, y, horizontal, vertical); }
+    @Override public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) { return suggestions.click(event) || super.mouseClicked(event, doubleClick); }
     @Override public boolean keyPressed(KeyEvent event) {
+        if (suggestions.key(event)) return true;
         if (event.key() == InputConstants.KEY_RETURN && search.isFocused()) { submitSearch(); return true; }
         if (!search.isFocused() && event.key() == InputConstants.KEY_RIGHT) { turn(1); return true; }
         if (!search.isFocused() && event.key() == InputConstants.KEY_LEFT) { turn(-1); return true; }
@@ -118,7 +123,7 @@ public final class WikiScreen extends Screen {
         else minecraft.gui.setScreen(parent);
     }
     @Override public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float tick) {
-        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, com.sumirelabs.sum1rem0d.game.ModContent.id("icon.png"), left + 4, 9, 0, 0, 16, 16, 256, 256, 256, 256);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, com.sumirelabs.sum1rem0d.game.ModContent.id("icon.png"), left + 4, 9, 0, 0, 16, 16, 16, 16, 16, 16);
         graphics.text(font, title, left + 24, 13, 0xFFFFFFFF, false);
         VanillaGuiParts.panel(graphics, left, top, navWidth, panelHeight); VanillaGuiParts.panel(graphics, right, top, contentWidth, panelHeight);
         // Draw native widgets over the panel frames.
@@ -134,5 +139,6 @@ public final class WikiScreen extends Screen {
             for (int i = 0; i < rows && page * rows + i < lines.size(); i++) graphics.text(font, lines.get(page * rows + i), right + 9, bodyY + i * 11, 0xFF404040, false);
         } else if (view.equals("search") && resultsCount == 0) graphics.text(font, "見つかりませんでした", right + 9, bodyY, 0xFF404040, false);
         graphics.centeredText(font, (page + 1) + " / " + pages, right + contentWidth / 2, top + panelHeight - 19, 0xFF404040);
+        suggestions.render(graphics, font, mouseX, mouseY);
     }
 }

@@ -2,6 +2,7 @@
 // remain explicit version branches in Java; this only adapts renamed symbols.
 ext.adaptMinecraftSource = { String line, String mc ->
     if (mc == '26.3') return line
+    line = line.replace('InputConstants.Type.KEYBOARD', 'InputConstants.Type.KEYSYM')
     line = line.replace('AbstractBedBlock', 'BedBlock').replace('RedstoneWireBlock', 'RedStoneWireBlock')
         .replace('net/minecraft/client/renderer/texture/UvMapping', 'net/minecraft/client/renderer/texture/TextureAtlasSprite')
         .replace(', net.minecraft.util.Prediction.SERVER_ONLY', '')
@@ -49,6 +50,7 @@ ext.adaptMinecraftSource = { String line, String mc ->
         .replace('.gui.overlay()', '.getOverlay()').replace('.gui.toastManager()', '.getToastManager()')
         .replace('.gameRenderer.mainRenderTarget()', '.getMainRenderTarget()')
         .replace('net.minecraft.advancements.triggers.', 'net.minecraft.advancements.criterion.')
+        .replace('net/minecraft/advancements/triggers/', 'net/minecraft/advancements/criterion/')
         .replace('.gui.hud.isHidden()', '.options.hideGui').replace('.gui.hud.toggle()', '.options.hideGui = !mc.options.hideGui')
         .replace('.gameRenderer.mainCamera()', '.gameRenderer.getMainCamera()')
         .replace('mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.getMainCamera(), mc.getBlockColors())', 'mc.levelRenderer.allChanged()')
@@ -57,5 +59,6 @@ ext.adaptMinecraftSource = { String line, String mc ->
         .replace('Blocks.BED.pick(net.minecraft.world.item.DyeColor.RED)', 'Blocks.RED_BED')
         .replace('Blocks.BED.pick(DyeColor.RED)', 'Blocks.RED_BED')
         .replace('Blocks.WOOL.pick(DyeColor.WHITE)', 'Blocks.WHITE_WOOL')
+    line = line.replace('chat.unsignedContent().orElseGet(() -> Component.literal(chat.body().content()))', 'chat.unsignedContent() != null ? chat.unsignedContent() : Component.literal(chat.body().content())')
     return line
 }

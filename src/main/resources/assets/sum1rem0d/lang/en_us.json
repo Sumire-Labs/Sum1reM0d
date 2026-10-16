@@ -11,5 +11,15 @@
   "gui.sum1rem0d.fletching.input": "Input",
   "gui.sum1rem0d.fletching.output": "Output",
   "item.sum1rem0d.coin": "Sum1re Coin",
-  "item.sum1rem0d.coin_roll": "Sum1re Coins ×10"
+  "item.sum1rem0d.coin_roll": "Sum1re Banknote Bundle",
+  "gui.sum1rem0d.coin_cost": "Cost: %s coins",
+  "gui.sum1rem0d.coin_requirement": "Required balance: %s coins",
+  "key.category.sum1rem0d.controls": "Sum1reM0d",
+  "key.sum1rem0d.wiki": "Open Wiki",
+  "key.sum1rem0d.config": "Open Config",
+  "key.sum1rem0d.wallet": "Open wallet / trading",
+  "toast.sum1rem0d.trade.title": "Trade request",
+  "toast.sum1rem0d.trade.sender": "%s wants to trade",
+  "toast.sum1rem0d.trade.hint": "Open Wallet / Trading to respond",
+  "item.sum1rem0d.mud_ball": "Mud Ball"
 }

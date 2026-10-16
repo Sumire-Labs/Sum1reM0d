@@ -23,6 +23,7 @@ public final class ServerConfigHandler {
         PlatformNetwork.send(player, new ConfigStatePayload(store.revision(), canEdit(player), store.snapshot().toString(), message, requestId, applied));
     }
     public static void handle(ConfigRequestPayload request, ServerPlayer player) {
+        if (com.sumirelabs.sum1rem0d.game.ChatPrivacyNetworkVerification.request(request, player)) return;
         if (com.sumirelabs.sum1rem0d.game.MultiplayerVerification.request(request, player)) return;
         if (!request.update()) { send(player, ""); return; }
         if (!canEdit(player)) { send(player, "変更にはOP権限が必要です。", request.requestId(), false); return; }

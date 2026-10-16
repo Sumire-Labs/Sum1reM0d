@@ -27,7 +27,9 @@ public final class ConfigScreen extends Screen {
     private long requestedAt;
     private boolean pending;
     private int page;
-    private String query = "";
+    private String query = "", searchText = "";
+    private EditBox search;
+    private SearchSuggestionPopup suggestions;
     private String status = "";
 
     public ConfigScreen(Screen parent) {
@@ -61,11 +63,14 @@ public final class ConfigScreen extends Screen {
         var wiki = addRenderableWidget(Button.builder(Component.literal("Wiki"), button -> minecraft.gui.setScreen(new WikiScreen(this))).bounds(5, 5, 55, 20).build());
         wiki.active = WikiRuntime.enabled();
         if (!personal) addRenderableWidget(Button.builder(Component.literal("個人設定"), button -> minecraft.gui.setScreen(new ConfigScreen(this, true))).bounds(width - 77, 5, 72, 20).build());
-        EditBox search = addRenderableWidget(new EditBox(font, left, 42, panel - 65, 20, Component.literal("機能を検索")));
+        search = addRenderableWidget(new EditBox(font, left, 42, panel - 65, 20, Component.literal("機能を検索")));
         search.setMaxLength(80);
-        search.setValue(query);
+        search.setValue(searchText);
+        suggestions = new SearchSuggestionPopup(search, ConfigSchema.features().stream().filter(feature -> draft != null && !pending && !options(feature).isEmpty()).map(feature -> new com.sumirelabs.sum1rem0d.wiki.SearchSuggestions.Entry(feature.id(), feature.label(), "")).toList(), height, id -> minecraft.gui.setScreen(new FeatureScreen(this, com.sumirelabs.sum1rem0d.wiki.WikiContent.schema(id))));
+        search.setResponder(value -> { searchText = value; suggestions.changed(value); });
+        suggestions.changed(searchText);
         addRenderableWidget(Button.builder(Component.literal("検索"), button -> {
-            query = search.getValue(); page = 0; rebuildWidgets();
+            submitSearch();
         }).bounds(left + panel - 60, 42, 60, 20).build());
         List<ConfigSchema.Feature> filtered = ConfigSchema.features().stream()
             .filter(feature -> !options(feature).isEmpty())
@@ -96,6 +101,8 @@ public final class ConfigScreen extends Screen {
         apply.active = editable();
         if (draft == null) status = "サーバー設定を取得できません。Modの導入状況を確認してください。";
     }
+
+    private void submitSearch() { query = search.getValue(); page = 0; rebuildWidgets(); suggestions.dismiss(); }
 
     private void apply() {
         if (!editable()) return;
@@ -141,6 +148,15 @@ public final class ConfigScreen extends Screen {
         graphics.centeredText(font, scope, width / 2, 28, 0xFFB8C6DA);
         graphics.centeredText(font, "ページ " + (page + 1) + " / 各機能の詳細から調整できます", width / 2, height - 64, 0xFFB8C6DA);
         graphics.centeredText(font, font.plainSubstrByWidth(status, width - 16), width / 2, height - 42, 0xFFFFD180);
+        suggestions.render(graphics, font, mouseX, mouseY);
+    }
+    @Override public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+        return suggestions.click(event) || super.mouseClicked(event, doubleClick);
+    }
+    @Override public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
+        if (suggestions.key(event)) return true;
+        if (search.isFocused() && event.key() == com.mojang.blaze3d.platform.InputConstants.KEY_RETURN) { submitSearch(); return true; }
+        return super.keyPressed(event);
     }
     @Override public void onClose() { minecraft.gui.setScreen(parent); }
 }

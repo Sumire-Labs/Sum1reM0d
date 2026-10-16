@@ -61,6 +61,9 @@ public final class ServerVerification {
             testFletching(server, level);
             PlayerVerification.verify(server, level, state, ServerVerification::passed);
             EconomyVerification.verify(server, ServerVerification::passed);
+            CoinServicesVerification.verify(server, ServerVerification::passed);
+            NoChatReportsVerification.verify(server, ServerVerification::passed);
+            MudBallVerification.verify(server, ServerVerification::passed);
             report.addProperty("success", true);
             Sum1reM0d.LOGGER.info("SERVER_VERIFY: all {} checks passed", PASSED.size());
         } catch (Throwable failure) {

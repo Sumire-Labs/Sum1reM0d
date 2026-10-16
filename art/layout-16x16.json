@@ -1,0 +1,62 @@
+{
+  "coin": {
+    "source_bounds": [
+      141,
+      157,
+      972,
+      921
+    ],
+    "source_size": [
+      1254,
+      1254
+    ]
+  },
+  "soap": {
+    "source_bounds": [
+      188,
+      287,
+      896,
+      753
+    ],
+    "source_size": [
+      1254,
+      1254
+    ]
+  },
+  "coin_roll": {
+    "source_bounds": [
+      235,
+      327,
+      784,
+      705
+    ],
+    "source_size": [
+      1254,
+      1254
+    ]
+  },
+  "mud_ball": {
+    "source_bounds": [
+      304,
+      313,
+      657,
+      659
+    ],
+    "source_size": [
+      1254,
+      1254
+    ]
+  },
+  "icon": {
+    "source_bounds": [
+      318,
+      179,
+      618,
+      866
+    ],
+    "source_size": [
+      1254,
+      1254
+    ]
+  }
+}

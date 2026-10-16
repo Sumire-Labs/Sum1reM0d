@@ -33,6 +33,7 @@ public final class Gameplay {
         boolean newDay = state.updateDay();
         RedstoneRefresh.tick(server);
         Economy.tick(server);
+        CoinServicesMultiplayerVerification.tick(server);
         EconomyMultiplayerVerification.tick(server);
         long gameTime = server.overworld().getGameTime();
         if (newDay) {
@@ -253,7 +254,7 @@ public final class Gameplay {
                 }
                 a.getInventory().setChanged(); b.getInventory().setChanged();
                 a.inventoryMenu.broadcastChanges(); b.inventoryMenu.broadcastChanges();
-                a.sendSystemMessage(Component.literal("満月で持ち物が入れ替わりました。")); b.sendSystemMessage(Component.literal("満月で持ち物が入れ替わりました。"));
+                a.sendSystemMessage(Component.literal("今日の異変で持ち物が入れ替わりました。")); b.sendSystemMessage(Component.literal("今日の異変で持ち物が入れ替わりました。"));
             }
     }
     static void shuffleNames(List<ServerPlayer> players, WorldState state, Random random) {

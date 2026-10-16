@@ -59,6 +59,10 @@ public final class ConfigSchema {
         if (option.kind() == Kind.MAP) {
             String[] pair = entry.split("=", -1);
             valid = pair.length == 2 && resourceId(pair[0], false) && resourceId(pair[1], false);
+        } else if (key.equals("hud_label")) {
+            valid = entry.codePoints().noneMatch(Character::isISOControl);
+        } else if (key.startsWith("hud_") && key.endsWith("color")) {
+            valid = entry.matches("#[0-9a-fA-F]{6}");
         } else if (key.equals("mode")) {
             valid = com.sumirelabs.sum1rem0d.game.OreDropMapping.MODES.contains(entry);
         } else if (key.contains("url")) {
@@ -67,7 +71,7 @@ public final class ConfigSchema {
             catch (IllegalArgumentException exception) { valid = false; }
         } else if (key.equals("moon_phases")) valid = entry.matches("[0-7]");
         else if (key.equals("target_mods") || key.equals("namespaces")) valid = entry.matches("[a-z0-9_.-]+");
-        else valid = resourceId(entry, option.kind() == Kind.LIST && !key.equals("soap_materials") && !key.equals("dimensions") && !key.equals("candidate_blocks"));
+        else valid = resourceId(entry, option.kind() == Kind.LIST && !key.equals("soap_materials") && !key.equals("mud_materials") && !key.equals("dimensions") && !key.equals("candidate_blocks"));
         if (!valid) throw new IllegalArgumentException(option.label() + ": 値の形式を確認してください: " + entry);
     }
     private static boolean resourceId(String value, boolean tags) { return value.matches((tags ? "#?" : "") + "[a-z0-9_.-]+:[a-z0-9_./-]+"); }
@@ -96,6 +100,7 @@ public final class ConfigSchema {
                 option.validate(values.get(option.key()));
             }
         }
+        ordered(features, "xp_bank", "xp_per_exchange", "maximum_xp_per_transaction");
         ordered(features, "economy", "starting_balance", "maximum_balance");
         ordered(features, "daily_fuel", "minimum", "maximum");
         ordered(features, "knockback_mob", "minimum_distance", "maximum_distance");
@@ -104,6 +109,8 @@ public final class ConfigSchema {
         ordered(features, "cleanliness", "health_threshold", "maximum");
         var swap = features.getAsJsonObject("inventory_swap");
         if (swap.get("start_slot").getAsInt() + swap.get("slots").getAsInt() > 36) throw new IllegalArgumentException("交換する枠がインベントリの範囲を超えています。");
+        var mud = split(features.getAsJsonObject("mud_ball").get("mud_materials").getAsString());
+        if (mud.isEmpty() || mud.size() > 9) throw new IllegalArgumentException("泥だんごの材料は1～9枠で指定してください。");
         var soap = split(features.getAsJsonObject("cleanliness").get("soap_materials").getAsString());
         if (soap.isEmpty() || soap.size() > 9) throw new IllegalArgumentException("石鹸の材料は1～9枠で指定してください。");
         var ores = new java.util.HashSet<String>();

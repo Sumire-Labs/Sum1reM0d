@@ -49,18 +49,19 @@ public final class Economy {
         if (d.coins < 0) throw new IllegalStateException("Invalid saved coin balance");
         return d.coins;
     }
-    private static void balance(ServerPlayer p, long value) { WorldState.get(p.level().getServer()).player(p).coins = value; }
+    static void balance(ServerPlayer p, long value) { WorldState.get(p.level().getServer()).player(p).coins = value; }
     private static long maximum() { return Rules.i("economy", "maximum_balance"); }
     public static int value(ItemStack stack) { return stack.is(ModContent.coin()) ? 1 : stack.is(ModContent.coinRoll()) ? 10 : 0; }
     private static void message(ServerPlayer p, String text) { p.sendSystemMessage(Component.literal("[Sum1reコ↑イン↓] " + text)); }
-    private static void saved(ServerPlayer p) {
+    static void saved(ServerPlayer p) {
         p.getInventory().setChanged(); p.inventoryMenu.broadcastChanges();
         p.level().getServer().getPlayerList().saveAll(); WorldState.get(p.level().getServer()).save(); Gameplay.sendState(p);
     }
+    private static void walletMode(ServerPlayer p) { if (p.isCreative() && !Rules.b("economy", "allow_creative_wallet")) throw new IllegalArgumentException("クリエイティブでの入出金はサーバー設定で許可してください"); }
     public static void depositHand(ServerPlayer p, InteractionHand hand) {
-        if (!Rules.on("economy") || !Rules.b("economy", "deposit") || p.isCreative() || p.isSpectator()) return;
+        if (!Rules.on("economy") || !Rules.b("economy", "deposit") || !p.isAlive() || p.isSpectator() || p.containerMenu != p.inventoryMenu) return;
         var stack = p.getItemInHand(hand); int unit = value(stack); if (unit == 0) return;
-        try { long next = CoinMath.credit(balance(p), (long)unit * stack.getCount(), maximum());
+        try { walletMode(p); long next = CoinMath.credit(balance(p), (long)unit * stack.getCount(), maximum());
             // Hand may be offhand: the journal includes all inventory/equipment slots.
             var copy = completeInventory(p); int handSlot = hand == InteractionHand.MAIN_HAND ? p.getInventory().getSelectedSlot() : net.minecraft.world.entity.player.Inventory.SLOT_OFFHAND;
             copy[handSlot] = ItemStack.EMPTY; commitInventories(Map.of(p,copy),Map.of(p,next)); saved(p); }
@@ -81,20 +82,21 @@ public final class Economy {
     }
     private static void apply(ServerPlayer p, ItemStack[] contents) { for (int i=0;i<contents.length;i++) p.getInventory().setItem(i, contents[i].copy()); }
     private static ItemStack[] completeInventory(ServerPlayer p) { var result = new ItemStack[p.getInventory().getContainerSize()]; for (int i=0;i<result.length;i++) result[i]=p.getInventory().getItem(i).copy(); return result; }
-    private static void commitInventories(Map<ServerPlayer,ItemStack[]> inventories,Map<ServerPlayer,Long> balances) {
+    private static void commitInventories(Map<ServerPlayer,ItemStack[]> inventories,Map<ServerPlayer,Long> balances) { commitInventories(inventories,balances,Map.of()); }
+    private static void commitInventories(Map<ServerPlayer,ItemStack[]> inventories,Map<ServerPlayer,Long> balances,Map<ServerPlayer,PlayerExperience> experience) {
         var first=inventories.keySet().iterator().next(); var state=WorldState.get(first.level().getServer()); var before=state.checkpoint();
         String revision=UUID.randomUUID().toString();
         try {
             for (var entry:inventories.entrySet()) {
                 var p=entry.getKey(); var items=completeInventory(p); System.arraycopy(entry.getValue(),0,items,0,entry.getValue().length);
-                var record=new JsonObject(); record.addProperty("revision",revision);
+                var record=new JsonObject(); record.addProperty("revision",revision); record.add("experience",experience.getOrDefault(p,PlayerExperience.capture(p)).json());
                 record.add("items",ItemStack.OPTIONAL_CODEC.listOf().encodeStart(p.registryAccess().createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE),Arrays.asList(items)).getOrThrow());
                 state.coinInventories().put(p.getUUID().toString(),record); balance(p,balances.get(p));
             }
             // Both accounts and their final inventories are durable in one atomic world-state replacement.
             state.saveStrict();
         } catch (RuntimeException failure) { state.restore(before); throw new IllegalStateException("保存できないため取引を取り消しました",failure); }
-        for (var entry:inventories.entrySet()) { apply(entry.getKey(),entry.getValue()); ((CoinInventoryRevision)entry.getKey()).sum1rem0d$coinRevision(revision); }
+        for (var entry:inventories.entrySet()) { apply(entry.getKey(),entry.getValue()); var xp=experience.get(entry.getKey()); if(xp!=null) {xp.apply(entry.getKey());xp.send(entry.getKey());} ((CoinInventoryRevision)entry.getKey()).sum1rem0d$coinRevision(revision); }
     }
     public static void recover(ServerPlayer p) {
         var record=WorldState.get(p.level().getServer()).coinInventories().get(p.getUUID().toString()); if(record==null)return;
@@ -102,29 +104,31 @@ public final class Economy {
         if(revision.equals(marker.sum1rem0d$coinRevision()))return;
         var items=ItemStack.OPTIONAL_CODEC.listOf().parse(p.registryAccess().createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE),record.get("items")).getOrThrow();
         if(items.size()!=p.getInventory().getContainerSize())throw new IllegalStateException("Invalid coin recovery inventory size");
-        apply(p,items.toArray(ItemStack[]::new)); marker.sum1rem0d$coinRevision(revision); p.getInventory().setChanged(); p.inventoryMenu.broadcastFullState();
+        apply(p,items.toArray(ItemStack[]::new)); if(record.has("experience")){var xp=PlayerExperience.read(record.getAsJsonObject("experience"));xp.apply(p);xp.send(p);} marker.sum1rem0d$coinRevision(revision); p.getInventory().setChanged(); p.inventoryMenu.broadcastFullState();
     }
     public static void handle(EconomyRequestPayload request, ServerPlayer p) {
         // Both loader handlers dispatch on the logical server thread.
         if (!p.level().getServer().isSameThread()) { p.level().getServer().execute(() -> handle(request,p)); return; }
+        if(request.action().equals("services_verify")&&Boolean.getBoolean("sum1rem0d.coinServicesVerify")){CoinServicesMultiplayerVerification.acknowledge(p,request.amount());return;}
         if (request.action().equals("verify") && Boolean.getBoolean("sum1rem0d.economyVerify")) { EconomyMultiplayerVerification.acknowledge(p,request.amount()); return; }
         if (!Rules.on("economy") || !p.isAlive() || p.isSpectator()) return;
         try {
             switch (request.action()) {
                 case "refresh" -> Gameplay.sendState(p);
                 case "deposit" -> {
-                    if (!Rules.b("economy","deposit") || p.isCreative() || SESSIONS.containsKey(p.getUUID())) return;
+                    walletMode(p); if (!Rules.b("economy","deposit")) throw new IllegalArgumentException("入金はサーバー設定で無効です"); if (SESSIONS.containsKey(p.getUUID()) || p.containerMenu != p.inventoryMenu) throw new IllegalArgumentException("取引・作業画面を閉じてから入金してください");
                     var copy = inventory(p); long amount = 0;
                     for (var stack : copy) if (value(stack) != 0) { amount = Math.addExact(amount, (long)value(stack)*stack.getCount()); stack.setCount(0); }
                     if(amount==0)return; long next = CoinMath.credit(balance(p),amount,maximum()); commitInventories(Map.of(p,copy),Map.of(p,next)); saved(p);
                 }
                 case "withdraw" -> {
-                    if (!Rules.b("economy","withdraw") || p.isCreative() || SESSIONS.containsKey(p.getUUID())) return;
+                    walletMode(p); if (!Rules.b("economy","withdraw")) throw new IllegalArgumentException("出金はサーバー設定で無効です"); if (SESSIONS.containsKey(p.getUUID()) || p.containerMenu != p.inventoryMenu) throw new IllegalArgumentException("取引・作業画面を閉じてから出金してください");
                     int unit = request.target().equals("roll") ? 10 : 1;
                     long amount = request.amount(); if (amount <= 0 || amount % unit != 0 || amount / unit > 64 || amount > balance(p)) throw new IllegalArgumentException("出金額は1スタック以内、残高以内にしてください");
                     var copy = inventory(p); if (!insert(copy,new ItemStack(unit==10?ModContent.coinRoll():ModContent.coin(),(int)(amount/unit)))) throw new IllegalArgumentException("持ち物に空きがありません");
                     commitInventories(Map.of(p,copy),Map.of(p,balance(p)-amount)); saved(p);
                 }
+                case "xp_deposit", "xp_withdraw" -> { if(request.revision()!=com.sumirelabs.sum1rem0d.Sum1reM0d.config().revision())throw new IllegalArgumentException("交換条件が更新されました。金額を再確認してください");exchangeXp(p,request.amount(),request.action().equals("xp_deposit")); }
                 case "invite" -> invite(p, UUID.fromString(request.target()));
                 case "join" -> join(p,request.revision());
                 case "decline" -> { INVITES.remove(p.getUUID()); Gameplay.sendState(p); }
@@ -144,6 +148,14 @@ public final class Economy {
                 default -> {}
             }
         } catch (IllegalArgumentException | ArithmeticException | IllegalStateException e) { message(p, e.getMessage()==null?"取引できません":e.getMessage()); Gameplay.sendState(p); }
+    }
+    static void exchangeXp(ServerPlayer p,long amount,boolean deposit) {
+        if(!Rules.on("economy")||!p.isAlive()||!Rules.on("xp_bank")||!Rules.b("xp_bank",deposit?"xp_to_coins":"coins_to_xp")||p.isCreative()||p.isSpectator()||p.containerMenu!=p.inventoryMenu||SESSIONS.containsKey(p.getUUID()))return;
+        if(amount<=0||amount>Rules.i("xp_bank","maximum_xp_per_transaction"))throw new IllegalArgumentException("1回の交換上限を確認してください");
+        long xp=PlayerExperience.capture(p).points();ExperienceAccounting.bar(xp);
+        var quote=ExperienceAccounting.exchange(xp,balance(p),amount,Rules.i("xp_bank","xp_per_exchange"),Rules.i("xp_bank","coins_per_exchange"),Rules.i("xp_bank","fee_percent"),deposit,maximum());
+        commitInventories(Map.of(p,completeInventory(p)),Map.of(p,quote.coinsAfter()),Map.of(p,PlayerExperience.at(quote.xpAfter())));saved(p);
+        message(p,deposit?amount+" XPを "+quote.coins()+" コインへ交換しました":quote.coins()+" コインを "+amount+" XPへ交換しました");
     }
     private static boolean near(ServerPlayer a,ServerPlayer b) {
         double distance=Rules.n("player_trading","maximum_distance"); return a!=b && a.level()==b.level() && a.distanceToSqr(b)<=distance*distance;
@@ -210,7 +222,7 @@ public final class Economy {
         INVITES.entrySet().removeIf(e->e.getValue().expires()<server.overworld().getGameTime());
     }
     public static JsonObject state(ServerPlayer p) {
-        var json=new JsonObject();json.addProperty("balance",balance(p)); if(Boolean.getBoolean("sum1rem0d.economyVerify")) json.addProperty("verificationPhase",EconomyMultiplayerVerification.phase());
+        var json=new JsonObject();json.addProperty("balance",balance(p));if(Boolean.getBoolean("sum1rem0d.coinServicesVerify"))json.addProperty("servicesPhase",CoinServicesMultiplayerVerification.phase()); try {json.addProperty("xpPoints",PlayerExperience.capture(p).points());json.addProperty("xpSupported",PlayerExperience.capture(p).points()<=Integer.MAX_VALUE);} catch(IllegalArgumentException|ArithmeticException invalid){json.addProperty("xpPoints",0);json.addProperty("xpSupported",false);} if(Boolean.getBoolean("sum1rem0d.economyVerify")) json.addProperty("verificationPhase",EconomyMultiplayerVerification.phase());
         var invite=INVITES.get(p.getUUID());
         if(invite!=null) { var sender=p.level().getServer().getPlayerList().getPlayer(invite.sender()); if(sender!=null) {json.addProperty("inviteName",sender.getGameProfile().name());json.addProperty("inviteRevision",invite.revision());} }
         var players=new JsonArray(); if(Rules.on("player_trading")) for(var other:p.level().getServer().getPlayerList().getPlayers()) if(active(other)&&near(p,other)) {var entry=new JsonObject();entry.addProperty("id",other.getUUID().toString());entry.addProperty("name",other.getGameProfile().name());players.add(entry);} json.add("players",players);

@@ -1,0 +1,56 @@
+{
+  "generator": "built-in image_gen",
+  "prompts": "art/prompts-16x16.json",
+  "assets": [
+    {
+      "asset": "coin",
+      "path": "src/main/resources/assets/sum1rem0d/textures/item/coin.png",
+      "size": [
+        16,
+        16
+      ],
+      "sha256": "0c1411307794b4ca9b80181eceaaa03c8f232aa06fbd2871dd3d070b20bd3da8",
+      "source": "art/source/16x16-redesign/coin-ai.png"
+    },
+    {
+      "asset": "soap",
+      "path": "src/main/resources/assets/sum1rem0d/textures/item/soap.png",
+      "size": [
+        16,
+        16
+      ],
+      "sha256": "2a64405dbbc33f5eee0b22d102ed54e4b7e9f8b2d66cdeb2845492a86a84b5ae",
+      "source": "art/source/16x16-redesign/soap-ai.png"
+    },
+    {
+      "asset": "coin_roll",
+      "path": "src/main/resources/assets/sum1rem0d/textures/item/coin_roll.png",
+      "size": [
+        16,
+        16
+      ],
+      "sha256": "3c3ffe8e8bc4f6fce21db84e98205ddffe89cdb22ce5eb94a52fb704c3361dae",
+      "source": "art/source/16x16-redesign/coin_roll-ai.png"
+    },
+    {
+      "asset": "mud_ball",
+      "path": "src/main/resources/assets/sum1rem0d/textures/item/mud_ball.png",
+      "size": [
+        16,
+        16
+      ],
+      "sha256": "c243cbc34954c1f37f1c4c2ea1684ccd0f952acf84409dfb7baac00403fe442f",
+      "source": "art/source/16x16-redesign/mud_ball-ai.png"
+    },
+    {
+      "asset": "icon",
+      "path": "src/main/resources/assets/sum1rem0d/icon.png",
+      "size": [
+        16,
+        16
+      ],
+      "sha256": "b717403b77470c7ed0cbf6f328f9300fa3a2e09a2ccbd8bf43ff6161c0ba85d9",
+      "source": "art/source/16x16-redesign/icon-ai.png"
+    }
+  ]
+}

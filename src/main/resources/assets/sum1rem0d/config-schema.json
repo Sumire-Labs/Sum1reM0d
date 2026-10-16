@@ -617,6 +617,94 @@
         "initial": 4,
         "min": 1,
         "max": 64
+      },
+      {
+        "key": "hud_anchor",
+        "label": "HUD基準（0左上/1右上/2左下/3右下）",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 3
+      },
+      {
+        "key": "hud_x",
+        "label": "HUDの端からの横距離（GUIピクセル）",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 0,
+        "max": 8192
+      },
+      {
+        "key": "hud_y",
+        "label": "HUDの端からの縦距離（GUIピクセル）",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 0,
+        "max": 8192
+      },
+      {
+        "key": "hud_scale",
+        "label": "HUDの大きさ",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0.5,
+        "max": 3
+      },
+      {
+        "key": "hud_background_opacity",
+        "label": "HUD背景の不透明度（0で透明）",
+        "type": "DECIMAL",
+        "initial": 0.6274509803921569,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "hud_text_color",
+        "label": "HUD文字色（#RRGGBB）",
+        "type": "TEXT",
+        "initial": "#FFFFFF",
+        "min": 0,
+        "max": 7
+      },
+      {
+        "key": "hud_shadow",
+        "label": "HUD文字の影",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hud_label",
+        "label": "HUDの表示名（空欄で数値のみ）",
+        "type": "TEXT",
+        "initial": "清潔度",
+        "min": 0,
+        "max": 80
+      },
+      {
+        "key": "hud_bar",
+        "label": "HUDの清潔度バーを表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hud_bar_color",
+        "label": "HUDバー通常色（#RRGGBB）",
+        "type": "TEXT",
+        "initial": "#69CDB8",
+        "min": 0,
+        "max": 7
+      },
+      {
+        "key": "hud_low_color",
+        "label": "HUDバー半分未満の色（#RRGGBB）",
+        "type": "TEXT",
+        "initial": "#E89964",
+        "min": 0,
+        "max": 7
       }
     ]
   },
@@ -2315,6 +2403,14 @@
         "initial": false,
         "min": 0,
         "max": 0
+      },
+      {
+        "key": "search_suggestions",
+        "label": "Wiki・Configの検索候補を表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
       }
     ]
   },
@@ -2368,6 +2464,78 @@
         "label": "残高HUD",
         "type": "BOOLEAN",
         "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hud_anchor",
+        "label": "HUD基準（0左上/1右上/2左下/3右下）",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 3
+      },
+      {
+        "key": "hud_x",
+        "label": "HUDの端からの横距離（GUIピクセル）",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 0,
+        "max": 8192
+      },
+      {
+        "key": "hud_y",
+        "label": "HUDの端からの縦距離（GUIピクセル）",
+        "type": "INTEGER",
+        "initial": 28,
+        "min": 0,
+        "max": 8192
+      },
+      {
+        "key": "hud_scale",
+        "label": "HUDの大きさ",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0.5,
+        "max": 3
+      },
+      {
+        "key": "hud_background_opacity",
+        "label": "HUD背景の不透明度（0で透明）",
+        "type": "DECIMAL",
+        "initial": 0.6274509803921569,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "hud_text_color",
+        "label": "HUD文字色（#RRGGBB）",
+        "type": "TEXT",
+        "initial": "#FFD060",
+        "min": 0,
+        "max": 7
+      },
+      {
+        "key": "hud_shadow",
+        "label": "HUD文字の影",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "hud_label",
+        "label": "HUDの表示名（空欄で数値のみ）",
+        "type": "TEXT",
+        "initial": "Sum1reコ↑イン↓",
+        "min": 0,
+        "max": 80
+      },
+      {
+        "key": "allow_creative_wallet",
+        "label": "クリエイティブでのコイン入出金を許可",
+        "type": "BOOLEAN",
+        "initial": false,
         "min": 0,
         "max": 0
       }
@@ -2503,6 +2671,225 @@
         "initial": true,
         "min": 0,
         "max": 0
+      },
+      {
+        "key": "toast_enabled",
+        "label": "取引依頼のトースト通知（個人）",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "toast_seconds",
+        "label": "取引依頼トーストの表示秒数（個人）",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 30
+      }
+    ]
+  },
+  {
+    "id": "coin_anvil",
+    "label": "金床のコイン払い",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "coins_per_level",
+        "label": "通常の消費レベル1あたりのコイン",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 1000000
+      }
+    ]
+  },
+  {
+    "id": "coin_enchanting",
+    "label": "エンチャントのコイン払い",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "coins_per_level",
+        "label": "通常の消費レベル1あたりのコイン",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 1000000
+      },
+      {
+        "key": "require_balance",
+        "label": "必要レベル相当の残高も要求",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "xp_bank",
+    "label": "XP・コイン銀行",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "xp_per_exchange",
+        "label": "交換単位のXPポイント",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 1000000
+      },
+      {
+        "key": "coins_per_exchange",
+        "label": "交換単位のコイン",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 1,
+        "max": 1000000
+      },
+      {
+        "key": "xp_to_coins",
+        "label": "XPからコインへ交換",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "coins_to_xp",
+        "label": "コインからXPへ交換",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "fee_percent",
+        "label": "手数料 (%)",
+        "type": "INTEGER",
+        "initial": 0,
+        "min": 0,
+        "max": 99
+      },
+      {
+        "key": "maximum_xp_per_transaction",
+        "label": "1回の交換XP上限",
+        "type": "INTEGER",
+        "initial": 1000000,
+        "min": 1,
+        "max": 1000000000
+      }
+    ]
+  },
+  {
+    "id": "no_chat_reports",
+    "label": "No Chat Reports（チャット報告防止）",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "サーバーで報告可能なチャットの配信を防止",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "suppress_signing",
+        "label": "自分のチャット署名送信を抑制（個人・再接続）",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "mud_ball",
+    "label": "泥だんご（清潔度を下げる）",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "cleanliness_loss",
+        "label": "使用時に下がる清潔度",
+        "type": "DECIMAL",
+        "initial": 25,
+        "min": 0,
+        "max": 100000
+      },
+      {
+        "key": "cooldown_ticks",
+        "label": "使用後の待ち時間（tick）",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 1200
+      },
+      {
+        "key": "consume",
+        "label": "使用時にアイテムを消費",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "クラフトを有効化",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "mud_materials",
+        "label": "クラフト材料（各1枠）",
+        "type": "LIST",
+        "initial": "minecraft:dirt,minecraft:clay_ball",
+        "min": 0,
+        "max": 512
+      },
+      {
+        "key": "recipe_output",
+        "label": "クラフト出力数",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 64
       }
     ]
   }

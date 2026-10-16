@@ -45,7 +45,17 @@
     "CoinMerchantMixin",
     "CoinMerchantSyncMixin",
     "CoinPlacedBlockMixin",
-    "CoinInventoryRevisionMixin"
+    "CoinInventoryRevisionMixin",
+    "CoinMenuDataAccess",
+    "CoinEnchantmentSeedAccess",
+    "CoinAnvilClickMixin",
+    "CoinAnvilMixin",
+    "CoinEnchantingMixin",
+    "VerificationEnchantmentCriteriaMixin",
+    "NoChatReportsSendMixin",
+    "NoChatReportsServerMixin",
+    "NoChatReportsStatusMixin",
+    "NoChatReportsDeliveryMixin"
   ],
   "client": [
     "MenuScreenMixin",
@@ -81,7 +91,11 @@
     "compat.JeiBrowserAreaMixin",
     "compat.JeiInputMixin",
     "GrassColorMixin",
-    "OreBlockNameMixin"
+    "OreBlockNameMixin",
+    "CoinAnvilScreenMixin",
+    "CoinEnchantingScreenMixin",
+    "NoChatReportsKeysMixin",
+    "NoChatReportsClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

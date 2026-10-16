@@ -21,7 +21,7 @@ import static com.sumirelabs.sum1rem0d.game.ServerVerification.require;
 final class EconomyVerification {
     private static void request(ServerPlayer p,String action,long amount,long revision){Economy.handle(new EconomyRequestPayload(action,"",amount,revision),p);}
     private static long revision(ServerPlayer p){return Economy.state(p).getAsJsonObject("trade").get("revision").getAsLong();}
-    private static ServerPlayer actor(MinecraftServer server,ServerLevel level,String name){
+    static ServerPlayer actor(MinecraftServer server,ServerLevel level,String name){
         var p=new PlayerVerification.TestPlayer(server,level,name);
         var connection=new Connection(PacketFlow.SERVERBOUND);new io.netty.channel.embedded.EmbeddedChannel(connection);
         p.connection=new ServerGamePacketListenerImpl(server,connection,p,CommonListenerCookie.createInitial(p.getGameProfile(),false)){
@@ -77,6 +77,14 @@ final class EconomyVerification {
             Economy.startSession(a,b);Economy.select(a,0,false);Economy.leaving(b);require(a.getInventory().getItem(0).is(Items.EMERALD)&&Economy.balance(a)==75,"Disconnect returns no escrow because items never left inventory");
             for(int i=0;i<36;i++)a.getInventory().setItem(i,new ItemStack(Items.STONE,64));Economy.startSession(a,b);Economy.select(b,0,false);request(a,"offer",10,revision(a));rev=revision(a);request(a,"confirm",0,rev);request(b,"confirm",0,rev);require(Economy.balance(a)==75&&Economy.balance(b)==45&&b.getInventory().getItem(0).is(Items.DIAMOND)&&a.getInventory().getItem(0).is(Items.STONE),"Full recipient refuses entire trade including currency");Economy.cancel(a,"fixture");
             passed.accept("native trade close, disconnect and full-recipient rollback preserve every item and coin");
+            a.getInventory().clearContent();state.player(a).coins=0;a.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+            var creative=config.snapshot();creative.getAsJsonObject("features").getAsJsonObject("economy").addProperty("allow_creative_wallet",false);config.update(creative,config.revision());
+            a.getInventory().setItem(0,new ItemStack(ModContent.coin(),3));request(a,"deposit",0,0);require(Economy.balance(a)==0&&a.getInventory().getItem(0).getCount()==3,"Creative wallet is disabled by default without consuming coins");
+            creative.getAsJsonObject("features").getAsJsonObject("economy").addProperty("allow_creative_wallet",true);config.update(creative,config.revision());request(a,"deposit",0,0);require(Economy.balance(a)==3&&a.getInventory().getItem(0).isEmpty(),"Configured creative deposit consumes physical coins");
+            request(a,"withdraw",1,0);require(Economy.balance(a)==2&&a.getInventory().getItem(0).is(ModContent.coin()),"Configured creative withdrawal creates one physical coin");
+            Economy.depositHand(a,net.minecraft.world.InteractionHand.MAIN_HAND);require(Economy.balance(a)==3&&a.getInventory().getItem(0).isEmpty(),"Configured creative right-click deposit conserves value");
+            a.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);creative.getAsJsonObject("features").getAsJsonObject("economy").addProperty("allow_creative_wallet",false);config.update(creative,config.revision());a.getInventory().setItem(0,new ItemStack(ModContent.coin(),2));request(a,"deposit",0,0);require(Economy.balance(a)==5&&a.getInventory().getItem(0).isEmpty(),"Coins created as items are valid in survival regardless of provenance");
+            passed.accept("creative wallet default denial, configured deposit/withdraw/right-click and survival item provenance");
         }finally{Economy.leaving(a);Economy.leaving(b);config.update(original,config.revision());state.restore(checkpoint);state.save();a.discard();b.discard();}
     }
 }

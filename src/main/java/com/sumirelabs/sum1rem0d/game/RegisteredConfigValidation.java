@@ -31,7 +31,7 @@ public final class RegisteredConfigValidation {
                     continue;
                 }
                 Registry<?> registry = switch (key) {
-                    case "target_items", "forbidden_items", "allowed_items", "input_item", "output_item", "soap_materials", "fuel_items" -> BuiltInRegistries.ITEM;
+                    case "target_items", "forbidden_items", "allowed_items", "input_item", "output_item", "soap_materials", "mud_materials", "fuel_items" -> BuiltInRegistries.ITEM;
                     case "target_blocks", "excluded_blocks", "candidate_blocks", "replacement", "first_block", "second_block" -> BuiltInRegistries.BLOCK;
                     case "buff_effects", "debuff_effects" -> BuiltInRegistries.MOB_EFFECT;
                     case "mob_type" -> BuiltInRegistries.ENTITY_TYPE;

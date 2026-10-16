@@ -53,6 +53,7 @@ repositories { mavenCentral() }
 ext.json5Coordinate = 'de.marhali:json5-java:3.0.0'
 dependencies {
     implementation json5Coordinate
+    compileOnly "io.github.llamalad7:mixinextras-common:0.5.5"
     testImplementation 'com.google.code.gson:gson:2.14.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
@@ -66,6 +67,14 @@ if (providers.gradleProperty('viewer_mod').isPresent()) {
 }
 tasks.withType(Test).configureEach { useJUnitPlatform() }
 tasks.withType(JavaExec).configureEach {
+    if (name == 'runClient' && providers.gradleProperty('asset_redesign_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.assetRedesignSmoke=true'
+    if (name == 'runClient' && providers.gradleProperty('trade_toast_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.tradeToastSmoke=true'
+    if (name == 'runClient' && providers.gradleProperty('hud_keys_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.hudKeysSmoke=true'
+    if (name == 'runClient' && providers.gradleProperty('suggestions_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.suggestionsSmoke=true'
+    if (name == 'runServer' && providers.gradleProperty('chat_verify').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.chatVerify=true'
+    if (name == 'runClient' && providers.gradleProperty('chat_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.chatSmoke=true'
+    if (name == 'runServer' && providers.gradleProperty('coin_services_verify').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.coinServicesVerify=true'
+    if (name == 'runClient' && providers.gradleProperty('coin_services_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.coinServicesSmoke=true'
     if (name == 'runServer' && providers.gradleProperty('economy_verify').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.economyVerify=true'
     if (name == 'runClient' && providers.gradleProperty('economy_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.economySmoke=true'
     if (name == 'runClient' && providers.gradleProperty('wiki_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.wikiSmoke=true'
@@ -73,12 +82,12 @@ tasks.withType(JavaExec).configureEach {
     if (name == 'runClient' && providers.gradleProperty('multi_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.multiSmoke=true'
     if (name == 'runClient' && providers.gradleProperty('viewer_smoke').map { it.toBoolean() }.orElse(false).get()) jvmArgs '-Dsum1rem0d.viewerSmoke=true', "-Dsum1rem0d.viewer=${providers.gradleProperty('viewer_mod').getOrElse('jei')}"
     if (name == 'runServer') standardInput = System.in
-    if (name == 'runClient' && ['client_smoke', 'network_smoke', 'browser_smoke', 'toast_smoke', 'viewer_smoke', 'multi_smoke', 'wiki_smoke', 'economy_smoke'].any { providers.gradleProperty(it).map { value -> value.toBoolean() }.orElse(false).get() }) {
+    if (name == 'runClient' && ['client_smoke', 'network_smoke', 'browser_smoke', 'toast_smoke', 'viewer_smoke', 'multi_smoke', 'wiki_smoke', 'economy_smoke', 'coin_services_smoke', 'chat_smoke', 'suggestions_smoke', 'trade_toast_smoke'].any { providers.gradleProperty(it).map { value -> value.toBoolean() }.orElse(false).get() }) {
         environment 'SDL_WINDOW_ACTIVATE_WHEN_SHOWN', '0'
         environment 'SDL_WINDOW_ACTIVATE_WHEN_RAISED', '0'
     }
-    def reportModes = name == 'runServer' ? [economy_verify: 'run/world/sum1rem0d-economy-multiplayer.json', server_verify: 'run/world/sum1rem0d-verification.json', toast_verify: 'run/world/sum1rem0d-toast-verification.json', multi_verify: 'run/world/sum1rem0d-multiplayer-verification.json']
-        : name == 'runClient' ? [economy_smoke: 'run/sum1rem0d-economy-verification.json', client_smoke: 'run/sum1rem0d-client-verification.json', network_smoke: 'run/sum1rem0d-network-verification.json', browser_smoke: 'run/sum1rem0d-browser-verification.json', toast_smoke: 'run/sum1rem0d-toast-verification.json', viewer_smoke: 'run/sum1rem0d-viewer-verification.json', multi_smoke: 'run/sum1rem0d-multiplayer-verification.json', wiki_smoke: 'run/sum1rem0d-wiki-verification.json'] : [:]
+    def reportModes = name == 'runServer' ? [chat_verify: 'run/world/sum1rem0d-chat-network.json', coin_services_verify: 'run/world/sum1rem0d-coin-services-multiplayer.json', economy_verify: 'run/world/sum1rem0d-economy-multiplayer.json', server_verify: 'run/world/sum1rem0d-verification.json', toast_verify: 'run/world/sum1rem0d-toast-verification.json', multi_verify: 'run/world/sum1rem0d-multiplayer-verification.json']
+        : name == 'runClient' ? [trade_toast_smoke: 'run/sum1rem0d-trade-toast-verification.json', suggestions_smoke: 'run/sum1rem0d-suggestions-verification.json', chat_smoke: 'run/sum1rem0d-chat-client.json', coin_services_smoke: 'run/sum1rem0d-coin-services-verification.json', economy_smoke: 'run/sum1rem0d-economy-verification.json', client_smoke: 'run/sum1rem0d-client-verification.json', network_smoke: 'run/sum1rem0d-network-verification.json', browser_smoke: 'run/sum1rem0d-browser-verification.json', toast_smoke: 'run/sum1rem0d-toast-verification.json', viewer_smoke: 'run/sum1rem0d-viewer-verification.json', multi_smoke: 'run/sum1rem0d-multiplayer-verification.json', wiki_smoke: 'run/sum1rem0d-wiki-verification.json'] : [:]
     if (name == 'runClient' && providers.gradleProperty('viewer_mod').getOrElse('jei') == 'emi') reportModes.viewer_smoke = 'run/sum1rem0d-emi-verification.json'
     def activeModes = reportModes.findAll { key, value -> providers.gradleProperty(key).map { it.toBoolean() }.orElse(false).get() }
     if (name == 'runClient' && providers.gradleProperty('client_run_dir').isPresent()) activeModes = activeModes.collectEntries { key, value -> [(key): providers.gradleProperty('client_run_dir').get() + value.substring(3)] }

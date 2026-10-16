@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 public final class ClientEntrypoint implements ClientModInitializer {
     @Override public void onInitializeClient() {
         com.sumirelabs.sum1rem0d.config.PersonalConfig.initialize(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir());
+        ClientKeys.register(net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper::registerKeyMapping);
         net.minecraft.client.gui.screens.MenuScreens.register(com.sumirelabs.sum1rem0d.game.FletchingMenu.TYPE, FletchingScreen::new);
         net.minecraft.client.gui.screens.MenuScreens.register(com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE, TradeScreen::new);
         ClientPlayNetworking.registerGlobalReceiver(ConfigStatePayload.TYPE,
@@ -22,10 +23,10 @@ public final class ClientEntrypoint implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(FakeAdvancementPayload.TYPE, (state, context) -> FakeAdvancementToast.receive(state));
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientRules.clear();
-            ClientGameState.clear();
+            ClientGameState.clear(); TradeInvitationToast.clear();
             PlatformClientNetwork.refresh();
         });
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { ClientRules.clear(); ClientGameState.clear(); });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { ClientRules.clear(); ClientGameState.clear(); TradeInvitationToast.clear(); });
     }
 }
 //?} elif neoforge {
@@ -41,6 +42,7 @@ import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlers
 public final class ClientEntrypoint {
     public ClientEntrypoint(IEventBus bus) {
         com.sumirelabs.sum1rem0d.config.PersonalConfig.initialize(net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get());
+        bus.addListener(ClientKeys::registerNeo);
         bus.addListener(ClientEntrypoint::register);
         bus.addListener(ClientEntrypoint::screens);
         NeoForge.EVENT_BUS.addListener(ClientEntrypoint::login);
@@ -54,9 +56,9 @@ public final class ClientEntrypoint {
     private static void screens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) { event.register(com.sumirelabs.sum1rem0d.game.FletchingMenu.TYPE, FletchingScreen::new); event.register(com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE, TradeScreen::new); }
     private static void login(ClientPlayerNetworkEvent.LoggingIn event) {
         ClientRules.clear();
-        ClientGameState.clear();
+        ClientGameState.clear(); TradeInvitationToast.clear();
         PlatformClientNetwork.refresh();
     }
-    private static void logout(ClientPlayerNetworkEvent.LoggingOut event) { ClientRules.clear(); ClientGameState.clear(); }
+    private static void logout(ClientPlayerNetworkEvent.LoggingOut event) { ClientRules.clear(); ClientGameState.clear(); TradeInvitationToast.clear(); }
 }
 *///?}

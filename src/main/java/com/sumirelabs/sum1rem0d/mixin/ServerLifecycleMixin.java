@@ -15,9 +15,9 @@ public abstract class ServerLifecycleMixin {
         if (com.sumirelabs.sum1rem0d.Sum1reM0d.initialized()) com.sumirelabs.sum1rem0d.game.RegisteredConfigValidation.validate(com.sumirelabs.sum1rem0d.Sum1reM0d.config().snapshot(), (MinecraftServer) (Object) this);
     }
     @Inject(method = "tickServer", at = @At("TAIL"))
-    private void sum1rem0d$tick(BooleanSupplier time, CallbackInfo ci) { Gameplay.tick((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.ServerVerification.tick((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.ToastVerification.tick((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.MultiplayerVerification.tick((MinecraftServer) (Object) this); }
+    private void sum1rem0d$tick(BooleanSupplier time, CallbackInfo ci) { com.sumirelabs.sum1rem0d.game.ChatPrivacyNetworkVerification.tick((MinecraftServer)(Object)this); Gameplay.tick((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.ServerVerification.tick((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.ToastVerification.tick((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.MultiplayerVerification.tick((MinecraftServer) (Object) this); }
     @Inject(method = "stopServer", at = @At("HEAD"))
-    private void sum1rem0d$restoreVerification(CallbackInfo ci) { com.sumirelabs.sum1rem0d.game.MultiplayerVerification.stopping((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.EconomyMultiplayerVerification.stopping((MinecraftServer)(Object)this); }
+    private void sum1rem0d$restoreVerification(CallbackInfo ci) { com.sumirelabs.sum1rem0d.game.ChatPrivacyNetworkVerification.stopping((MinecraftServer)(Object)this); com.sumirelabs.sum1rem0d.game.MultiplayerVerification.stopping((MinecraftServer) (Object) this); com.sumirelabs.sum1rem0d.game.EconomyMultiplayerVerification.stopping((MinecraftServer)(Object)this); com.sumirelabs.sum1rem0d.game.CoinServicesMultiplayerVerification.stopping((MinecraftServer)(Object)this); }
     @Inject(method = "saveAllChunks", at = @At("HEAD"))
     private void sum1rem0d$save(boolean silent, boolean flush, boolean force, CallbackInfoReturnable<Boolean> cir) { WorldState.saveIfLoaded((MinecraftServer) (Object) this); }
     @Inject(method = "stopServer", at = @At("TAIL"))

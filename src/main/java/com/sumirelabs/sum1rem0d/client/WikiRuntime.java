@@ -14,7 +14,7 @@ public final class WikiRuntime {
     public static boolean enabled() { return PersonalConfig.store().enabled("wiki"); }
     static void reset() { connection = null; completed = false; readyTicks = 0; }
     static void tick(Minecraft mc) {
-        if (java.util.List.of("clientSmoke", "networkSmoke", "browserSmoke", "toastSmoke", "viewerSmoke", "multiSmoke", "economySmoke").stream().anyMatch(name -> Boolean.getBoolean("sum1rem0d." + name))) return;
+        if (java.util.List.of("clientSmoke", "networkSmoke", "browserSmoke", "toastSmoke", "viewerSmoke", "multiSmoke", "economySmoke", "coinServicesSmoke", "chatSmoke").stream().anyMatch(name -> Boolean.getBoolean("sum1rem0d." + name))) return;
         Object next = mc.getConnection();
         if (connection != next) { connection = next; completed = false; readyTicks = 0; }
         if (connection == null || completed || mc.level == null || mc.player == null || !ClientRules.received() || !ClientGameState.received()) return;

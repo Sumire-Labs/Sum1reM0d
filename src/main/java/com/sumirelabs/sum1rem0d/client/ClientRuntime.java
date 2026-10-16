@@ -14,6 +14,7 @@ public final class ClientRuntime {
     private static int activityCooldown;
     private ClientRuntime() {}
     public static void acceptRules(ConfigStatePayload payload) {
+        ChatPrivacySmoke.rules(payload);
         var before = ClientRules.snapshot().getAsJsonObject("features");
         ClientRules.accept(payload);
         var after = ClientRules.snapshot().getAsJsonObject("features");
@@ -29,6 +30,7 @@ public final class ClientRuntime {
         boolean grass = ClientGameState.daily("upside_down_grass"), ore = ClientGameState.daily("diamond_disguise");
         int permutation = (int) ClientGameState.number("furnacePermutation", -1);
         ClientGameState.accept(payload);
+        TradeInvitationToast.receive(ClientGameState.snapshot());
         cameraTicks = (int) ClientGameState.number("cameraTicks", 0); redTicks = (int) ClientGameState.number("redTicks", 0);
         if (cameraTicks > 0) {
             originalYaw = (float) ClientGameState.number("originalYaw", 0); originalPitch = (float) ClientGameState.number("originalPitch", 0);
@@ -46,7 +48,8 @@ public final class ClientRuntime {
         ViewerSmoke.tick(mc);
         EmiSmoke.tick(mc);
         MultiplayerSmoke.tick(mc);
-        EconomySmoke.tick(mc); WikiSmoke.tick(mc); WikiRuntime.tick(mc);
+        TradeToastSmoke.tick(mc); SearchSuggestionSmoke.tick(mc); ChatPrivacySmoke.tick(mc); CoinServicesSmoke.tick(mc); EconomySmoke.tick(mc); WikiSmoke.tick(mc); WikiRuntime.tick(mc);
+        ClientKeys.tick(mc);
         BrowserOverlays.tick();
         AfkLights.tick();
         if (mc.player == null) { cameraTicks = 0; redTicks = 0; cameraActive = false; return; }
@@ -76,17 +79,6 @@ public final class ClientRuntime {
             graphics.fill(0, 0, graphics.guiWidth(), 16, color); graphics.fill(0, graphics.guiHeight() - 16, graphics.guiWidth(), graphics.guiHeight(), color);
             graphics.fill(0, 16, 16, graphics.guiHeight() - 16, color); graphics.fill(graphics.guiWidth() - 16, 16, graphics.guiWidth(), graphics.guiHeight() - 16, color);
         }
-        if (ClientRules.enabled("economy") && PersonalConfig.store().bool("economy","hud")) {
-            String label = "Sum1reコ↑イン↓ " + WalletScreen.number(WalletScreen.state(),"balance");
-            int x=8,y=28; graphics.fill(x,y,x+mc.font.width(label)+6,y+13,0xA0000000); graphics.text(mc.font,label,x+3,y+2,0xFFFFD060);
-        }
-        if (ClientRules.enabled("cleanliness") && PersonalConfig.store().bool("cleanliness", "hud")) {
-            int x = 8, y = 8;
-            double max = ClientRules.number("cleanliness", "maximum"), clean = ClientGameState.number("cleanliness", max);
-            String label = "清潔度 " + (int) clean + " / " + (int) max;
-            graphics.fill(x, y, x + Math.max(92, mc.font.width(label) + 6), y + 15, 0xA0000000);
-            graphics.fill(x + 2, y + 11, x + 2 + (int) (Math.max(0, Math.min(1, clean / max)) * 88), y + 13, clean < max / 2 ? 0xFFE89964 : 0xFF69CDB8);
-            graphics.text(mc.font, label, x + 3, y + 1, 0xFFFFFFFF);
-        }
+        CustomHud.render(graphics);
     }
 }

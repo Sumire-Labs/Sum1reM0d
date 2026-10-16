@@ -17,7 +17,7 @@ public abstract class SoapCreativeTabMixin {
     private void sum1rem0d$soap(CallbackInfo ci) {
         var key = BuiltInRegistries.CREATIVE_MODE_TAB.getKey((CreativeModeTab) (Object) this);
         if (key == null || !key.toString().equals("minecraft:tools_and_utilities")) return;
-        var visible = ItemStackLinkedSet.createTypeAndComponentsSet(); visible.addAll(displayItems); visible.add(new ItemStack(ModContent.soap())); visible.add(new ItemStack(ModContent.coin())); visible.add(new ItemStack(ModContent.coinRoll())); displayItems = visible;
-        var searchable = ItemStackLinkedSet.createTypeAndComponentsSet(); searchable.addAll(displayItemsSearchTab); searchable.add(new ItemStack(ModContent.soap())); searchable.add(new ItemStack(ModContent.coin())); searchable.add(new ItemStack(ModContent.coinRoll())); displayItemsSearchTab = searchable;
+        var visible = ItemStackLinkedSet.createTypeAndComponentsSet(); visible.addAll(displayItems); visible.add(new ItemStack(ModContent.soap())); visible.add(new ItemStack(ModContent.mudBall())); visible.add(new ItemStack(ModContent.coin())); visible.add(new ItemStack(ModContent.coinRoll())); displayItems = visible;
+        var searchable = ItemStackLinkedSet.createTypeAndComponentsSet(); searchable.addAll(displayItemsSearchTab); searchable.add(new ItemStack(ModContent.soap())); searchable.add(new ItemStack(ModContent.mudBall())); searchable.add(new ItemStack(ModContent.coin())); searchable.add(new ItemStack(ModContent.coinRoll())); displayItemsSearchTab = searchable;
     }
 }

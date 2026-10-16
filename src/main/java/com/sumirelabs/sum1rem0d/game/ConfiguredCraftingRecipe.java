@@ -16,7 +16,7 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
         StreamCodec.ofMember((recipe, buffer) -> buffer.writeUtf(recipe.feature, 64), buffer -> new ConfiguredCraftingRecipe(buffer.readUtf(64))));
     private final String feature;
     public ConfiguredCraftingRecipe(String feature) {
-        if (!feature.equals("grass_coal") && !feature.equals("cleanliness")) throw new IllegalArgumentException("Unknown configured recipe");
+        if (!feature.equals("grass_coal") && !feature.equals("cleanliness") && !feature.equals("mud_ball")) throw new IllegalArgumentException("Unknown configured recipe");
         this.feature = feature;
     }
     /** Reject impossible outputs instead of silently changing the configured quantity. */
@@ -35,6 +35,12 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
                     throw new IllegalArgumentException("草から石炭: 出力数はこのアイテムのスタック上限 " + maximum + " 以下にしてください。");
             }
         }
+        var mud = features.getAsJsonObject("mud_ball");
+        if (mud.get("enabled").getAsBoolean() && mud.get("recipe_enabled").getAsBoolean()) {
+            for (String material : com.sumirelabs.sum1rem0d.config.ConfigSchema.split(mud.get("mud_materials").getAsString())) requireItem(material);
+            var item = ModContent.mudBall();
+            if (item.builtInRegistryHolder().areComponentsBound() && mud.get("recipe_output").getAsInt() > item.getDefaultInstance().getMaxStackSize()) throw new IllegalArgumentException("泥だんごの出力数がスタック上限を超えています");
+        }
         var soap = features.getAsJsonObject("cleanliness");
         if (soap.get("enabled").getAsBoolean())
             for (String material : com.sumirelabs.sum1rem0d.config.ConfigSchema.split(soap.get("soap_materials").getAsString())) requireItem(material);
@@ -48,7 +54,8 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
     @Override public boolean matches(CraftingInput input, Level level) {
         if (!Rules.on(feature) || assemble(input).isEmpty()) return false;
         List<String> required;
-        if (feature.equals("cleanliness")) required = new ArrayList<>(Rules.list(feature, "soap_materials"));
+        if (feature.equals("mud_ball")) required = new ArrayList<>(Rules.list(feature, "mud_materials"));
+        else if (feature.equals("cleanliness")) required = new ArrayList<>(Rules.list(feature, "soap_materials"));
         else required = new ArrayList<>(Collections.nCopies(Rules.i(feature, "input_count"), Rules.s(feature, "input_item")));
         if (required.isEmpty() || input.ingredientCount() != required.size()) return false;
         for (ItemStack stack : input.items()) if (!stack.isEmpty()) {
@@ -59,6 +66,11 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
     }
     @Override public ItemStack assemble(CraftingInput input) {
         if (!Rules.on(feature)) return ItemStack.EMPTY;
+        if (feature.equals("mud_ball")) {
+            if (!Rules.on("cleanliness") || !Rules.b(feature,"recipe_enabled")) return ItemStack.EMPTY;
+            int count = Rules.i(feature,"recipe_output");
+            return count > ModContent.mudBall().getDefaultInstance().getMaxStackSize() ? ItemStack.EMPTY : new ItemStack(ModContent.mudBall(),count);
+        }
         if (feature.equals("cleanliness")) return new ItemStack(ModContent.soap(), Rules.i(feature, "soap_output"));
         var id = Rules.id(Rules.s(feature, "output_item"));
         if (id == null) return ItemStack.EMPTY;

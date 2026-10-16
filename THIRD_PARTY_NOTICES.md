@@ -13,3 +13,11 @@ This distribution includes an unmodified copy of `de.marhali:json5-java:3.0.0`, 
 - Maven: https://repo.maven.apache.org/maven2/de/marhali/json5-java/3.0.0/
 
 Other components, including MCEF, retain their own license notices in their distribution modules.
+
+## No Chat Reports — core chat report prevention
+
+Source: https://github.com/Aizistral-Studios/No-Chat-Reports/tree/7c7f63552026f5faab3c63eda80c76fa725e2e40
+Authors: Aizistral and No Chat Reports contributors; original system-message conversion by JFronny.
+License: WTFPL version 2 (see licenses/No-Chat-Reports-WTFPL.txt).
+
+Sum1reM0d adapts the system-chat conversion, profile-key suppression, secure-profile override and NCR server-discovery convention. It uses its own configurable implementation and does not bundle the full upstream mod or its encrypted-chat feature. Native send callbacks and Minecraft content filtering are preserved. Sum1reM0d's own license remains BlueOak-1.0.0.

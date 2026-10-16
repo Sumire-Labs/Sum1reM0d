@@ -35,6 +35,7 @@ public final class ModEntrypoint {
             for (String name : ModContent.EFFECTS) helper.register(ModContent.id(name), ModContent.createEffect(name));
         });
         event.register(Registries.ITEM, helper -> helper.register(ModContent.id("soap"), ModContent.createSoap()));
+        event.register(Registries.ITEM, helper -> helper.register(ModContent.id("mud_ball"), ModContent.createMudBall()));
         event.register(Registries.ITEM, helper -> { for (String name : java.util.List.of("coin", "coin_roll")) helper.register(ModContent.id(name),ModContent.createCoin(name)); });
         event.register(Registries.MENU, helper -> helper.register(ModContent.id("trade"),com.sumirelabs.sum1rem0d.game.TradeMenu.TYPE));
         event.register(Registries.BLOCK, helper -> helper.register(ModContent.id("upside_down_grass"), ModContent.createGrass()));

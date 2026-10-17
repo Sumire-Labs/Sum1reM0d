@@ -35,3 +35,5 @@ Run `prepare-equipment.ps1`, `prepare-dedicated.ps1`, and `preview-equipment.ps1
 Piston base now inherits minecraft:block/piston_base for geometry and textures. Its inventory model uses the same extended body with vanilla block display transforms. Historical generated piston icon/tiles are no longer runtime resources.
 
 The additional user-supplied sum1reicon.png is preserved at 128x128 and copied unchanged to assets/sum1rem0d/icon.png. Wiki/preview rendering uses the full 128x128 source region. manifest-hag.json now records 24 supplied PNGs including the icon.
+
+Mixed materials now preserve vanilla artwork: wool/concrete directly reference vanilla white textures. Bed PNGs are byte-identical copies from the 26.3 native assets; prepare-vanilla-dyed-models.py splits native model faces at cloth mask boundaries without modifying pixel colors. Minor pillow-shadow differences are excluded; pillow, wooden frame and legs are never tinted. Previous generated mixed tiles and bed wood are no longer used.

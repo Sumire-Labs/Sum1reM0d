@@ -21,6 +21,7 @@ final class RemainingVisualChecks {
    var block=ExtraContent.block(name).defaultBlockState();var pos=new BlockPos(0,64,0);var entity=new TextileEntity(name,pos,block);entity.color(0x13579B);
    var world=(BlockAndTintGetter)Proxy.newProxyInstance(BlockAndTintGetter.class.getClassLoader(),new Class<?>[]{BlockAndTintGetter.class},(proxy,method,args)->switch(method.getName()){case "getBlockEntity"->entity;case "getBlockState"->block;case "toString"->"Textile color fixture";default->throw new UnsupportedOperationException(method.getName());});
    var source=mc.getBlockColors().getTintSource(block,0);require(source!=null && source.colorInWorld(block,world,pos)==0xFF13579B,"Exact native textile tint "+name);entity.color(0xBC6731);require(source.colorInWorld(block,world,pos)==0xFFBC6731,"Updated native textile tint "+name);
+   if(name.equals("mixed_bed")){var white=mc.getBlockColors().getTintSource(block,1);require(white!=null && white.colorInWorld(block,world,pos)==0xFFFFFFFF,"Pillow and wooden parts remain white after cloth color changes");}
   }
   passed.accept("Native wool and bed block renderer tints read exact changing 24bit colors");
   for(String name:List.of("mixed_concrete","mixed_wool","mixed_bed")){
@@ -30,8 +31,10 @@ final class RemainingVisualChecks {
    var tintedCollector=(SubmitNodeCollector)Proxy.newProxyInstance(SubmitNodeCollector.class.getClassLoader(),new Class<?>[]{SubmitNodeCollector.class},(proxy,method,args)->{if(method.getName().equals("order"))return proxy;if(method.getName().equals("submitItem"))for(int tint:(int[])args[5])tints.add(tint);return null;});
    var tintedState=new ItemStackRenderState();mc.getItemModelResolver().updateForTopItem(tintedState,stack,ItemDisplayContext.GUI,mc.level,mc.player,0);tintedState.submit(new PoseStack(),tintedCollector,0,0,0);
    require(tints.contains(0xFF13579B),"Actual item render submission preserves exact RGB "+name);
+   if(name.equals("mixed_bed"))require(tints.size()==2 && tints.get(1)==0xFFFFFFFF,"Actual bed item submits independent white pillow layer");
   }
   passed.accept("Concrete, wool and bed actual item render submissions preserve their dyed component RGB");
+  passed.accept("Bed pillow and wooden parts use an independent constant-white layer in world and item render submissions");
   var lights=new ArrayList<Integer>();var collector=(SubmitNodeCollector)Proxy.newProxyInstance(SubmitNodeCollector.class.getClassLoader(),new Class<?>[]{SubmitNodeCollector.class},(proxy,method,args)->{if(method.getName().equals("order"))return proxy;if(method.getName().equals("submitItem"))lights.add((Integer)args[2]);return null;});var state=new ItemStackRenderState();
   mc.getItemModelResolver().updateForTopItem(state,new ItemStack(ExtraContent.item("redstone_pickaxe")),ItemDisplayContext.GUI,mc.level,mc.player,0);state.submit(new PoseStack(),collector,0,0,0);require(!lights.isEmpty() && lights.stream().allMatch(i->i==0xF000F0),"Native redstone item submits full-bright quads");
   lights.clear();mc.getItemModelResolver().updateForTopItem(state,new ItemStack(Items.IRON_PICKAXE),ItemDisplayContext.GUI,mc.level,mc.player,0);state.submit(new PoseStack(),collector,0,0,0);require(!lights.isEmpty() && lights.stream().allMatch(i->i==0),"Reused item state clears glow for ordinary items");

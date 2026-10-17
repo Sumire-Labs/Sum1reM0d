@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "all": "sum1rem0d:block/mixed_concrete",
-    "particle": "sum1rem0d:block/mixed_concrete"
+    "all": "minecraft:block/white_concrete",
+    "particle": "minecraft:block/white_concrete"
   },
   "elements": [
     {

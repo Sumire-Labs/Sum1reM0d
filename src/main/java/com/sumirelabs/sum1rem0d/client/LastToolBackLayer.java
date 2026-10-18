@@ -29,13 +29,13 @@ public final class LastToolBackLayer extends RenderLayer {
         humanoid.body.translateAndRotate(pose);
         pose.translate(option(options,"offset_x",0.0), option(options,"offset_y",0.35), option(options,"offset_z",0.18));
         //? if >=26.3 {
-        pose.rotateDegrees(Axis.ZP, (float) option(options,"rotation",90));
+        pose.rotateDegrees(Axis.ZP, (float) option(options,"rotation",100));
         //?} else {
-        /*pose.mulPose(Axis.ZP.rotationDegrees((float) option(options,"rotation",90)));
+        /*pose.mulPose(Axis.ZP.rotationDegrees((float) option(options,"rotation",100)));
         *///?}
-        float scale = (float) Math.clamp(option(options,"scale",0.45), 0.2, 0.8);
+        float scale = (float) Math.clamp(option(options,"scale",0.60), 0.2, 0.8);
         pose.scale(scale, scale, scale);
-        item.submit(pose, collector, light, 0, 0);
+        item.submit(pose, collector, light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, 0);
         pose.popPose();
     }
 

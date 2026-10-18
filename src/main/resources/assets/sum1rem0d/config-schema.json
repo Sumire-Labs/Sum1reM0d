@@ -4878,6 +4878,22 @@
         "initial": true,
         "min": 0,
         "max": 0
+      },
+      {
+        "key": "slot_x",
+        "label": "スロット横位置（インベントリ基準）",
+        "type": "INTEGER",
+        "initial": 153,
+        "min": -200,
+        "max": 400
+      },
+      {
+        "key": "slot_y",
+        "label": "スロット縦位置（インベントリ基準）",
+        "type": "INTEGER",
+        "initial": 61,
+        "min": -100,
+        "max": 300
       }
     ]
   },
@@ -5083,7 +5099,7 @@
         "key": "scale",
         "label": "背中ツールの大きさ",
         "type": "DECIMAL",
-        "initial": 0.45,
+        "initial": 0.6,
         "min": 0.2,
         "max": 0.8
       },
@@ -5115,7 +5131,7 @@
         "key": "rotation",
         "label": "斜めの角度",
         "type": "DECIMAL",
-        "initial": 90,
+        "initial": 100,
         "min": -180,
         "max": 180
       }
@@ -7057,6 +7073,214 @@
         "initial": 200,
         "min": 0,
         "max": 72000
+      }
+    ]
+  },
+  {
+    "id": "nether_slayer",
+    "label": "ネザー特効",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "damage_per_level",
+        "label": "レベルごとの追加ダメージ",
+        "type": "DECIMAL",
+        "initial": 2.5,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "end_slayer",
+    "label": "エンド特効",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "damage_per_level",
+        "label": "レベルごとの追加ダメージ",
+        "type": "DECIMAL",
+        "initial": 2.5,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "expanded_weapon_enchantments",
+    "label": "メイス・トライデントの攻撃エンチャント",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "elytra_enchanting",
+    "label": "エリトラのエンチャント台対応",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "enchantability",
+        "label": "エンチャント適性",
+        "type": "INTEGER",
+        "initial": 10,
+        "min": 1,
+        "max": 50
+      }
+    ]
+  },
+  {
+    "id": "death_box",
+    "label": "デスボックス",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "search_radius",
+        "label": "設置場所の探索半径",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 0,
+        "max": 8
+      },
+      {
+        "key": "announce",
+        "label": "死亡座標を通知",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "random_shulker_colors",
+    "label": "シュルカーのランダム色",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "chance",
+        "label": "色変更確率 (%)",
+        "type": "DECIMAL",
+        "initial": 100,
+        "min": 0,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "fast_shulker_bullets",
+    "label": "高速シュルカー弾",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "speed_multiplier",
+        "label": "速度倍率",
+        "type": "DECIMAL",
+        "initial": 4,
+        "min": 1,
+        "max": 12
+      }
+    ]
+  },
+  {
+    "id": "enderman_laser",
+    "label": "エンダーマンの眼レーザー",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "range",
+        "label": "射程",
+        "type": "DECIMAL",
+        "initial": 24,
+        "min": 1,
+        "max": 64
+      },
+      {
+        "key": "damage",
+        "label": "ダメージ",
+        "type": "DECIMAL",
+        "initial": 6,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "interval_ticks",
+        "label": "発射間隔 (tick)",
+        "type": "INTEGER",
+        "initial": 60,
+        "min": 10,
+        "max": 1200
+      },
+      {
+        "key": "charge_ticks",
+        "label": "予告時間 (tick)",
+        "type": "INTEGER",
+        "initial": 12,
+        "min": 0,
+        "max": 100
       }
     ]
   }

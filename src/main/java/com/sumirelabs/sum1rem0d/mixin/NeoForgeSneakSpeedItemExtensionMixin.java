@@ -34,4 +34,9 @@ public interface NeoForgeSneakSpeedItemExtensionMixin {
             cir.setReturnValue(true);
         }
     }
+    @Inject(method = "isPrimaryItemFor", at = @At("HEAD"), cancellable = true, remap = false)
+    default void sum1rem0d$expandedEquipment(ItemStack stack, Holder<Enchantment> enchantment, CallbackInfoReturnable<Boolean> cir) {
+        if (com.sumirelabs.sum1rem0d.game.DimensionCombatRules.disabled(enchantment.value())) cir.setReturnValue(false);
+        else if (com.sumirelabs.sum1rem0d.game.DimensionCombatRules.allows(enchantment.value(), stack)) cir.setReturnValue(true);
+    }
 }

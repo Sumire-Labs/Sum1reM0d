@@ -139,5 +139,9 @@
   "block.sum1rem0d.sugar_wire": "Sugar Wire",
   "block.sum1rem0d.gunpowder_wire": "Gunpowder Wire",
   "container.sum1rem0d.trade": "Trade with %s",
-  "itemGroup.sum1rem0d": "Sum1reM0d"
+  "itemGroup.sum1rem0d": "Sum1reM0d",
+  "enchantment.sum1rem0d.nether_slayer": "Nether Slayer",
+  "enchantment.sum1rem0d.end_slayer": "End Slayer",
+  "block.sum1rem0d.death_box": "Death Box",
+  "tag.item.sum1rem0d.dimension_slayer_weapons": "Dimension Slayer Weapons"
 }

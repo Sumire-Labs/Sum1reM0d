@@ -15,10 +15,15 @@ import net.minecraft.world.item.Items;
 final class LastToolBackSmoke {
     private static boolean finished;
     private static boolean connectStarted;
+    private static JsonObject visualResult, savedPersonal;
+    private static net.minecraft.client.CameraType savedCamera;
+    private static long captureAt;
+    private static int visualStage;
     private static long connectStartedAt;
     private LastToolBackSmoke() {}
 
     static void tick(Minecraft mc) {
+        if (visualStage > 0) { visualTick(mc); return; }
         if (finished || !Boolean.getBoolean("sum1rem0d.lastToolBackSmoke") || !mc.isGameLoadFinished()) return;
         if (mc.player == null || mc.level == null) {
             if (!connectStarted) {
@@ -66,7 +71,38 @@ final class LastToolBackSmoke {
             LastToolBack.clear();
             LastToolBack.tick(mc);
         }
-        complete(mc, result);
+        if (result.get("success").getAsBoolean()) {
+            try {
+                savedPersonal = com.sumirelabs.sum1rem0d.config.PersonalConfig.store().snapshot();
+                var personal = savedPersonal.deepCopy(); personal.getAsJsonObject("features").getAsJsonObject("wiki").addProperty("enabled", false); personal.getAsJsonObject("features").getAsJsonObject("last_tool_back").addProperty("enabled", true);
+                personal.getAsJsonObject("features").getAsJsonObject("last_tool_back").addProperty("rotation", 100);
+                personal.getAsJsonObject("features").getAsJsonObject("last_tool_back").addProperty("scale", .60);
+                com.sumirelabs.sum1rem0d.config.PersonalConfig.store().update(personal, com.sumirelabs.sum1rem0d.config.PersonalConfig.store().revision());
+                var rules = com.sumirelabs.sum1rem0d.config.ClientRules.snapshot(); rules.getAsJsonObject("features").getAsJsonObject("second_offhand").addProperty("enabled", true);
+                com.sumirelabs.sum1rem0d.config.ClientRules.accept(new com.sumirelabs.sum1rem0d.network.ConfigStatePayload(0,false,rules.toString(),"",0,false));
+                SecondOffhandClient.accept(new com.sumirelabs.sum1rem0d.network.SecondOffhandStatePayload(mc.player.getUUID(), new ItemStack(Items.DIAMOND_AXE)));
+                mc.player.getInventory().setSelectedItem(new ItemStack(Items.STICK));
+                LastToolBack.observeHeldForVerification(mc, new ItemStack(Items.DIAMOND_PICKAXE)); LastToolBack.observeHeldForVerification(mc, new ItemStack(Items.STICK));
+                savedCamera = mc.options.getCameraType();
+                mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
+                mc.gui.setScreen(null);
+                visualResult = result; visualStage = 1; captureAt = System.nanoTime() + 3_000_000_000L;
+            } catch (Exception e) { result.addProperty("success", false); result.addProperty("failure", e.toString()); complete(mc, result); }
+        } else complete(mc, result);
+    }
+    private static void visualTick(Minecraft mc) {
+        if (System.nanoTime() < captureAt) return;
+        try {
+            String name = visualStage == 1 ? "back-tool-colors" : "second-offhand-layout";
+            net.minecraft.client.Screenshot.grab(mc.gameDirectory, name + ".png", mc.gameRenderer.mainRenderTarget(), 1, message -> {});
+            if (visualStage == 1) {
+                mc.gui.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(mc.player));
+                visualStage = 2; captureAt = System.nanoTime() + 2_000_000_000L; return;
+            }
+            mc.options.setCameraType(savedCamera);
+            com.sumirelabs.sum1rem0d.config.PersonalConfig.store().update(savedPersonal, com.sumirelabs.sum1rem0d.config.PersonalConfig.store().revision());
+            visualStage = 0; complete(mc, visualResult);
+        } catch (Exception e) { visualResult.addProperty("success", false); visualResult.addProperty("failure", e.toString()); visualStage = 0; complete(mc, visualResult); }
     }
 
     private static void complete(Minecraft mc, JsonObject result) {

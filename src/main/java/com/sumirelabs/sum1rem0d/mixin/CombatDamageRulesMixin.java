@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class CombatDamageRulesMixin {
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private float sum1rem0d$rebalanceCombatDamage(float damage, ServerLevel level, DamageSource source) {
-        return CombatItemRules.incomingDamage((LivingEntity) (Object) this, source, damage);
+        return com.sumirelabs.sum1rem0d.game.DimensionCombatRules.damage((LivingEntity) (Object) this, level, source, CombatItemRules.incomingDamage((LivingEntity) (Object) this, source, damage));
     }
 }

@@ -51,6 +51,7 @@ public final class ModContent {
         for(String name:PaxelContent.ITEMS)Registry.register(BuiltInRegistries.ITEM,id(name),PaxelContent.createItem(name));
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("paxel"),PaxelRecipe.SERIALIZER);
         DeliveryBoxContent.registerFabric();
+        DeathBoxContent.registerFabric();
         AutomationContent.registerFabric();
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("mixed_containers"),MixedContainersRecipe.SERIALIZER);
         for (String name : FoodContent.ITEMS) Registry.register(BuiltInRegistries.ITEM, id(name), FoodContent.createItem(name));

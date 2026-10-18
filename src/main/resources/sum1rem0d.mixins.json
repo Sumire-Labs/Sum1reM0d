@@ -141,7 +141,14 @@
     "VanillaCauldronMergeMixin",
     "LeashableLeadMixin",
     "FishingHookRulesMixin",
-    "WindBurstBlockMixin"
+    "WindBurstBlockMixin",
+    "ExpandedEnchantmentsMixin",
+    "ElytraEnchantingMixin",
+    "ElytraEnchantableItemMixin",
+    "EndMobRulesMixin",
+    "ShulkerVariantAccess",
+    "FastShulkerBulletMixin",
+    "DeathBoxInventoryMixin"
   ],
   "client": [
     "MenuScreenMixin",

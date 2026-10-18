@@ -34,7 +34,7 @@ public final class SecondOffhandService {
         ItemStack stack = access(oldPlayer).sum1rem0d$secondOffhand();
         if (stack.isEmpty()) return;
         access(oldPlayer).sum1rem0d$secondOffhand(ItemStack.EMPTY);
-        if (Rules.on("second_offhand") && Rules.b("second_offhand", "death_keep")) {
+        if (respawned.level().getGameRules().get(net.minecraft.world.level.gamerules.GameRules.KEEP_INVENTORY) || Rules.on("second_offhand") && Rules.b("second_offhand", "death_keep")) {
             access(respawned).sum1rem0d$secondOffhand(stack);
             syncOwner(respawned);
         } else {

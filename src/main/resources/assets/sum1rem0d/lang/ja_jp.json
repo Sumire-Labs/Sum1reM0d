@@ -139,5 +139,9 @@
   "block.sum1rem0d.sugar_wire": "砂糖配線",
   "block.sum1rem0d.gunpowder_wire": "火薬配線",
   "container.sum1rem0d.trade": "%sとの取引",
-  "itemGroup.sum1rem0d": "Sum1reM0d"
+  "itemGroup.sum1rem0d": "Sum1reM0d",
+  "enchantment.sum1rem0d.nether_slayer": "ネザー特効",
+  "enchantment.sum1rem0d.end_slayer": "エンド特効",
+  "block.sum1rem0d.death_box": "デスボックス",
+  "tag.item.sum1rem0d.dimension_slayer_weapons": "特効エンチャント対応武器"
 }

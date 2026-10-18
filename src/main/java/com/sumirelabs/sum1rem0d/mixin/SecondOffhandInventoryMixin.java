@@ -18,7 +18,7 @@ public abstract class SecondOffhandInventoryMixin {
     private void sum1rem0d$secondOffhandSlot(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (!ClientRules.enabled("second_offhand")) return;
         var access = (ContainerScreenAccess) this;
-        int x = access.sum1rem0d$leftPos() + 77, y = access.sum1rem0d$topPos() + 82;
+        int x = access.sum1rem0d$leftPos() + SecondOffhandClient.slotX(), y = access.sum1rem0d$topPos() + SecondOffhandClient.slotY();
         graphics.fill(x - 1, y - 1, x + 19, y + 19, 0xFF202020);
         graphics.fill(x, y, x + 18, y + 18, 0xFF8B8B8B);
         graphics.fill(x + 1, y + 1, x + 17, y + 17, 0xFF373737);
@@ -29,7 +29,7 @@ public abstract class SecondOffhandInventoryMixin {
     private void sum1rem0d$secondOffhandItem(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (!ClientRules.enabled("second_offhand")) return;
         var access = (ContainerScreenAccess) this;
-        int x = access.sum1rem0d$leftPos() + 78, y = access.sum1rem0d$topPos() + 83;
+        int x = access.sum1rem0d$leftPos() + SecondOffhandClient.slotX() + 1, y = access.sum1rem0d$topPos() + SecondOffhandClient.slotY() + 1;
         Player player = Minecraft.getInstance().player;
         if (player != null) graphics.item(SecondOffhandClient.stack(player.getUUID()), x, y);
     }

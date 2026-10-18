@@ -26,6 +26,8 @@ public final class SecondOffhandClient {
     }
 
     public static ItemStack stack(UUID player) { return ITEMS.getOrDefault(player, ItemStack.EMPTY); }
+    public static int slotX() { return com.sumirelabs.sum1rem0d.config.PersonalConfig.store().integer("second_offhand", "slot_x"); }
+    public static int slotY() { return com.sumirelabs.sum1rem0d.config.PersonalConfig.store().integer("second_offhand", "slot_y"); }
     public static long revision() { return revision; }
 
     public static void clear() { ITEMS.clear(); RENDER.clear(); com.sumirelabs.sum1rem0d.game.PaxelRecipeMapState.clear(); revision++; }

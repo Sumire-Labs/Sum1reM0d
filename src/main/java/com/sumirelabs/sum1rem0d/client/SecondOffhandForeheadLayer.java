@@ -28,7 +28,7 @@ public final class SecondOffhandForeheadLayer extends RenderLayer {
         humanoid.head.translateAndRotate(pose);
         pose.translate(0, -0.28, -0.42);
         pose.scale(0.35f, 0.35f, 0.35f);
-        item.submit(pose, collector, light, 0, 0);
+        item.submit(pose, collector, light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, 0);
         pose.popPose();
     }
 }

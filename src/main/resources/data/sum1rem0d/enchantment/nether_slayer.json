@@ -1,0 +1,21 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.sum1rem0d.nether_slayer"
+  },
+  "effects": {},
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 8
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#sum1rem0d:dimension_slayer_weapons",
+  "weight": 5
+}

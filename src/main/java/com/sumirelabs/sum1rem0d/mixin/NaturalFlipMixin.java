@@ -30,6 +30,7 @@ public abstract class NaturalFlipMixin implements NaturalFlip {
  }
  @Inject(method="finalizeSpawn",at=@At("RETURN")) private void sum1rem0d$spawn(ServerLevelAccessor level,DifficultyInstance difficulty,EntitySpawnReason reason,SpawnGroupData group,CallbackInfoReturnable<SpawnGroupData> cir) {
   var mob=(Mob)(Object)this;
+  if (mob instanceof net.minecraft.world.entity.monster.Shulker && Rules.on("random_shulker_colors") && Rules.roll(mob.getRandom(), "random_shulker_colors")) ((ShulkerVariantAccess) mob).sum1rem0d$setVariant(java.util.Optional.of(net.minecraft.world.item.DyeColor.values()[mob.getRandom().nextInt(16)]));
   if(Rules.on("dinnerbone_mobs") && (reason==EntitySpawnReason.NATURAL || reason==EntitySpawnReason.CHUNK_GENERATION) && !mob.hasCustomName() && !(mob instanceof net.minecraft.world.entity.boss.enderdragon.EnderDragon) && !(mob instanceof net.minecraft.world.entity.boss.wither.WitherBoss)) sum1rem0d$setFlip(Rules.roll(mob.getRandom(),"dinnerbone_mobs"));
  }
  @Inject(method="addAdditionalSaveData",at=@At("TAIL")) private void sum1rem0d$save(ValueOutput output,CallbackInfo ci) { output.putBoolean("sum1rem0d:natural_flip",sum1rem0d$isFlipped()); }

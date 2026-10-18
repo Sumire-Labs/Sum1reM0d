@@ -16,7 +16,7 @@ public abstract class SecondOffhandInventoryInputMixin {
     private void sum1rem0d$swapSecondOffhand(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
         if (!((Object) this instanceof InventoryScreen) || !ClientRules.enabled("second_offhand")) return;
         var access = (ContainerScreenAccess) this;
-        int x = access.sum1rem0d$leftPos() + 77, y = access.sum1rem0d$topPos() + 82;
+        int x = access.sum1rem0d$leftPos() + SecondOffhandClient.slotX(), y = access.sum1rem0d$topPos() + SecondOffhandClient.slotY();
         if (event.x() >= x - 1 && event.x() < x + 19 && event.y() >= y - 1 && event.y() < y + 19) {
             SecondOffhandClient.requestSwap();
             cir.setReturnValue(true);

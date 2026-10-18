@@ -34,6 +34,8 @@ public final class ModEntrypoint {
         bus.addListener(ModEntrypoint::registerContent);
     }
     private static void registerContent(RegisterEvent event) {
+        event.register(Registries.BLOCK, h -> h.register(ModContent.id("death_box"), com.sumirelabs.sum1rem0d.game.DeathBoxContent.createBlock()));
+        event.register(Registries.BLOCK_ENTITY_TYPE, h -> h.register(ModContent.id("death_box"), com.sumirelabs.sum1rem0d.game.DeathBoxContent.createType()));
         event.register(Registries.CREATIVE_MODE_TAB, helper -> helper.register(ModContent.id("main"), com.sumirelabs.sum1rem0d.game.SumireCreativeTab.create()));
         event.register(Registries.BLOCK,h->{for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createBlock(name));for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.MATERIAL_BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createBlock(name));});
         event.register(Registries.BLOCK_ENTITY_TYPE,h->h.register(ModContent.id("automation_machine"),com.sumirelabs.sum1rem0d.game.AutomationContent.createType()));

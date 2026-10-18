@@ -9,9 +9,16 @@ import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 public final class ExtraContent {
- public static final List<String> BLOCKS=List.of("piston_base","mixed_wool","mixed_bed","mixed_wool_slab","mixed_wool_stairs","mixed_concrete_slab","mixed_concrete_stairs","glow_wire","sugar_wire","gunpowder_wire");
- public static final List<String> ITEMS=java.util.stream.Stream.concat(List.of("piston_base","tamed_book","mixed_wool","mixed_bed","mixed_wool_slab","mixed_wool_stairs","mixed_concrete_slab","mixed_concrete_stairs").stream(),ExtraEquipment.ITEMS.stream()).toList();
- public static final List<String> BLOCK_ENTITIES=List.of("mixed_wool","mixed_bed","mixed_wool_slab","mixed_wool_stairs","mixed_concrete_slab","mixed_concrete_stairs");
+ //? if >=26.3 {
+ public static final boolean MIXED_SHAPES_AVAILABLE=true;
+ public static final List<String> MIXED_SHAPES=List.of("mixed_wool_slab","mixed_wool_stairs","mixed_concrete_slab","mixed_concrete_stairs");
+ //?} else {
+ /*public static final boolean MIXED_SHAPES_AVAILABLE=false;
+ public static final List<String> MIXED_SHAPES=List.of();
+ *///?}
+ public static final List<String> BLOCKS=java.util.stream.Stream.concat(List.of("piston_base","mixed_wool","mixed_bed","glow_wire","sugar_wire","gunpowder_wire").stream(),MIXED_SHAPES.stream()).toList();
+ public static final List<String> ITEMS=java.util.stream.Stream.concat(java.util.stream.Stream.concat(List.of("piston_base","tamed_book","mixed_wool","mixed_bed").stream(),MIXED_SHAPES.stream()),ExtraEquipment.ITEMS.stream()).toList();
+ public static final List<String> BLOCK_ENTITIES=java.util.stream.Stream.concat(List.of("mixed_wool","mixed_bed").stream(),MIXED_SHAPES.stream()).toList();
  private ExtraContent(){}
  public static Block block(String name){return BuiltInRegistries.BLOCK.getValue(ModContent.id(name));}
  public static Item item(String name){return BuiltInRegistries.ITEM.getValue(ModContent.id(name));}

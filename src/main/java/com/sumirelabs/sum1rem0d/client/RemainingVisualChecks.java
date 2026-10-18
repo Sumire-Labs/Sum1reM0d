@@ -39,11 +39,13 @@ final class RemainingVisualChecks {
   }
   passed.accept("All 11 rebuilt paxel sprites load as crisp native 16x16 transparent images");
 
-  for(var dye:net.minecraft.world.item.DyeColor.values())for(boolean stairs:new boolean[]{false,true}){
-   var item=WoolShapeBackport.item(dye,stairs);var id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);
-   require(item!=Items.AIR && !mc.getModelManager().getItemModel(id).getClass().getSimpleName().contains("Missing"),"Wool shape item model resolves: "+id);
+  if(ExtraContent.MIXED_SHAPES_AVAILABLE){
+   for(var dye:net.minecraft.world.item.DyeColor.values())for(boolean stairs:new boolean[]{false,true}){
+    var item=VanillaWoolShapes.item(dye,stairs);var id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);
+    require(item!=Items.AIR && !mc.getModelManager().getItemModel(id).getClass().getSimpleName().contains("Missing"),"Native wool shape item model resolves: "+id);
+   }
+   passed.accept("All 32 native wool shape item models resolve");
   }
-  passed.accept("All 32 vanilla/backported wool shape item models resolve");
 
   var savedRules=ClientRules.snapshot();var tintDraft=savedRules.deepCopy();var glowOptions=tintDraft.getAsJsonObject("features").getAsJsonObject("glow_wire");
   try{

@@ -11,7 +11,6 @@ public final class ModEntrypoint implements ModInitializer {
     public void onInitialize() {
         Sum1reM0d.initialize(FabricLoader.getInstance().getConfigDir());
         ModContent.registerFabric();
-        com.sumirelabs.sum1rem0d.game.WoolShapeBackport.registerFabric();
         com.sumirelabs.sum1rem0d.game.SumireCreativeTab.registerFabric();
         PlatformNetwork.initialize();
     }
@@ -32,8 +31,6 @@ public final class ModEntrypoint {
         com.sumirelabs.sum1rem0d.game.NaturalFlipData.register(bus);
         bus.addListener(PlatformNetwork::register);
         bus.addListener(com.sumirelabs.sum1rem0d.game.ExtraContent::setupNeo);
-        bus.addListener(com.sumirelabs.sum1rem0d.game.WoolShapeBackport::registerNeo);
-        bus.addListener(com.sumirelabs.sum1rem0d.game.WoolShapeBackport::setupNeo);
         bus.addListener(ModEntrypoint::registerContent);
     }
     private static void registerContent(RegisterEvent event) {

@@ -37,33 +37,62 @@ afterEvaluate {
 // All metadata lives in src/main/resources; ship only the selected loader's descriptor.
 tasks.named('processResources') {
     inputs.property('equipment_baby_layer', stonecutter.eval(minecraftVersion, '>=26.3'))
-    inputs.property('wool_shape_backport', stonecutter.eval(minecraftVersion, '<26.3'))
+    inputs.property('native_mixed_shapes', stonecutter.eval(minecraftVersion, '>=26.3'))
+    ['block','item'].each { registry ->
+        exclude "data/minecraft/tags/${registry}/wool_slabs.json"
+        exclude "data/minecraft/tags/${registry}/wool_stairs.json"
+    }
     if (stonecutter.eval(minecraftVersion, '>=26.3')) {
-        def colors = ['white','orange','magenta','light_blue','yellow','lime','pink','gray','light_gray','cyan','purple','blue','brown','green','red','black']
-        colors.each { color ->
-            ['slab','stairs'].each { shape ->
-                def name = "${color}_wool_${shape}"
-                exclude "assets/sum1rem0d/blockstates/${name}.json"
-                exclude "assets/sum1rem0d/items/${name}.json"
-                exclude "data/sum1rem0d/loot_table/blocks/${name}.json"
-                if (shape == 'slab') {
-                    exclude "assets/sum1rem0d/models/block/${color}_wool.json"
-                    exclude "assets/sum1rem0d/models/block/${color}_wool_slab.json"
-                    exclude "assets/sum1rem0d/models/block/${color}_wool_slab_top.json"
-                } else {
-                    exclude "assets/sum1rem0d/models/block/${color}_wool_stairs.json"
-                    exclude "assets/sum1rem0d/models/block/${color}_wool_stairs_inner.json"
-                    exclude "assets/sum1rem0d/models/block/${color}_wool_stairs_outer.json"
-                }
-            }
-        }
-        ['block','item'].each { registry ->
-            exclude "data/minecraft/tags/${registry}/wool_slabs.json"
-            exclude "data/minecraft/tags/${registry}/wool_stairs.json"
-        }
         filesMatching('assets/sum1rem0d/equipment/*.json') {
             def family = name.replace('.json', '')
             if (family in ['emerald', 'redstone', 'lapis']) filter { String line -> line.contains('"humanoid": [') ? '    "humanoid_baby": [{"texture": "sum1rem0d:' + family + '"}],\n' + line : line }
+        }
+    } else {
+        ['mixed_wool_slab','mixed_wool_stairs','mixed_concrete_slab','mixed_concrete_stairs'].each { name ->
+            exclude "data/sum1rem0d/recipe/${name}.json"
+            exclude "data/sum1rem0d/loot_table/blocks/${name}.json"
+            exclude "assets/sum1rem0d/blockstates/${name}.json"
+            exclude "assets/sum1rem0d/items/${name}.json"
+            exclude "assets/sum1rem0d/models/block/${name}*.json"
+        }
+    }
+    if (!stonecutter.eval(minecraftVersion, '>=26.3')) {
+        doLast {
+            def root = destinationDir
+            def excludedIds = ['mixed_wool_slab', 'mixed_wool_stairs', 'mixed_concrete_slab', 'mixed_concrete_stairs'] as Set
+            def schema = new File(root, 'assets/sum1rem0d/config-schema.json')
+            if (schema.exists()) {
+                def entries = new groovy.json.JsonSlurper().parse(schema)
+                entries.removeAll { it instanceof Map && excludedIds.contains(it.id) }
+                schema.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(entries)) + '\n'
+            }
+            def timing = new File(root, 'assets/sum1rem0d/config-timing.json')
+            if (timing.exists()) {
+                def data = new groovy.json.JsonSlurper().parse(timing)
+                excludedIds.each { data.features.remove(it) }
+                timing.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(data)) + '\n'
+            }
+            new File(root, 'data/minecraft/tags').eachFileRecurse { tag ->
+                if (!tag.isFile() || !tag.name.endsWith('.json')) return
+                def data = new groovy.json.JsonSlurper().parse(tag)
+                def stripShapeIds
+                stripShapeIds = { value ->
+                    if (value instanceof Map) value.values().each { child -> stripShapeIds(child) }
+                    else if (value instanceof List) {
+                        value.removeAll { entry -> entry instanceof String && (entry.startsWith('sum1rem0d:') && excludedIds.contains(entry.substring('sum1rem0d:'.length()))) }
+                        value.each { child -> stripShapeIds(child) }
+                    }
+                }
+                stripShapeIds(data)
+                tag.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(data)) + '\n'
+            }
+            def wiki = new File(root, 'assets/sum1rem0d/wiki/guide.json')
+            if (wiki.exists()) {
+                def data = new groovy.json.JsonSlurper().parse(wiki)
+                data.categories.each { category -> category.features?.removeAll { excludedIds.contains(it) } }
+                data.articles.removeAll { it instanceof Map && excludedIds.contains(it.feature) }
+                wiki.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(data)) + '\n'
+            }
         }
     }
     inputs.property('mod_icon_metadata_key', modLoader == 'neoforge' && stonecutter.eval(minecraftVersion, '>=26.2') ? 'iconFile' : 'logoFile')

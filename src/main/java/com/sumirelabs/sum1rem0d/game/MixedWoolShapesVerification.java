@@ -27,6 +27,10 @@ final class MixedWoolShapesVerification {
     private MixedWoolShapesVerification() {}
 
     static void verify(MinecraftServer server, java.util.function.Consumer<String> passed) throws Exception {
+        if (!ExtraContent.MIXED_SHAPES_AVAILABLE) {
+            passed.accept("Mixed shape blocks are unavailable before Minecraft 26.3");
+            return;
+        }
         var store = Sum1reM0d.config();
         var original = store.snapshot();
         var draft = original.deepCopy();
@@ -49,7 +53,7 @@ final class MixedWoolShapesVerification {
                 var wool = BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(color.getName() + "_wool"));
                 var input = slabInput(new ItemStack(wool), new ItemStack(wool), new ItemStack(wool));
                 var result = craft(server, input, level);
-                var expectedItem = WoolShapeBackport.item(color, false);
+                var expectedItem = VanillaWoolShapes.item(color, false);
                 var expectedId = Identifier.fromNamespaceAndPath(nativeWoolShapes() ? "minecraft" : "sum1rem0d", color.getName() + "_wool_slab");
                 var block = Block.byItem(expectedItem);
                 var woolBlock = Block.byItem(wool);
@@ -106,7 +110,7 @@ final class MixedWoolShapesVerification {
             for (DyeColor color : DyeColor.values()) {
                 var input = woolStairInput(color);
                 var result = craft(server, input, level);
-                var expectedItem = WoolShapeBackport.item(color, true);
+                var expectedItem = VanillaWoolShapes.item(color, true);
                 var expectedId = Identifier.fromNamespaceAndPath(nativeWoolShapes() ? "minecraft" : "sum1rem0d", color.getName() + "_wool_stairs");
                 var block = Block.byItem(expectedItem);
                 var woolBlock = Block.byItem(BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(color.getName() + "_wool")));

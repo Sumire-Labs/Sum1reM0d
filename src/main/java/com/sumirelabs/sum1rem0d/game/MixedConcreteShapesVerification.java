@@ -19,6 +19,10 @@ final class MixedConcreteShapesVerification {
     private MixedConcreteShapesVerification() {}
 
     static void verify(MinecraftServer server, Consumer<String> passed) throws Exception {
+        if (!ExtraContent.MIXED_SHAPES_AVAILABLE) {
+            passed.accept("Mixed shape blocks are unavailable before Minecraft 26.3");
+            return;
+        }
         var config = Sum1reM0d.config();
         var original = config.snapshot();
         var draft = original.deepCopy();

@@ -32,7 +32,7 @@ public final class DyeTextiles {
   if(same && !custom)return ItemStack.EMPTY;return stack("mixed_bed",blend(colors));
  }
  public static ItemStack woolShape(CraftingInput input,String feature){
-  if(!List.of("mixed_wool_slab","mixed_wool_stairs").contains(feature)||!Rules.on(feature)||!Rules.b(feature,"recipe_enabled"))return ItemStack.EMPTY;
+  if(!ExtraContent.MIXED_SHAPES_AVAILABLE||!List.of("mixed_wool_slab","mixed_wool_stairs").contains(feature)||!Rules.on(feature)||!Rules.b(feature,"recipe_enabled"))return ItemStack.EMPTY;
   int[] slots;
   if(feature.equals("mixed_wool_slab")){
    if(input.width()!=3||input.height()<1)return ItemStack.EMPTY;slots=null;
@@ -51,12 +51,12 @@ public final class DyeTextiles {
   boolean custom=false;for(int slot:slots)custom|=input.getItem(slot).is(ExtraContent.item("mixed_wool"));
   if(!custom && colors.stream().distinct().count()==1){
    var original=BuiltInRegistries.ITEM.getKey(input.getItem(slots[0]).getItem()).getPath();
-   for(var dye:DyeColor.values())if(original.equals(dye.getName()+"_wool"))return new ItemStack(WoolShapeBackport.item(dye,feature.equals("mixed_wool_stairs")),output);
+   for(var dye:DyeColor.values())if(original.equals(dye.getName()+"_wool"))return new ItemStack(VanillaWoolShapes.item(dye,feature.equals("mixed_wool_stairs")),output);
   }
   return stack(feature,blend(colors)).copyWithCount(output);
  }
  public static ItemStack concreteShape(CraftingInput input,String feature){
-  if(!List.of("mixed_concrete_slab","mixed_concrete_stairs").contains(feature)||!Rules.on(feature)||!Rules.b(feature,"recipe_enabled"))return ItemStack.EMPTY;
+  if(!ExtraContent.MIXED_SHAPES_AVAILABLE||!List.of("mixed_concrete_slab","mixed_concrete_stairs").contains(feature)||!Rules.on(feature)||!Rules.b(feature,"recipe_enabled"))return ItemStack.EMPTY;
   int[] slots;
   if(feature.equals("mixed_concrete_slab")){
    if(input.width()!=3||input.height()<1)return ItemStack.EMPTY;slots=null;
@@ -86,7 +86,9 @@ public final class DyeTextiles {
   var bed=ExtraContent.block("mixed_bed");var states=new HashSet<>(bed.getStateDefinition().getPossibleStates());states.removeIf(s->s.getValue(BlockStateProperties.BED_PART)!=BedPart.HEAD);
   com.sumirelabs.sum1rem0d.mixin.PathPoiAccess.sum1rem0d$register(BuiltInRegistries.POINT_OF_INTEREST_TYPE.getOrThrow(PoiTypes.HOME),states);
   ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool"),30,60);
-  ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool_slab"),30,60);
-  ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool_stairs"),30,60);
+  if(ExtraContent.MIXED_SHAPES_AVAILABLE){
+   ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool_slab"),30,60);
+   ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool_stairs"),30,60);
+  }
  }
 }

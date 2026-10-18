@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-/** Durable machine settings and the auto-crafter/clicker one-use slots. */
+/** Durable settings and the auto-clicker one-use slot. */
 public final class AutomationMachineEntity extends BlockEntity implements Container {
     private final List<ItemStack> items=new ArrayList<>(Collections.nCopies(1,ItemStack.EMPTY));
     private int cooldown;

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 /** Independent content and registry factories for the A01-A07/A09 automation machines. */
 public final class AutomationContent {
-    public static final List<String> BLOCKS=List.of("jukebox_grinder","auto_clicker");
+    public static final List<String> BLOCKS=List.of("auto_clicker");
     public static final List<String> MATERIAL_BLOCKS=List.of("dust");
     public static final List<String> ITEMS=List.of("iron_dust","copper_dust","gold_dust","washed_iron_dust","washed_copper_dust","washed_gold_dust");
     public static final MenuType<AutomationMenu> MENU=new MenuType<>(AutomationMenu::new,FeatureFlags.DEFAULT_FLAGS);
@@ -25,7 +25,7 @@ public final class AutomationContent {
     @SuppressWarnings("unchecked") public static BlockEntityType<AutomationMachineEntity> type(){return (BlockEntityType<AutomationMachineEntity>)BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(ModContent.id("automation_machine"));}
     public static Block createBlock(String name){
         if(name.equals("dust"))return new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).setId(ResourceKey.create(Registries.BLOCK,ModContent.id(name))));
-        Block copy=switch(name){case "jukebox_grinder"->Blocks.JUKEBOX;case "auto_clicker"->Blocks.DISPENSER;default->throw new IllegalArgumentException(name);};
+        Block copy=switch(name){case "auto_clicker"->Blocks.DISPENSER;default->throw new IllegalArgumentException(name);};
         return new AutomationMachineBlock(name,BlockBehaviour.Properties.ofFullCopy(copy).setId(ResourceKey.create(Registries.BLOCK,ModContent.id(name))));
     }
     public static Item createBlockItem(String name){return new BlockItem(block(name),new Item.Properties().setId(ResourceKey.create(Registries.ITEM,ModContent.id(name))));}

@@ -48,7 +48,9 @@ public final class ServerVerification {
             var candidate = config.snapshot();
             candidate.getAsJsonObject("features").getAsJsonObject("hopper_breaker").addProperty("interval", 1);
             config.update(candidate, config.revision());
-            if (Boolean.getBoolean("sum1rem0d.combatExpansionVerify")) {
+            if (Boolean.getBoolean("sum1rem0d.utilityFeaturesVerify")) {
+                UtilityFeaturesVerification.verify(server,ServerVerification::passed);
+            } else if (Boolean.getBoolean("sum1rem0d.combatExpansionVerify")) {
                 CombatExpansionVerification.verify(server, ServerVerification::passed);
             } else if (Boolean.getBoolean("sum1rem0d.patch204Verify")) {
                 Release204Verification.verify(server,ServerVerification::passed);

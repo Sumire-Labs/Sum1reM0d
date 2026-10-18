@@ -1,0 +1,40 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/wall_glowstone_torch",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/wall_glowstone_torch",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/wall_glowstone_torch",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/wall_glowstone_torch",
+        "y": 270
+      }
+    }
+  ]
+}

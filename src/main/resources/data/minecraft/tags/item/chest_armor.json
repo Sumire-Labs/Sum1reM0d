@@ -1,1 +1,9 @@
-{"replace": false, "values": ["sum1rem0d:emerald_chestplate", "sum1rem0d:redstone_chestplate", "sum1rem0d:lapis_chestplate"]}
+{
+  "replace": false,
+  "values": [
+    "sum1rem0d:emerald_chestplate",
+    "sum1rem0d:redstone_chestplate",
+    "sum1rem0d:lapis_chestplate",
+    "sum1rem0d:wooden_chestplate"
+  ]
+}

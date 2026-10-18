@@ -1,0 +1,93 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "wood": "minecraft:block/oak_planks",
+    "head": "minecraft:block/glowstone",
+    "particle": "minecraft:block/glowstone"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        3,
+        13
+      ],
+      "to": [
+        9,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#wood"
+        },
+        "down": {
+          "texture": "#wood"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          3,
+          14
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        12
+      ],
+      "to": [
+        10,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#head"
+        },
+        "south": {
+          "texture": "#head"
+        },
+        "east": {
+          "texture": "#head"
+        },
+        "west": {
+          "texture": "#head"
+        },
+        "up": {
+          "texture": "#head"
+        },
+        "down": {
+          "texture": "#head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          3,
+          14
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

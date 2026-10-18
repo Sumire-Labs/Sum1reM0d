@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.*;
 public abstract class WireMixin {
     @Inject(method = "updatePowerStrength", at = @At("HEAD"), cancellable = true)
     private void sum1rem0d$wire(Level level, BlockPos pos, BlockState state, Orientation orientation, boolean shape, CallbackInfo ci) {
+        if (com.sumirelabs.sum1rem0d.game.OpticalFiberNetwork.updating()) { ci.cancel(); return; }
         if (RedstoneGameplay.part("wire")) { RedstoneGameplay.wire(level, pos); ci.cancel(); }
     }
 }

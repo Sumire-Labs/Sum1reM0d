@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "sum1rem0d:nether_slayer",
-    "sum1rem0d:end_slayer"
+    "sum1rem0d:end_slayer",
+    "sum1rem0d:fragility_curse"
   ]
 }

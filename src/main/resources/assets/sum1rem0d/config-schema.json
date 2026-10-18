@@ -7283,5 +7283,208 @@
         "max": 100
       }
     ]
+  },
+  {
+    "id": "double_doors",
+    "label": "両開きドア",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "glowstone_torch",
+    "label": "グロウストーントーチ",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "light_level",
+        "label": "明るさ",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 0,
+        "max": 15
+      },
+      {
+        "key": "particles",
+        "label": "金色の粒子",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "レシピを有効化",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "recipe_output",
+        "label": "レシピ出力数",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 64
+      }
+    ]
+  },
+  {
+    "id": "fragility_curse",
+    "label": "破損の呪い",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "durability_multiplier",
+        "label": "耐久消費倍率",
+        "type": "INTEGER",
+        "initial": 3,
+        "min": 1,
+        "max": 100
+      }
+    ]
+  },
+  {
+    "id": "wooden_armor",
+    "label": "木の防具",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "armor_durability",
+        "label": "耐久係数（15で鉄防具相当）",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 1,
+        "max": 1000
+      },
+      {
+        "key": "helmet_defense",
+        "label": "ヘルメットの防御力",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "chestplate_defense",
+        "label": "チェストプレートの防御力",
+        "type": "INTEGER",
+        "initial": 2,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "leggings_defense",
+        "label": "レギンスの防御力",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "boots_defense",
+        "label": "ブーツの防御力",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 30
+      },
+      {
+        "key": "enchantability",
+        "label": "エンチャント適性",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 50
+      },
+      {
+        "key": "toughness",
+        "label": "防具強靭度",
+        "type": "DECIMAL",
+        "initial": 0,
+        "min": 0,
+        "max": 20
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "レシピを有効化",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      }
+    ]
+  },
+  {
+    "id": "optical_fiber",
+    "label": "光ファイバー",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "network_limit",
+        "label": "配線網の探索上限（赤石を含む）",
+        "type": "INTEGER",
+        "initial": 4096,
+        "min": 32,
+        "max": 65536
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "レシピを有効化",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "recipe_output",
+        "label": "レシピ出力数",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 1,
+        "max": 64
+      }
+    ]
   }
 ]

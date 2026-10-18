@@ -148,7 +148,9 @@
     "EndMobRulesMixin",
     "ShulkerVariantAccess",
     "FastShulkerBulletMixin",
-    "DeathBoxInventoryMixin"
+    "DeathBoxInventoryMixin",
+    "DoubleDoorPowerMixin",
+    "FragilityCurseMixin"
   ],
   "client": [
     "MenuScreenMixin",

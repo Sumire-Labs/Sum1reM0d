@@ -143,5 +143,15 @@
   "enchantment.sum1rem0d.nether_slayer": "Nether Slayer",
   "enchantment.sum1rem0d.end_slayer": "End Slayer",
   "block.sum1rem0d.death_box": "Death Box",
-  "tag.item.sum1rem0d.dimension_slayer_weapons": "Dimension Slayer Weapons"
+  "tag.item.sum1rem0d.dimension_slayer_weapons": "Dimension Slayer Weapons",
+  "block.sum1rem0d.glowstone_torch": "Glowstone Torch",
+  "block.sum1rem0d.wall_glowstone_torch": "Wall Glowstone Torch",
+  "block.sum1rem0d.optical_fiber": "Optical Fiber",
+  "item.sum1rem0d.wooden_helmet": "Wooden Helmet",
+  "item.sum1rem0d.wooden_chestplate": "Wooden Chestplate",
+  "item.sum1rem0d.wooden_leggings": "Wooden Leggings",
+  "item.sum1rem0d.wooden_boots": "Wooden Boots",
+  "enchantment.sum1rem0d.fragility_curse": "Curse of Fragility",
+  "item.sum1rem0d.glowstone_torch": "Glowstone Torch",
+  "item.sum1rem0d.optical_fiber": "Optical Fiber"
 }

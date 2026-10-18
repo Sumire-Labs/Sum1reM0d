@@ -16,7 +16,7 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
         StreamCodec.ofMember((recipe, buffer) -> buffer.writeUtf(recipe.feature, 64), buffer -> new ConfiguredCraftingRecipe(buffer.readUtf(64))));
     private final String feature;
     public ConfiguredCraftingRecipe(String feature) {
-        if (!List.of("grass_coal","cleanliness","mud_ball","sumzon_delivery_box","auto_clicker","sulfur_gunpowder").contains(feature)) throw new IllegalArgumentException("Unknown configured recipe");
+        if (!List.of("glowstone_torch","optical_fiber","grass_coal","cleanliness","mud_ball","sumzon_delivery_box","auto_clicker","sulfur_gunpowder").contains(feature)) throw new IllegalArgumentException("Unknown configured recipe");
         this.feature = feature;
     }
     /** Reject impossible outputs instead of silently changing the configured quantity. */
@@ -52,6 +52,7 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
         return item;
     }
     @Override public boolean matches(CraftingInput input, Level level) {
+        if (UtilityContent.ITEMS.contains(feature)) return !UtilityContent.craft(feature,input).isEmpty();
         if (!Rules.on(feature) || assemble(input).isEmpty()) return false;
         if (feature.equals("sumzon_delivery_box")) {
             if(!Rules.b(feature,"recipe_enabled")||input.width()!=3||input.height()!=3)return false;
@@ -75,6 +76,7 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
         return required.isEmpty();
     }
     @Override public ItemStack assemble(CraftingInput input) {
+        if (UtilityContent.ITEMS.contains(feature)) return UtilityContent.craft(feature,input);
         if (!Rules.on(feature)) return ItemStack.EMPTY;
         if(feature.equals("sumzon_delivery_box"))return Rules.b(feature,"recipe_enabled")?new ItemStack(DeliveryBoxContent.item()):ItemStack.EMPTY;
         if(feature.equals("sulfur_gunpowder"))return Rules.b(feature,"enabled")?new ItemStack(Items.GUNPOWDER,4):ItemStack.EMPTY;

@@ -50,19 +50,20 @@ public final class RedstoneRefresh {
     }
     public static void unloaded(ServerLevel level, LevelChunk chunk) {
         if (!level.getServer().isSameThread()) { level.getServer().execute(() -> unloaded(level, chunk)); return; }
+        OpticalFiberNetwork.unloaded(level,chunk.getPos());
         GlowstoneWiring.unloaded(level,chunk.getPos());
         var data = LEVELS.get(level); if (data == null) return;
         var old = data.chunks.remove(chunk.getPos()); if (old != null) data.pending.removeAll(old);
     }
-    public static void close(MinecraftServer server) { LEVELS.keySet().removeIf(level -> level.getServer() == server); SETTINGS.remove(server); GlowstoneWiring.close(server); }
+    public static void close(MinecraftServer server) { LEVELS.keySet().removeIf(level -> level.getServer() == server); SETTINGS.remove(server); GlowstoneWiring.close(server); OpticalFiberNetwork.close(server); }
     public static void tick(MinecraftServer server) {
         if (!Sum1reM0d.initialized()) return;
         var store = Sum1reM0d.config(); var previous = SETTINGS.get(server); long revision = store.revision();
         if (previous == null || previous.revision != revision) {
             var features = store.snapshot().getAsJsonObject("features"); var settings = new JsonObject();
-            for (String feature : List.of("redstone_inversion", "comparator_division", "glow_wire", "sugar_wire", "gunpowder_wire")) settings.add(feature, features.get(feature));
+            for (String feature : List.of("redstone_inversion", "comparator_division", "glow_wire", "sugar_wire", "gunpowder_wire", "optical_fiber")) settings.add(feature, features.get(feature));
             SETTINGS.put(server, new Settings(revision, settings));
-            if(previous==null || !settings.equals(previous.values))GlowstoneWiring.invalidate(server);
+            if(previous==null || !settings.equals(previous.values)){ GlowstoneWiring.invalidate(server); for(var level:server.getAllLevels())OpticalFiberNetwork.invalidate(level); }
             if (previous == null || !settings.equals(previous.values)) for (var entry : LEVELS.entrySet()) if (entry.getKey().getServer() == server) entry.getValue().chunks.values().forEach(entry.getValue().pending::addAll);
         }
         int budget = 128;
@@ -71,6 +72,7 @@ public final class RedstoneRefresh {
             while (budget > 0 && !data.pending.isEmpty()) {
                 var pos = data.pending.iterator().next(); data.pending.remove(pos); budget--;
                 if (!level.hasChunkAt(pos)) continue; var state = level.getBlockState(pos); if (!relevant(state)) continue;
+                if(state.getBlock() instanceof OpticalFiberBlock) { data.pending.removeAll(OpticalFiberNetwork.update(level,pos)); continue; }
                 if(state.getBlock() instanceof GlowWireBlock) data.pending.removeAll(GlowstoneWiring.update(level,pos,false));
                 else if (state.is(Blocks.REDSTONE_WIRE) && RedstoneGameplay.part("wire")) data.pending.removeAll(RedstoneGameplay.wire(level, pos));
                 else level.neighborChanged(pos, state.getBlock(), null);

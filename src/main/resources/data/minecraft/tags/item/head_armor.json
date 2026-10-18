@@ -1,1 +1,9 @@
-{"replace": false, "values": ["sum1rem0d:emerald_helmet", "sum1rem0d:redstone_helmet", "sum1rem0d:lapis_helmet"]}
+{
+  "replace": false,
+  "values": [
+    "sum1rem0d:emerald_helmet",
+    "sum1rem0d:redstone_helmet",
+    "sum1rem0d:lapis_helmet",
+    "sum1rem0d:wooden_helmet"
+  ]
+}

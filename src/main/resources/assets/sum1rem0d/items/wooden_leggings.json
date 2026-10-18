@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "sum1rem0d:item/wooden_leggings",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": 9990207
+      }
+    ]
+  }
+}

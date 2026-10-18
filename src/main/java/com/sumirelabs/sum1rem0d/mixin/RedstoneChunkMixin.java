@@ -14,6 +14,6 @@ public abstract class RedstoneChunkMixin {
     @Shadow public abstract Level getLevel();
     @Inject(method = "setBlockState", at = @At("RETURN"))
     private void sum1rem0d$source(BlockPos pos, BlockState state, int flags, CallbackInfoReturnable<BlockState> cir) {
-        if (getLevel() instanceof ServerLevel level && cir.getReturnValue() != null) RedstoneRefresh.changed(level, pos, cir.getReturnValue(), state);
+        if (getLevel() instanceof ServerLevel level && cir.getReturnValue() != null) { RedstoneRefresh.changed(level, pos, cir.getReturnValue(), state); com.sumirelabs.sum1rem0d.game.DoubleDoors.changed(level,pos,cir.getReturnValue(),state); }
     }
 }

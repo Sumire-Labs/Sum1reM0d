@@ -143,5 +143,15 @@
   "enchantment.sum1rem0d.nether_slayer": "ネザー特効",
   "enchantment.sum1rem0d.end_slayer": "エンド特効",
   "block.sum1rem0d.death_box": "デスボックス",
-  "tag.item.sum1rem0d.dimension_slayer_weapons": "特効エンチャント対応武器"
+  "tag.item.sum1rem0d.dimension_slayer_weapons": "特効エンチャント対応武器",
+  "block.sum1rem0d.glowstone_torch": "グロウストーントーチ",
+  "block.sum1rem0d.wall_glowstone_torch": "壁付きグロウストーントーチ",
+  "block.sum1rem0d.optical_fiber": "光ファイバー",
+  "item.sum1rem0d.wooden_helmet": "木のヘルメット",
+  "item.sum1rem0d.wooden_chestplate": "木のチェストプレート",
+  "item.sum1rem0d.wooden_leggings": "木のレギンス",
+  "item.sum1rem0d.wooden_boots": "木のブーツ",
+  "enchantment.sum1rem0d.fragility_curse": "破損の呪い",
+  "item.sum1rem0d.glowstone_torch": "グロウストーントーチ",
+  "item.sum1rem0d.optical_fiber": "光ファイバー"
 }

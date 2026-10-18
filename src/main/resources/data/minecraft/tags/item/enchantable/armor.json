@@ -1,1 +1,21 @@
-{"replace": false, "values": ["sum1rem0d:emerald_helmet", "sum1rem0d:emerald_chestplate", "sum1rem0d:emerald_leggings", "sum1rem0d:emerald_boots", "sum1rem0d:redstone_helmet", "sum1rem0d:redstone_chestplate", "sum1rem0d:redstone_leggings", "sum1rem0d:redstone_boots", "sum1rem0d:lapis_helmet", "sum1rem0d:lapis_chestplate", "sum1rem0d:lapis_leggings", "sum1rem0d:lapis_boots"]}
+{
+  "replace": false,
+  "values": [
+    "sum1rem0d:emerald_helmet",
+    "sum1rem0d:emerald_chestplate",
+    "sum1rem0d:emerald_leggings",
+    "sum1rem0d:emerald_boots",
+    "sum1rem0d:redstone_helmet",
+    "sum1rem0d:redstone_chestplate",
+    "sum1rem0d:redstone_leggings",
+    "sum1rem0d:redstone_boots",
+    "sum1rem0d:lapis_helmet",
+    "sum1rem0d:lapis_chestplate",
+    "sum1rem0d:lapis_leggings",
+    "sum1rem0d:lapis_boots",
+    "sum1rem0d:wooden_helmet",
+    "sum1rem0d:wooden_chestplate",
+    "sum1rem0d:wooden_leggings",
+    "sum1rem0d:wooden_boots"
+  ]
+}

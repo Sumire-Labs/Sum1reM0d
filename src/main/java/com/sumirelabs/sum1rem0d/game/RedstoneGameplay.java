@@ -27,6 +27,8 @@ public final class RedstoneGameplay {
     public static int raw(java.util.function.IntSupplier query){boolean previous=SYNTHETIC.get();SYNTHETIC.set(true);try{return query.getAsInt();}finally{SYNTHETIC.set(previous);}}
     public static boolean part(String key) { return Rules.on("redstone_inversion") && Rules.b("redstone_inversion", key); }
     public static int signal(BlockState state, BlockGetter level, BlockPos pos, Direction direction, int original, boolean direct) {
+        if(OpticalFiberNetwork.reading() && state.getBlock() instanceof RedstoneWireBlock)return 0;
+        if(state.getBlock() instanceof OpticalFiberBlock)return original;
         if(GlowstoneWiring.reading() && state.getBlock() instanceof RedstoneWireBlock)return 0;
         if(state.getBlock() instanceof GlowWireBlock)return original;
         if (SYNTHETIC.get() || !Rules.on("redstone_inversion")) return original;

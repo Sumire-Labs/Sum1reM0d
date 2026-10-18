@@ -1,0 +1,6 @@
+{
+  "parent": "sum1rem0d:block/optical_fiber_center",
+  "textures": {
+    "core": "minecraft:block/glowstone"
+  }
+}

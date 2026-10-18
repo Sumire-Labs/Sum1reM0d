@@ -67,6 +67,7 @@ public final class ClientRuntime {
         ClientSmoke.tick(mc);
         NetworkSmoke.tick(mc);
         BrowserSmoke.tick(mc);
+        UtilityAssetsSmoke.tick(mc);
         ImeSmoke.tick(mc);
         ToastSmoke.tick(mc);
         ViewerSmoke.tick(mc);

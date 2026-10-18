@@ -48,6 +48,7 @@ public final class ModContent {
     }
     public static void registerFabric() {
         ExtraContent.registerFabric();
+        UtilityContent.registerFabric();
         for(String name:PaxelContent.ITEMS)Registry.register(BuiltInRegistries.ITEM,id(name),PaxelContent.createItem(name));
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("paxel"),PaxelRecipe.SERIALIZER);
         DeliveryBoxContent.registerFabric();

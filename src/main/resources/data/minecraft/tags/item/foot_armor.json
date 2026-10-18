@@ -1,1 +1,9 @@
-{"replace": false, "values": ["sum1rem0d:emerald_boots", "sum1rem0d:redstone_boots", "sum1rem0d:lapis_boots"]}
+{
+  "replace": false,
+  "values": [
+    "sum1rem0d:emerald_boots",
+    "sum1rem0d:redstone_boots",
+    "sum1rem0d:lapis_boots",
+    "sum1rem0d:wooden_boots"
+  ]
+}

@@ -8,6 +8,9 @@ public final class CompressedBookshelfBlock extends Block {
     public CompressedBookshelfBlock(int tier,Properties props){super(props);this.tier=tier;}
     public int tier(){return tier;}
     //? if neoforge {
-    /*@Override public float getEnchantPowerBonus(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.LevelReader level,net.minecraft.core.BlockPos pos){return BookshelfContent.power(tier);}
+    /*// NeoForge changed LevelReader to BlockGetter between supported releases.
+    // Keep both overloads: each runtime overrides the signature it actually uses.
+    public float getEnchantPowerBonus(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.LevelReader level,net.minecraft.core.BlockPos pos){return BookshelfContent.power(tier);}
+    public float getEnchantPowerBonus(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.BlockGetter level,net.minecraft.core.BlockPos pos){return BookshelfContent.power(tier);}
     *///?}
 }

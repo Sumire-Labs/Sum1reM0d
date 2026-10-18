@@ -49,7 +49,7 @@ class ConfigStoreTest {
         store.load();
         var candidate = store.snapshot();
         candidate.getAsJsonObject("features").getAsJsonObject("death_message").addProperty("text", "変更後");
-        assertEquals("You Suck", store.text("death_message", "text"));
+        assertEquals("You Suck!! 👎🖕", store.text("death_message", "text"));
         store.update(candidate, 0);
         assertEquals(1, store.revision());
         candidate.getAsJsonObject("features").getAsJsonObject("death_message").addProperty("text", "not applied");

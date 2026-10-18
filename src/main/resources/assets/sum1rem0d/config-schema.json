@@ -2189,7 +2189,7 @@
         "key": "text",
         "label": "表示文言",
         "type": "TEXT",
-        "initial": "You Suck",
+        "initial": "You Suck!! 👎🖕",
         "min": 0,
         "max": 160
       }

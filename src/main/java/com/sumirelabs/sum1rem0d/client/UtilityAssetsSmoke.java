@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 final class UtilityAssetsSmoke {
     private static long shownAt;
     private static boolean done,connecting;
+    private static final boolean REPAIRS=Boolean.getBoolean("sum1rem0d.placementRepairsSmoke");
     private static final boolean BOOKSHELVES=Boolean.getBoolean("sum1rem0d.bookshelfAssetsSmoke");
     private static final List<String> NAMES=BOOKSHELVES?BookshelfContent.BLOCKS:List.of("glowstone_torch","optical_fiber","wooden_helmet","wooden_chestplate","wooden_leggings","wooden_boots");
     static void tick(Minecraft mc){
@@ -28,6 +29,7 @@ final class UtilityAssetsSmoke {
         try{
             if(shownAt==0){
                 for(var name:NAMES)if(mc.getModelManager().getItemModel(ModContent.id(name)).getClass().getSimpleName().contains("Missing"))throw new AssertionError("Missing item model: "+name);
+                if(REPAIRS)PlacementRepairClientChecks.verify(mc);
                 if(BOOKSHELVES)for(int tier=1;tier<=8;tier++){
                     var state=BookshelfContent.block(tier).defaultBlockState();var tint=mc.getBlockColors().getTintSource(state,0);
                     if(tint==null||tint.color(state)!=CompressedBookshelfTint.INSTANCE.calculate(new ItemStack(BookshelfContent.item(tier)),mc.level,mc.player))throw new AssertionError("Block/item bookshelf tint mismatch: "+tier);
@@ -42,8 +44,8 @@ final class UtilityAssetsSmoke {
     }
     private static void finish(Minecraft mc,boolean success,String failure){
         done=true;var report=new JsonObject();report.addProperty("success",success);report.addProperty("failure",failure);
-        var checks=new com.google.gson.JsonArray();if(success){checks.add(BOOKSHELVES?"All eight compressed bookshelf models render":"Six new item models resolve and render in the native GUI");checks.add(BOOKSHELVES?"Placed-block and item tint sources produce identical darkness":"Torch/fiber blockstate models and wooden equipment textures load");}report.add("passed",checks);
-        try{Files.writeString(mc.gameDirectory.toPath().resolve(BOOKSHELVES?"sum1rem0d-bookshelf-assets.json":"sum1rem0d-utility-assets.json"),report.toString());}catch(Exception e){throw new IllegalStateException(e);}
+        var checks=new com.google.gson.JsonArray();if(success){checks.add(BOOKSHELVES?"All eight compressed bookshelf models render":"Six new item models resolve and render in the native GUI");checks.add(BOOKSHELVES?"Placed-block and item tint sources produce identical darkness":"Torch/fiber blockstate models and wooden equipment textures load");}if(success&&REPAIRS){checks.add("Native baked cable arms point toward all six actual connections, powered and unpowered");checks.add("Shelf native tooltip follows damage Config and native Combat tab includes the shelf");}report.add("passed",checks);
+        try{Files.writeString(mc.gameDirectory.toPath().resolve(REPAIRS?"sum1rem0d-placement-repairs-client.json":BOOKSHELVES?"sum1rem0d-bookshelf-assets.json":"sum1rem0d-utility-assets.json"),report.toString());}catch(Exception e){throw new IllegalStateException(e);}
         mc.disconnectFromWorld(net.minecraft.client.multiplayer.ClientLevel.DEFAULT_QUIT_MESSAGE);
         mc.stop();
     }

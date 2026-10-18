@@ -159,5 +159,6 @@ public final class ConfigScreen extends Screen {
         if (search.isFocused() && event.key() == com.mojang.blaze3d.platform.InputConstants.KEY_RETURN) { submitSearch(); return true; }
         return super.keyPressed(event);
     }
+    @Override public boolean mouseScrolled(double x,double y,double horizontal,double vertical){return suggestions.scroll(x,y,vertical)||super.mouseScrolled(x,y,horizontal,vertical);}
     @Override public void onClose() { minecraft.gui.setScreen(parent); }
 }

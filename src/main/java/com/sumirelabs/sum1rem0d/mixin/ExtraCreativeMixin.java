@@ -20,6 +20,7 @@ public abstract class ExtraCreativeMixin {
   for(var name:ExtraEquipment.ITEMS){boolean armor=ExtraEquipment.isArmor(name);boolean combat=armor || name.endsWith("_sword") || name.endsWith("_axe");if(tab.equals("combat") && combat || tab.equals("tools_and_utilities") && !armor && !name.endsWith("_sword"))added.add(new ItemStack(ExtraContent.item(name)));}
   if(tab.equals("functional_blocks")){added.add(new ItemStack(UtilityContent.item("glowstone_torch")));for(int tier=1;tier<=8;tier++)added.add(new ItemStack(BookshelfContent.item(tier)));}
   if(tab.equals("redstone_blocks"))added.add(new ItemStack(UtilityContent.item("optical_fiber")));
+  if(tab.equals("combat")&&Rules.on("shelf_weapon"))added.addAll(CombatItemRules.shelfWeapons());
   if(added.isEmpty())return;var visible=ItemStackLinkedSet.createTypeAndComponentsSet();visible.addAll(displayItems);visible.addAll(added);displayItems=visible;var search=ItemStackLinkedSet.createTypeAndComponentsSet();search.addAll(displayItemsSearchTab);search.addAll(added);displayItemsSearchTab=search;
  }
 }

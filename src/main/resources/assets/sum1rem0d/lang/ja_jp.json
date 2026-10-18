@@ -109,7 +109,7 @@
   "item.sum1rem0d.cooked_cat_meat": "焼きネコ肉",
   "gui.sum1rem0d.clock_ticks": "昼の時間: %s tick",
   "gui.sum1rem0d.inventory_wiki": "Wiki",
-  "gui.sum1rem0d.inventory_wallet": "財布",
+  "gui.sum1rem0d.inventory_wallet": "Sum1re Wallet",
   "item.sum1rem0d.copper_paxel": "銅のパクセル",
   "sum1rem0d.disguise.manyullyn_paxel": "マニュリンのパクセル",
   "block.sum1rem0d.mixed_wool_slab": "混色羊毛のハーフブロック",
@@ -171,5 +171,8 @@
   "block.sum1rem0d.compressed_bookshelf_8": "43,046,721倍圧縮本棚",
   "item.sum1rem0d.compressed_bookshelf_8": "43,046,721倍圧縮本棚",
   "tooltip.sum1rem0d.compressed_bookshelf.units": "本棚 %s 個分を圧縮",
-  "tooltip.sum1rem0d.compressed_bookshelf.power": "本棚パワー: %s"
+  "tooltip.sum1rem0d.compressed_bookshelf.power": "本棚パワー: %s",
+  "tooltip.sum1rem0d.shelf.damage": "攻撃力: %s",
+  "tooltip.sum1rem0d.shelf.guard": "右クリックでガード: ダメージを%s%%軽減",
+  "gui.sum1rem0d.inventory_shop": "Sumzon"
 }

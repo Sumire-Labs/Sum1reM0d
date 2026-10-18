@@ -2310,6 +2310,38 @@
         "max": 0,
         "key": "paused_bar",
         "label": "一時停止中に再開バーを表示"
+      },
+      {
+        "key": "mini_player",
+        "label": "インベントリを閉じたらミニプレイヤーを表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "mini_width",
+        "label": "ミニプレイヤーの幅",
+        "type": "INTEGER",
+        "initial": 160,
+        "min": 80,
+        "max": 800
+      },
+      {
+        "key": "mini_height",
+        "label": "ミニプレイヤーの高さ",
+        "type": "INTEGER",
+        "initial": 90,
+        "min": 45,
+        "max": 600
+      },
+      {
+        "key": "mini_margin",
+        "label": "ミニプレイヤーの右上余白",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 0,
+        "max": 200
       }
     ]
   },
@@ -2475,6 +2507,22 @@
         "initial": true,
         "min": 0,
         "max": 0
+      },
+      {
+        "key": "search_suggestion_icons",
+        "label": "検索候補のアイコン",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "search_suggestion_rows",
+        "label": "検索候補の最大表示行数",
+        "type": "INTEGER",
+        "initial": 5,
+        "min": 1,
+        "max": 12
       }
     ]
   },

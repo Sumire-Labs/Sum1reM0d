@@ -21,6 +21,14 @@ public final class CombatItemRules {
                 : configured.contains(id);
     }
 
+    public static java.util.List<ItemStack> shelfWeapons() {
+        var ids=Rules.list("shelf_weapon","target_item_ids");
+        if(ids.isEmpty())ids=java.util.List.of("minecraft:poplar_shelf");
+        var result=new java.util.ArrayList<ItemStack>();
+        for(var raw:ids){var id=net.minecraft.resources.Identifier.tryParse(raw);if(id!=null)BuiltInRegistries.ITEM.getOptional(id).filter(item->item!=net.minecraft.world.item.Items.AIR).ifPresent(item->result.add(new ItemStack(item)));}
+        return java.util.List.copyOf(result);
+    }
+
     public static int maxDamage(ItemStack stack, int vanilla) {
         if (vanilla <= 0) return vanilla;
         String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();

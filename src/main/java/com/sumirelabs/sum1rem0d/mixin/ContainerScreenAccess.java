@@ -8,6 +8,7 @@ public interface ContainerScreenAccess {
     @Accessor("leftPos") int sum1rem0d$leftPos();
     @Accessor("leftPos") void sum1rem0d$setLeftPos(int value);
     @Accessor("imageWidth") int sum1rem0d$imageWidth();
+    @Accessor("imageHeight") int sum1rem0d$imageHeight();
     @Accessor("topPos") int sum1rem0d$topPos();
     @Accessor("menu") AbstractContainerMenu sum1rem0d$menu();
 }

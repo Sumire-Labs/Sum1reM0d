@@ -29,7 +29,7 @@ public final class GlowstoneTorchBlock extends Block implements SimpleWaterlogge
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder) { builder.add(LIGHT,WATERLOGGED,FACING); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         var state=defaultBlockState().setValue(LIGHT,Rules.on("glowstone_torch")?Rules.i("glowstone_torch","light_level"):0)
-            .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).is(Fluids.WATER));
+            .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).is(net.minecraft.tags.FluidTags.WATER));
         if (!wall) return state;
         for(var direction:context.getNearestLookingDirections()) if(direction.getAxis().isHorizontal()) {
             var candidate=state.setValue(FACING,direction.getOpposite());
@@ -43,6 +43,17 @@ public final class GlowstoneTorchBlock extends Block implements SimpleWaterlogge
         return level.getBlockState(pos.relative(support)).isFaceSturdy(level,pos.relative(support),support.getOpposite());
     }
     @Override protected FluidState getFluidState(BlockState state) { return state.getValue(WATERLOGGED)?Fluids.WATER.getSource(false):super.getFluidState(state); }
+    @Override public boolean canPlaceLiquid(net.minecraft.world.entity.LivingEntity entity,BlockGetter level,BlockPos pos,BlockState state,Fluid fluid) {
+        return !state.getValue(WATERLOGGED)&&fluid.is(net.minecraft.tags.FluidTags.WATER);
+    }
+    @Override public boolean placeLiquid(LevelAccessor level,BlockPos pos,BlockState state,FluidState fluid) {
+        if(state.getValue(WATERLOGGED)||!fluid.is(net.minecraft.tags.FluidTags.WATER))return false;
+        if(!level.isClientSide()) {
+            level.setBlock(pos,state.setValue(WATERLOGGED,true),3);
+            level.scheduleTick(pos,Fluids.WATER,Fluids.WATER.getTickDelay(level));
+        }
+        return true;
+    }
     @Override protected BlockState updateShape(BlockState state,LevelReader level,ScheduledTickAccess ticks,BlockPos pos,Direction direction,BlockPos neighbor,BlockState other,RandomSource random) {
         if(state.getValue(WATERLOGGED)) ticks.scheduleTick(pos,Fluids.WATER,Fluids.WATER.getTickDelay(level));
         return canSurvive(state,level,pos)?state:state.getValue(WATERLOGGED)?Blocks.WATER.defaultBlockState():Blocks.AIR.defaultBlockState();
@@ -51,6 +62,14 @@ public final class GlowstoneTorchBlock extends Block implements SimpleWaterlogge
     @Override protected void tick(BlockState state,ServerLevel level,BlockPos pos,RandomSource random) {
         int light=Rules.on("glowstone_torch")?Rules.i("glowstone_torch","light_level"):0;
         if(state.getValue(LIGHT)!=light)level.setBlock(pos,state.setValue(LIGHT,light),3);
+        // Previously placed dry torches may be surrounded by settled water with no pending fluid tick.
+        // Ask the neighboring water to flow naturally; do not pull water upward or invent it in air.
+        if(!state.getValue(WATERLOGGED))for(var direction:Direction.values()) {
+            var neighbor=pos.relative(direction);
+            if(!level.hasChunkAt(neighbor))continue;
+            var fluid=level.getFluidState(neighbor);
+            if(fluid.is(net.minecraft.tags.FluidTags.WATER))level.scheduleTick(neighbor,fluid.getType(),1);
+        }
         level.scheduleTick(pos,this,20);
     }
     @Override public void animateTick(BlockState state,Level level,BlockPos pos,RandomSource random) {

@@ -109,7 +109,7 @@
   "item.sum1rem0d.cooked_cat_meat": "Cooked Cat Meat",
   "gui.sum1rem0d.clock_ticks": "Daytime tick: %s",
   "gui.sum1rem0d.inventory_wiki": "Wiki",
-  "gui.sum1rem0d.inventory_wallet": "Wallet",
+  "gui.sum1rem0d.inventory_wallet": "Sum1re Wallet",
   "item.sum1rem0d.copper_paxel": "Copper Paxel",
   "sum1rem0d.disguise.manyullyn_paxel": "Manyullyn Paxel",
   "block.sum1rem0d.mixed_wool_slab": "Mixed Wool Slab",
@@ -171,5 +171,8 @@
   "block.sum1rem0d.compressed_bookshelf_8": "43,046,721× Compressed Bookshelf",
   "item.sum1rem0d.compressed_bookshelf_8": "43,046,721× Compressed Bookshelf",
   "tooltip.sum1rem0d.compressed_bookshelf.units": "Contains %s bookshelves",
-  "tooltip.sum1rem0d.compressed_bookshelf.power": "Bookshelf power: %s"
+  "tooltip.sum1rem0d.compressed_bookshelf.power": "Bookshelf power: %s",
+  "tooltip.sum1rem0d.shelf.damage": "Attack Damage: %s",
+  "tooltip.sum1rem0d.shelf.guard": "Right-click Guard: %s%% damage reduction",
+  "gui.sum1rem0d.inventory_shop": "Sumzon"
 }

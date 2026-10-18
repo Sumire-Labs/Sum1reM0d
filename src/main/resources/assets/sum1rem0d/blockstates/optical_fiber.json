@@ -54,7 +54,7 @@
       },
       "apply": {
         "model": "sum1rem0d:block/optical_fiber_arm",
-        "x": 90
+        "x": 270
       }
     },
     {
@@ -64,7 +64,7 @@
       },
       "apply": {
         "model": "sum1rem0d:block/optical_fiber_arm",
-        "x": 270
+        "x": 90
       }
     },
     {
@@ -121,7 +121,7 @@
       },
       "apply": {
         "model": "sum1rem0d:block/optical_fiber_arm_on",
-        "x": 90
+        "x": 270
       }
     },
     {
@@ -131,7 +131,7 @@
       },
       "apply": {
         "model": "sum1rem0d:block/optical_fiber_arm_on",
-        "x": 270
+        "x": 90
       }
     }
   ]

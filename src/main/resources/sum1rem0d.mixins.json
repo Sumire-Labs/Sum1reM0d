@@ -151,7 +151,8 @@
     "DeathBoxInventoryMixin",
     "DoubleDoorPowerMixin",
     "FragilityCurseMixin",
-    "CompressedBookshelfEnchantingMixin"
+    "CompressedBookshelfEnchantingMixin",
+    "ShelfWeaponTooltipMixin"
   ],
   "client": [
     "MenuScreenMixin",

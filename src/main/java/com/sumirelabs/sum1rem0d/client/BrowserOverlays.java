@@ -19,7 +19,7 @@ public final class BrowserOverlays {
     private static long nextAd, adOpened;
     private static int youtubeX, youtubeY, youtubeWidth, youtubeHeight, adX, adY, adWidth, adHeight;
     private static int hudX = 8, hudY = 26, hudWidth, hudHeight;
-    private static boolean draggingHud;
+    private static boolean draggingHud,hudMoved;
     private static long pausedBarConfigRevision = Long.MIN_VALUE;
     private static boolean cachedPausedBar;
     private static int worldAdTicksRemaining;
@@ -27,7 +27,7 @@ public final class BrowserOverlays {
     private static double dragOffsetX, dragOffsetY;
     private BrowserOverlays() {}
     static BrowserSession youtubeSession() { return youtube; }
-    static int[] hudBounds() { return hudVisible() ? new int[] { hudX, hudY, hudWidth, hudHeight } : null; }
+    static int[] hudBounds() { return Minecraft.getInstance().gui.screen()==null && hudVisible() ? new int[] { hudX, hudY, hudWidth, hudHeight } : null; }
     private static boolean pausedBar() {
         if (youtube == null) return false;
         var state = youtube.playback();
@@ -39,7 +39,7 @@ public final class BrowserOverlays {
         }
         return state.hasMedia() && state.paused() && !state.ended() && cachedPausedBar;
     }
-    private static boolean hudVisible() { return youtube != null && (youtube.playing() || pausedBar()); }
+    private static boolean hudVisible() { return youtube != null && PersonalConfig.store().bool("youtube","mini_player") && (youtube.playing() || pausedBar()); }
     static BrowserSession adSession() { return ad; }
     private static boolean inventory(Screen screen) { return screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen; }
     private static boolean advertisementScreen(Screen screen) {
@@ -80,7 +80,9 @@ public final class BrowserOverlays {
     public static void changed(Screen next) {
         if (owner == next) return;
         if (youtube != null) {
-            lastYoutubeUrl = youtube.url(); youtube.focus(false);
+            lastYoutubeUrl = youtube.url();
+            if(!PersonalConfig.store().bool("youtube","stop_on_close")&&inventory(owner))youtube.keepPlayingOnScreenChange();
+            youtube.focus(false);
             if (PersonalConfig.store().bool("youtube", "stop_on_close") || Minecraft.getInstance().level == null) { youtube.close(); youtube = null; }
         }
         if (ad != null) { ad.close(); ad = null; }
@@ -154,10 +156,11 @@ public final class BrowserOverlays {
     /** Draws the persistent player while the inventory is closed. */
     public static void renderHud(GuiGraphicsExtractor graphics) {
         var mc = Minecraft.getInstance();
-        if (!hudVisible() || mc.level == null || mc.gui.hud.isHidden() || !ClientRules.enabled("youtube") || inventory(mc.gui.screen())) return;
+        if (!hudVisible() || mc.level == null || mc.gui.hud.isHidden() || !ClientRules.enabled("youtube") || mc.gui.screen()!=null) return;
         boolean paused = pausedBar();
-        hudWidth = paused ? Math.max(140, Math.min(220, graphics.guiWidth() - 16)) : Math.max(1, Math.min(PersonalConfig.store().integer("youtube", "width"), graphics.guiWidth() - 16));
-        hudHeight = paused ? 20 : Math.max(1, Math.min(PersonalConfig.store().integer("youtube", "height"), graphics.guiHeight() - hudY - 8));
+        hudWidth = paused ? Math.max(140, Math.min(220, graphics.guiWidth() - 16)) : Math.max(1, Math.min(PersonalConfig.store().integer("youtube", "mini_width"), graphics.guiWidth() - 16));
+        hudHeight = paused ? 20 : Math.max(1, Math.min(PersonalConfig.store().integer("youtube", "mini_height"), graphics.guiHeight() - 44));
+        if(!hudMoved){int margin=PersonalConfig.store().integer("youtube","mini_margin");hudX=graphics.guiWidth()-hudWidth-margin;hudY=margin+18;}
         hudX = Math.max(0, Math.min(hudX, graphics.guiWidth() - hudWidth));
         hudY = Math.max(0, Math.min(hudY, graphics.guiHeight() - hudHeight - 18));
         var font = mc.font;
@@ -168,7 +171,7 @@ public final class BrowserOverlays {
         }
         graphics.fill(hudX - 2, hudY - 18, hudX + hudWidth + 2, hudY + hudHeight + 2, 0xEE101114);
         graphics.text(font, "←  →  ↻  YouTube", hudX + 3, hudY - 13, -1);
-        youtube.draw(graphics, hudX, hudY, hudWidth, hudHeight, PersonalConfig.store().integer("youtube", "volume"));
+        youtube.drawMiniPlayer(graphics, hudX, hudY, hudWidth, hudHeight, PersonalConfig.store().integer("youtube", "volume"));
     }
 
     /** Timed structure popup and full-track PvP death media driven by server state serials. */
@@ -247,6 +250,7 @@ public final class BrowserOverlays {
     public static boolean hudDrag(double x, double y) {
         if (draggingHud) {
             var mc = Minecraft.getInstance();
+            hudMoved=true;
             hudX = (int) Math.max(0, Math.min(mc.getWindow().getGuiScaledWidth() - hudWidth, x - dragOffsetX));
             hudY = (int) Math.max(18, Math.min(mc.getWindow().getGuiScaledHeight() - hudHeight - 2, y - dragOffsetY + 18));
             return true;
@@ -302,5 +306,5 @@ public final class BrowserOverlays {
         return false;
     }
     public static boolean character(CharacterEvent event) { if (owner == null || owner != Minecraft.getInstance().gui.screen()) return false; return ad != null ? ad.character(event) : youtube != null && youtube.character(event); }
-    public static void closeAll() { if (youtube != null) youtube.close(); youtube = null; closeAd(); stopWorldMedia(); owner = null; draggingHud = false; lastYoutubeUrl = null; configuredYoutubeUrl = null; }
+    public static void closeAll() { if (youtube != null) youtube.close(); youtube = null; closeAd(); stopWorldMedia(); owner = null; draggingHud = false; hudMoved=false; lastYoutubeUrl = null; configuredYoutubeUrl = null; }
 }

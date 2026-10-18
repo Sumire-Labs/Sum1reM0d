@@ -7,7 +7,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
-/** Pattern slots for the auto-crafter and its single tool slot for the clicker. */
+/** Single tool slot for the clicker. */
 public final class AutomationMenu extends AbstractContainerMenu {
     private static ClientTargetHint clientTargetHint;
     public final AutomationMachineEntity machine;

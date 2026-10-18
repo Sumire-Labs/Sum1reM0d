@@ -21,7 +21,6 @@ public final class SumireCreativeTab {
                 if (!Rules.on("creative_tab")) return;
                 BuiltInRegistries.ITEM.stream()
                     .filter(item -> BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("sum1rem0d"))
-                    .filter(item -> !AutomationContent.retiredItem(item))
                     .sorted(Comparator.comparing(item -> BuiltInRegistries.ITEM.getKey(item).getPath()))
                     .forEach(item -> output.accept(item));
             }).build();

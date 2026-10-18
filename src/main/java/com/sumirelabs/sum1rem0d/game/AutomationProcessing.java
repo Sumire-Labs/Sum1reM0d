@@ -36,7 +36,7 @@ public final class AutomationProcessing {
     private AutomationProcessing(){}
     static void loaded(AutomationMachineEntity entity){LOADED.add(entity);}
     static void unloaded(AutomationMachineEntity entity){LOADED.remove(entity);var actor=CLICKER_ACTORS.remove(entity);if(actor!=null)actor.discard();}
-    public static boolean enabled(String kind){return switch(kind){case "automated_crafting_table","automated_crafting"->Rules.on("automated_crafting");case "jukebox_grinder"->Rules.on("jukebox_grinder");case "washing_cauldron"->Rules.on("washing_cauldron");case "tesla_coil"->Rules.on("tesla_coil");case "auto_clicker"->Rules.on("auto_clicker");default->false;};}
+    public static boolean enabled(String kind){return switch(kind){case "automated_crafting"->Rules.on("automated_crafting");case "jukebox_grinder"->Rules.on("jukebox_grinder");case "washing_cauldron"->Rules.on("washing_cauldron");case "tesla_coil"->Rules.on("tesla_coil");case "auto_clicker"->Rules.on("auto_clicker");default->false;};}
     public static void tick(MinecraftServer server){
         for(var machine:List.copyOf(LOADED)){if(!(machine.getLevel() instanceof ServerLevel level)||level.getServer()!=server||machine.isRemoved())continue;tick(machine,level);}
         tickNativeVanilla(server);
@@ -63,11 +63,10 @@ public final class AutomationProcessing {
     }
     private static void tick(AutomationMachineEntity machine,ServerLevel level){
         String kind=machine.kind();if(!enabled(kind))return;
-        if(kind.equals("tesla_coil")){tesla(machine,level);return;}
         if(kind.equals("auto_clicker")){clicker(machine,level);return;}
         if(machine.cooldown()>0){machine.cooldown(machine.cooldown()-1);return;}
-        boolean done=switch(kind){case "automated_crafting_table"->craft(machine,level);case "jukebox_grinder"->grind(machine,level);case "washing_cauldron"->wash(machine,level);default->false;};
-        if(done){machine.cooldown(Math.max(1,Rules.i(kind.equals("automated_crafting_table")?"automated_crafting":kind,"interval_ticks")));machine.setChanged();}
+        boolean done=kind.equals("jukebox_grinder")&&grind(machine,level);
+        if(done){machine.cooldown(Math.max(1,Rules.i(kind,"interval_ticks")));machine.setChanged();}
     }
     private record SlotRef(Container container,int slot){}
     private static List<Container> containersAround(AutomationMachineEntity machine,ServerLevel level,boolean above){return containersAround(level,machine.getBlockPos(),above);}
@@ -87,20 +86,6 @@ public final class AutomationProcessing {
         for(var c:containers){var after=current.get(c);for(int i=0;i<after.length;i++)if(!ItemStack.matches(c.getItem(i),after[i]))c.setItem(i,after[i]);c.setChanged();}return true;
     }
     private static boolean consume(SlotRef ref,int count){var stack=ref.container().getItem(ref.slot());if(stack.getCount()<count)return false;stack.shrink(count);if(stack.isEmpty())ref.container().setItem(ref.slot(),ItemStack.EMPTY);else ref.container().setChanged();return true;}
-    private static boolean craft(AutomationMachineEntity machine,ServerLevel level){
-        var input=CraftingInput.of(3,3,machine.pattern());var match=level.recipeAccess().getRecipeFor(RecipeType.CRAFTING,input,level).orElse(null);if(match==null)return false;
-        var recipe=match.value();var result=recipe.assemble(input);if(result.isEmpty())return false;
-        for(var leftover:recipe.getRemainingItems(input))if(!leftover.isEmpty())return false;
-        var sources=containersAround(machine,level,false);var available=slots(sources);var needed=new IdentityHashMap<Container,int[]>();for(var c:sources)needed.put(c,new int[c.getContainerSize()]);
-        for(var ingredient:recipe.placementInfo().ingredients())if(!ingredient.isEmpty()){
-            SlotRef found=null;for(var ref:available){var stack=ref.container().getItem(ref.slot());int used=needed.get(ref.container())[ref.slot()];if(stack.getCount()>used&&ingredient.test(stack)){found=ref;break;}}
-            if(found==null)return false;needed.get(found.container())[found.slot()]++;
-        }
-        var output=containersAround(machine,level,true);if(output.isEmpty())return false;
-        var outputContainer=output.getFirst();var post=planInsert(outputContainer,result);if(post==null)return false;
-        for(var c:sources){var counts=needed.get(c);for(int i=0;i<counts.length;i++)if(counts[i]>0&&!consume(new SlotRef(c,i),counts[i]))return false;}
-        for(int i=0;i<post.length;i++)if(!ItemStack.matches(outputContainer.getItem(i),post[i]))outputContainer.setItem(i,post[i]);outputContainer.setChanged();return true;
-    }
     /** Vanilla Crafter uses its 3x3 contents as a persistent recipe sample; side barrels fund the output. */
     public static boolean craftFromVanillaCrafter(ServerLevel level,BlockPos pos,CrafterBlockEntity crafter){
         if(!enabled("automated_crafting"))return false;var key=new WorldPos(level.dimension().identifier().toString(),pos.asLong());if(level.getGameTime()<CRAFT_NEXT.getOrDefault(key,Long.MIN_VALUE))return false;
@@ -173,7 +158,6 @@ public final class AutomationProcessing {
                 ||path.equals("mixed_wool")||path.equals("mixed_wool_slab")||path.equals("mixed_wool_stairs")
                 ||path.equals("mixed_bed")||path.equals("mixed_concrete")||path.equals("mixed_shulker");
     }
-    private static boolean wash(AutomationMachineEntity machine,ServerLevel level){var inputs=containersAround(machine,level,true);return !inputs.isEmpty()&&washOne(level,machine.getBlockPos(),inputs.getFirst(),machine.getBlockState());}
     static boolean tryNativeWash(ServerLevel level,BlockPos cauldron){
         if(!enabled("washing_cauldron")||!level.hasChunkAt(cauldron)||!washableWater(level,cauldron))return false;
         var inputPos=cauldron.above();if(!level.hasChunkAt(inputPos)||!(level.getBlockEntity(inputPos) instanceof Container input))return false;
@@ -188,14 +172,12 @@ public final class AutomationProcessing {
     }
     private static boolean washOne(ServerLevel level,BlockPos cauldron,Container input,BlockState state){
         boolean vanilla=state.is(Blocks.WATER_CAULDRON);LargeCauldronBlock large=state.getBlock() instanceof LargeCauldronBlock candidate?candidate:null;
-        var levelProperty=vanilla?BlockStateProperties.LEVEL_CAULDRON:AutomationMachineBlock.WATER_LEVEL;
-        int water=large!=null?large.availableWater(level,cauldron):state.hasProperty(levelProperty)?state.getValue(levelProperty):0;
+        int water=large!=null?large.availableWater(level,cauldron):state.getValue(BlockStateProperties.LEVEL_CAULDRON);
         if(water<=0||large!=null&&!large.isWater(level,cauldron))return false;var outputs=containersAround(level,cauldron,false);if(outputs.isEmpty())return false;
         for(int i=0;i<input.getContainerSize();i++){var source=input.getItem(i);if(source.isEmpty())continue;var result=washed(source,level);if(result.isEmpty()||!fits(outputs,result))continue;var before=source.copy();if(!consume(new SlotRef(input,i),1))return false;
             if(large!=null&&!large.consumeWater(level,cauldron,1)){input.setItem(i,before);return false;}
             if(!output(outputs,result))throw new IllegalStateException("Validated wash output no longer fits");
-            if(vanilla){if(water==1)level.setBlock(cauldron,Blocks.CAULDRON.defaultBlockState(),3);else level.setBlock(cauldron,state.setValue(levelProperty,water-1),3);}
-            else if(large==null)level.setBlock(cauldron,state.setValue(levelProperty,water-1),3);
+            if(vanilla){if(water==1)level.setBlock(cauldron,Blocks.CAULDRON.defaultBlockState(),3);else level.setBlock(cauldron,state.setValue(BlockStateProperties.LEVEL_CAULDRON,water-1),3);}
             level.playSound(null,cauldron,net.minecraft.sounds.SoundEvents.BOTTLE_FILL,net.minecraft.sounds.SoundSource.BLOCKS,.7F,1F);return true;}return false;
     }
     private static net.minecraft.world.entity.Entity clickerEntity(ServerLevel level,BlockPos target,ServerPlayer actor){
@@ -204,7 +186,6 @@ public final class AutomationProcessing {
         return level.getEntitiesOfClass(net.minecraft.world.entity.Entity.class,bounds,entity->entity!=actor&&entity.isPickable()&&entity.isAlive()&&(!(entity instanceof Player player)||!player.isSpectator()))
                 .stream().min(Comparator.comparingDouble(entity->entity.distanceToSqr(Vec3.atCenterOf(actor.blockPosition())))).orElse(null);
     }
-    private static void tesla(AutomationMachineEntity machine,ServerLevel level){if(!level.hasNeighborSignal(machine.getBlockPos()))return;if(machine.cooldown()>0){machine.cooldown(machine.cooldown()-1);return;}double radius=Rules.n("tesla_coil","range"),damage=Rules.n("tesla_coil","damage");attackTeslaTargets(level,machine.getBlockPos(),radius,(float)damage);machine.cooldown(Math.max(1,Rules.i("tesla_coil","interval_ticks")));}
     static int attackTeslaTargets(ServerLevel level,BlockPos origin,double radius,float damage){
         var box=new AABB(origin).inflate(Math.max(0,radius));int hits=0;
         for(var target:level.getEntitiesOfClass(LivingEntity.class,box,LivingEntity::isAlive)){

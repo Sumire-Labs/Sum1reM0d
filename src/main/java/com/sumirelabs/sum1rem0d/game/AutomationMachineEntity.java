@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 /** Durable machine settings and the auto-crafter/clicker one-use slots. */
 public final class AutomationMachineEntity extends BlockEntity implements Container {
-    private final List<ItemStack> items=new ArrayList<>(Collections.nCopies(9,ItemStack.EMPTY));
+    private final List<ItemStack> items=new ArrayList<>(Collections.nCopies(1,ItemStack.EMPTY));
     private int cooldown;
     private boolean leftClick=true,lastPowered;
     private UUID actorOwner;
@@ -29,7 +29,7 @@ public final class AutomationMachineEntity extends BlockEntity implements Contai
     public UUID actorOwner(){return actorOwner;}public void actorOwner(UUID owner){if(!Objects.equals(actorOwner,owner)){actorOwner=owner;setChanged();}}
     @Override public void setRemoved(){AutomationProcessing.unloaded(this);super.setRemoved();}
     @Override public void preRemoveSideEffects(BlockPos pos,BlockState state){super.preRemoveSideEffects(pos,state);if(level!=null)net.minecraft.world.Containers.dropContents(level,pos,this);}
-    @Override public int getContainerSize(){return kind().equals("automated_crafting_table")?9:kind().equals("auto_clicker")?1:0;}
+    @Override public int getContainerSize(){return kind().equals("auto_clicker")?1:0;}
     @Override public boolean isEmpty(){for(int i=0;i<getContainerSize();i++)if(!items.get(i).isEmpty())return false;return true;}
     @Override public ItemStack getItem(int slot){return slot>=0&&slot<getContainerSize()?items.get(slot):ItemStack.EMPTY;}
     @Override public ItemStack removeItem(int slot,int count){if(slot<0||slot>=getContainerSize()||count<=0)return ItemStack.EMPTY;var current=items.get(slot);if(current.isEmpty())return ItemStack.EMPTY;var taken=current.split(count);setChanged();return taken;}
@@ -45,7 +45,6 @@ public final class AutomationMachineEntity extends BlockEntity implements Contai
     @Override protected void loadAdditional(ValueInput in){
         super.loadAdditional(in);cooldown=Math.max(0,in.getIntOr("cooldown",0));leftClick=in.getBooleanOr("leftClick",true);lastPowered=in.getBooleanOr("lastPowered",false);
         actorOwner=in.read("actorOwner",UUIDUtil.CODEC).orElse(null);
-        var stored=in.read("items",ItemStack.OPTIONAL_CODEC.listOf()).orElse(List.of());for(int i=0;i<Math.min(stored.size(),9);i++)items.set(i,stored.get(i));
+        var stored=in.read("items",ItemStack.OPTIONAL_CODEC.listOf()).orElse(List.of());for(int i=0;i<Math.min(stored.size(),1);i++)items.set(i,stored.get(i));
     }
-    public List<ItemStack> pattern(){var result=new ArrayList<ItemStack>(9);for(int i=0;i<9;i++)result.add(items.get(i).copyWithCount(items.get(i).isEmpty()?0:1));return result;}
 }

@@ -12,8 +12,6 @@ final class MachineMenuVerification {
    require(menu.clickMenuButton(actor,0),"Valid nearby player toggles clicker mode");require(menu.leftClickMode()==machine.leftClick() && machine.leftClick()!=(i==0?start:!start),"Mode changes in both menu and actual machine");
    client.setData(0,menu.leftClickMode()?1:0);require(client.leftClickMode()==menu.leftClickMode(),"Native menu data update synchronizes the client mode without block entity updates");
   }
-  var crafter=pos.east(3);ServerVerification.place(level,crafter,AutomationContent.block("automated_crafting_table").defaultBlockState());var craftMenu=new AutomationMenu(42,actor.getInventory(),(AutomationMachineEntity)level.getBlockEntity(crafter));
-  require(craftMenu.slots.size()==45 && craftMenu.playerInventoryLabelY()==72,"Crafter uses nine pattern slots and its own inventory label alignment");
-  passed.accept("Clicker left/right toggles, native DataSlot sync and clicker/crafter inventory slot alignment");
+  passed.accept("Clicker left/right toggles and native DataSlot sync");
  }
 }

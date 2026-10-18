@@ -1,1 +1,0 @@
-{"multipart":[{"apply":{"model":"minecraft:block/cauldron"}},{"when":{"washing_level":"1"},"apply":{"model":"minecraft:block/water_cauldron_level1"}},{"when":{"washing_level":"2"},"apply":{"model":"minecraft:block/water_cauldron_level2"}},{"when":{"washing_level":"3"},"apply":{"model":"minecraft:block/water_cauldron_full"}}]}

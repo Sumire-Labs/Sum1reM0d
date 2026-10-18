@@ -12,6 +12,8 @@ final class DustWiringVerification {
   var config=Sum1reM0d.config();var before=config.snapshot();var level=server.overworld();var origin=new BlockPos(2020,240,40);
   try{
    var draft=before.deepCopy();var f=draft.getAsJsonObject("features");for(String name:List.of("glow_wire","sugar_wire","gunpowder_wire")){var opt=f.getAsJsonObject(name);opt.addProperty("enabled",true);opt.addProperty("opposite_redstone",false);opt.addProperty("inverted",false);}config.update(draft,config.revision());
+   for(int power=0;power<=15;power++)require(ExtraContent.block("glow_wire").defaultBlockState().setValue(GlowWireBlock.POWER,power).getLightEmission()==power,"Glow light emission matches signal "+power);
+   passed.accept("All 16 glow signal states emit matching light levels");
    String[] names={"glow_wire","sugar_wire","gunpowder_wire"};
    for(int row=0;row<3;row++)for(int x=0;x<3;x++){var p=origin.offset(x,0,row);ServerVerification.place(level,p.below(),Blocks.STONE.defaultBlockState());ServerVerification.place(level,p,ExtraContent.block(names[row]).defaultBlockState());}
    ServerVerification.place(level,origin.west(),Blocks.REDSTONE_BLOCK.defaultBlockState());

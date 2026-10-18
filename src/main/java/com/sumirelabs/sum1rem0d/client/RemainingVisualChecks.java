@@ -17,6 +17,19 @@ final class RemainingVisualChecks {
  private RemainingVisualChecks(){}
  private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
  static void verify(Minecraft mc,Consumer<String> passed){
+  var savedRules=ClientRules.snapshot();var tintDraft=savedRules.deepCopy();var glowOptions=tintDraft.getAsJsonObject("features").getAsJsonObject("glow_wire");
+  try{
+   glowOptions.addProperty("signal_tint",true);glowOptions.addProperty("minimum_brightness",20);ClientRules.accept(new ConfigStatePayload(ClientRules.revision,ClientRules.editable,tintDraft.toString(),"",0,false));
+   var wire=ExtraContent.block("glow_wire");var source=mc.getBlockColors().getTintSource(wire.defaultBlockState(),0);require(source!=null,"Glow wire has native tint provider");int previous=-1;
+   for(int power=0;power<=15;power++){var state=wire.defaultBlockState().setValue(GlowWireBlock.POWER,power);int color=source.color(state);require(color==GlowWireTint.signalColor(power,20),"Native glow tint at signal "+power);int red=(color>>16)&255;require(red>previous,"Strictly increasing glow brightness "+power);previous=red;}
+   require(source.color(wire.defaultBlockState())==0xFF332A12,"Unpowered wire is dark gold");require(source.color(wire.defaultBlockState().setValue(GlowWireBlock.POWER,15))==0xFFFFD45A,"Full power keeps original gold");
+   glowOptions.addProperty("signal_tint",false);ClientRules.accept(new ConfigStatePayload(ClientRules.revision,ClientRules.editable,tintDraft.toString(),"",0,false));require(source.color(wire.defaultBlockState())==0xFFFFD45A,"Tint OFF restores constant gold");
+   glowOptions.addProperty("signal_tint",true);glowOptions.addProperty("minimum_brightness",0);ClientRules.accept(new ConfigStatePayload(ClientRules.revision,ClientRules.editable,tintDraft.toString(),"",0,false));require(source.color(wire.defaultBlockState())==0xFF000000,"Config minimum brightness applies");
+   for(String name:List.of("sugar_wire","gunpowder_wire")){var state=ExtraContent.block(name).defaultBlockState();var other=mc.getBlockColors().getTintSource(state,0);require(other.color(state)==other.color(state.setValue(GlowWireBlock.POWER,15)),"Other dust tint unchanged");}
+   try{var ext=Class.forName("net.caffeinemc.mods.sodium.client.model.color.interop.BlockColorsExtension");var providers=(Map<?,?>)ext.getMethod("sodium$getProviders").invoke(mc.getBlockColors());require(providers.containsKey(wire),"Sodium glow color provider registered");}catch(ClassNotFoundException absent){}catch(ReflectiveOperationException error){throw new IllegalStateException(error);}
+   passed.accept("Native/Sodium glow tint: all 16 signal levels, Config OFF and minimum brightness, independent dust colors");
+  }finally{ClientRules.accept(new ConfigStatePayload(ClientRules.revision,ClientRules.editable,savedRules.toString(),"",0,false));}
+
   for(String name:List.of("mixed_wool","mixed_bed")){
    var block=ExtraContent.block(name).defaultBlockState();var pos=new BlockPos(0,64,0);var entity=new TextileEntity(name,pos,block);entity.color(0x13579B);
    var world=(BlockAndTintGetter)Proxy.newProxyInstance(BlockAndTintGetter.class.getClassLoader(),new Class<?>[]{BlockAndTintGetter.class},(proxy,method,args)->switch(method.getName()){case "getBlockEntity"->entity;case "getBlockState"->block;case "toString"->"Textile color fixture";default->throw new UnsupportedOperationException(method.getName());});

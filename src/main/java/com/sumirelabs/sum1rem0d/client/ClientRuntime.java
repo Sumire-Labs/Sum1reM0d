@@ -20,7 +20,7 @@ public final class ClientRuntime {
         ClientRules.accept(payload);
         var after = ClientRules.snapshot().getAsJsonObject("features");
         var mc = Minecraft.getInstance();
-        if (mc.level != null && java.util.List.of("upside_down_grass", "diamond_disguise", "furnace_textures", "sideways_nylium").stream().anyMatch(id -> !before.get(id).equals(after.get(id))))
+        if (mc.level != null && java.util.List.of("upside_down_grass", "diamond_disguise", "furnace_textures", "sideways_nylium", "glow_wire").stream().anyMatch(id -> !before.get(id).equals(after.get(id))))
             mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
     }
     public static void accept(GameStatePayload payload) {

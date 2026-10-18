@@ -3821,6 +3821,22 @@
     "implemented": true,
     "options": [
       {
+        "key": "signal_tint",
+        "label": "信号強度で配線の明るさを変える",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "minimum_brightness",
+        "label": "信号0の配線の明るさ（%）",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
+      },
+      {
         "key": "enabled",
         "label": "有効",
         "type": "BOOLEAN",

@@ -17,7 +17,7 @@ public final class DyedWoolStairsBlock extends StairBlock implements EntityBlock
     private static final MapCodec<DyedWoolStairsBlock> CODEC = simpleCodec(DyedWoolStairsBlock::new);
     @Override public MapCodec<DyedWoolStairsBlock> codec() { return CODEC; }
     //?}
-    public DyedWoolStairsBlock(Properties properties) { super(net.minecraft.world.level.block.Blocks.OAK_STAIRS.defaultBlockState(), properties); }
+    public DyedWoolStairsBlock(Properties properties) { super(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("white_wool")).defaultBlockState(), properties); }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new TextileEntity("mixed_wool_stairs", pos, state); }
     @Override protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean data) {
         return level.getBlockEntity(pos) instanceof DyedBlockEntity entity ? entity.item() : DyeTextiles.stack("mixed_wool_stairs", 0xFFFFFF);

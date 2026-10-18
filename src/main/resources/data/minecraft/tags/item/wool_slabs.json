@@ -1,0 +1,69 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "sum1rem0d:white_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:orange_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:magenta_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:light_blue_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:yellow_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:lime_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:pink_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:gray_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:light_gray_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:cyan_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:purple_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:blue_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:brown_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:green_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:red_wool_slab",
+      "required": false
+    },
+    {
+      "id": "sum1rem0d:black_wool_slab",
+      "required": false
+    }
+  ]
+}

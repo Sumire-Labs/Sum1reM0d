@@ -37,7 +37,30 @@ afterEvaluate {
 // All metadata lives in src/main/resources; ship only the selected loader's descriptor.
 tasks.named('processResources') {
     inputs.property('equipment_baby_layer', stonecutter.eval(minecraftVersion, '>=26.3'))
+    inputs.property('wool_shape_backport', stonecutter.eval(minecraftVersion, '<26.3'))
     if (stonecutter.eval(minecraftVersion, '>=26.3')) {
+        def colors = ['white','orange','magenta','light_blue','yellow','lime','pink','gray','light_gray','cyan','purple','blue','brown','green','red','black']
+        colors.each { color ->
+            ['slab','stairs'].each { shape ->
+                def name = "${color}_wool_${shape}"
+                exclude "assets/sum1rem0d/blockstates/${name}.json"
+                exclude "assets/sum1rem0d/items/${name}.json"
+                exclude "data/sum1rem0d/loot_table/blocks/${name}.json"
+                if (shape == 'slab') {
+                    exclude "assets/sum1rem0d/models/block/${color}_wool.json"
+                    exclude "assets/sum1rem0d/models/block/${color}_wool_slab.json"
+                    exclude "assets/sum1rem0d/models/block/${color}_wool_slab_top.json"
+                } else {
+                    exclude "assets/sum1rem0d/models/block/${color}_wool_stairs.json"
+                    exclude "assets/sum1rem0d/models/block/${color}_wool_stairs_inner.json"
+                    exclude "assets/sum1rem0d/models/block/${color}_wool_stairs_outer.json"
+                }
+            }
+        }
+        ['block','item'].each { registry ->
+            exclude "data/minecraft/tags/${registry}/wool_slabs.json"
+            exclude "data/minecraft/tags/${registry}/wool_stairs.json"
+        }
         filesMatching('assets/sum1rem0d/equipment/*.json') {
             def family = name.replace('.json', '')
             if (family in ['emerald', 'redstone', 'lapis']) filter { String line -> line.contains('"humanoid": [') ? '    "humanoid_baby": [{"texture": "sum1rem0d:' + family + '"}],\n' + line : line }

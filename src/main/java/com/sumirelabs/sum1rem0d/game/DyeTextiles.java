@@ -48,6 +48,11 @@ public final class DyeTextiles {
   var colors=new ArrayList<Integer>();
   for(int slot:slots){var wool=input.getItem(slot);if(!kind(wool,"wool"))return ItemStack.EMPTY;colors.add(color(wool));}
   if(!Rules.b(feature,"allow_mixed_colors")&&colors.stream().distinct().count()>1)return ItemStack.EMPTY;
+  boolean custom=false;for(int slot:slots)custom|=input.getItem(slot).is(ExtraContent.item("mixed_wool"));
+  if(!custom && colors.stream().distinct().count()==1){
+   var original=BuiltInRegistries.ITEM.getKey(input.getItem(slots[0]).getItem()).getPath();
+   for(var dye:DyeColor.values())if(original.equals(dye.getName()+"_wool"))return new ItemStack(WoolShapeBackport.item(dye,feature.equals("mixed_wool_stairs")),output);
+  }
   return stack(feature,blend(colors)).copyWithCount(output);
  }
  private static boolean patternMatches(CraftingInput input,int[] slots){var occupied=new HashSet<Integer>();for(int slot:slots)occupied.add(slot);for(int i=0;i<input.items().size();i++)if(input.getItem(i).isEmpty()==occupied.contains(i))return false;return true;}

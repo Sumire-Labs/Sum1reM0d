@@ -17,6 +17,34 @@ final class RemainingVisualChecks {
  private RemainingVisualChecks(){}
  private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
  static void verify(Minecraft mc,Consumer<String> passed){
+  var displayKeys=new HashSet<String>();
+  for(var item:net.minecraft.core.registries.BuiltInRegistries.ITEM){var id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);if(!id.getNamespace().equals("sum1rem0d"))continue;
+   displayKeys.add((item instanceof BlockItem?"block.":"item.")+id.getNamespace()+"."+id.getPath());
+   require(!mc.getModelManager().getItemModel(id).getClass().getSimpleName().contains("Missing"),"Registered item model resolves: "+id);
+  }
+  for(var block:net.minecraft.core.registries.BuiltInRegistries.BLOCK){var id=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block);if(id.getNamespace().equals("sum1rem0d"))displayKeys.add("block.sum1rem0d."+id.getPath());}
+  for(var effect:net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT){var id=net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getKey(effect);if(id.getNamespace().equals("sum1rem0d"))displayKeys.add("effect.sum1rem0d."+id.getPath());}
+  for(String locale:List.of("ja_jp","en_us")){
+   try(var reader=new java.io.InputStreamReader(mc.getResourceManager().getResource(ModContent.id("lang/"+locale+".json")).orElseThrow().open(),java.nio.charset.StandardCharsets.UTF_8)){
+    var translations=com.google.gson.JsonParser.parseReader(reader).getAsJsonObject();for(String key:displayKeys)require(translations.has(key),"Registered display name has "+locale+" translation: "+key);
+   }catch(java.io.IOException error){throw new IllegalStateException(error);}
+  }
+  passed.accept("All registered Mod item models and Japanese/English item, block and effect names resolve");
+  for(String material:List.of("wooden","stone","copper","iron","golden","diamond","netherite","emerald","redstone","lapis","manyullyn")){
+   try(var stream=mc.getResourceManager().getResource(ModContent.id("textures/item/"+material+"_paxel.png")).orElseThrow().open()){
+    var sprite=javax.imageio.ImageIO.read(stream);require(sprite!=null && sprite.getWidth()==16 && sprite.getHeight()==16,"Native 16x16 paxel sprite: "+material);int pixels=0;
+    for(int y=0;y<16;y++)for(int x=0;x<16;x++){int alpha=sprite.getRGB(x,y)>>>24;require(alpha==0||alpha==255,"Crisp paxel alpha: "+material);if(alpha==255)pixels++;}
+    require(pixels>=35 && pixels<196,"Readable transparent paxel silhouette: "+material);
+   }catch(java.io.IOException error){throw new IllegalStateException(error);}
+  }
+  passed.accept("All 11 rebuilt paxel sprites load as crisp native 16x16 transparent images");
+
+  for(var dye:net.minecraft.world.item.DyeColor.values())for(boolean stairs:new boolean[]{false,true}){
+   var item=WoolShapeBackport.item(dye,stairs);var id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);
+   require(item!=Items.AIR && !mc.getModelManager().getItemModel(id).getClass().getSimpleName().contains("Missing"),"Wool shape item model resolves: "+id);
+  }
+  passed.accept("All 32 vanilla/backported wool shape item models resolve");
+
   var savedRules=ClientRules.snapshot();var tintDraft=savedRules.deepCopy();var glowOptions=tintDraft.getAsJsonObject("features").getAsJsonObject("glow_wire");
   try{
    glowOptions.addProperty("signal_tint",true);glowOptions.addProperty("minimum_brightness",20);ClientRules.accept(new ConfigStatePayload(ClientRules.revision,ClientRules.editable,tintDraft.toString(),"",0,false));

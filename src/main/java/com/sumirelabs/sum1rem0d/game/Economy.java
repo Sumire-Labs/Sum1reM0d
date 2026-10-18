@@ -204,7 +204,7 @@ public final class Economy {
     }
     static void startSession(ServerPlayer other,ServerPlayer p) {
         var s=new Session(other,p); SESSIONS.put(p.getUUID(),s); SESSIONS.put(other.getUUID(),s);
-        for(var actor:List.of(other,p)) actor.openMenu(new SimpleMenuProvider((id,inventory,who)->new TradeMenu(id,inventory,s),Component.literal("取引: "+s.other(actor).getGameProfile().name())));
+        for(var actor:List.of(other,p)) actor.openMenu(new SimpleMenuProvider((id,inventory,who)->new TradeMenu(id,inventory,s),Component.translatable("container.sum1rem0d.trade",s.other(actor).getGameProfile().name())));
         s.sync();
     }
     private static Session current(ServerPlayer p,long revision) {

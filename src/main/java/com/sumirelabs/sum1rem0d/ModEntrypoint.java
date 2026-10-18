@@ -11,6 +11,8 @@ public final class ModEntrypoint implements ModInitializer {
     public void onInitialize() {
         Sum1reM0d.initialize(FabricLoader.getInstance().getConfigDir());
         ModContent.registerFabric();
+        com.sumirelabs.sum1rem0d.game.WoolShapeBackport.registerFabric();
+        com.sumirelabs.sum1rem0d.game.SumireCreativeTab.registerFabric();
         PlatformNetwork.initialize();
     }
 }
@@ -30,9 +32,12 @@ public final class ModEntrypoint {
         com.sumirelabs.sum1rem0d.game.NaturalFlipData.register(bus);
         bus.addListener(PlatformNetwork::register);
         bus.addListener(com.sumirelabs.sum1rem0d.game.ExtraContent::setupNeo);
+        bus.addListener(com.sumirelabs.sum1rem0d.game.WoolShapeBackport::registerNeo);
+        bus.addListener(com.sumirelabs.sum1rem0d.game.WoolShapeBackport::setupNeo);
         bus.addListener(ModEntrypoint::registerContent);
     }
     private static void registerContent(RegisterEvent event) {
+        event.register(Registries.CREATIVE_MODE_TAB, helper -> helper.register(ModContent.id("main"), com.sumirelabs.sum1rem0d.game.SumireCreativeTab.create()));
         event.register(Registries.BLOCK,h->{for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createBlock(name));for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.MATERIAL_BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createBlock(name));});
         event.register(Registries.BLOCK_ENTITY_TYPE,h->h.register(ModContent.id("automation_machine"),com.sumirelabs.sum1rem0d.game.AutomationContent.createType()));
         event.register(Registries.ITEM,h->{for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createBlockItem(name));for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.MATERIAL_BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createBlockItem(name));for(var name:com.sumirelabs.sum1rem0d.game.AutomationContent.ITEMS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.AutomationContent.createItem(name));if(com.sumirelabs.sum1rem0d.game.AutomationContent.needsLegacySulfur())h.register(ModContent.id("sulfur"),com.sumirelabs.sum1rem0d.game.AutomationContent.createItem("sulfur"));});

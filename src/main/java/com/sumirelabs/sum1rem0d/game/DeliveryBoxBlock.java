@@ -36,7 +36,7 @@ public final class DeliveryBoxBlock extends Block implements EntityBlock {
                 DeliveryBoxAccess.open(serverPlayer, pos, box);
                 serverPlayer.openMenu(new net.minecraft.world.SimpleMenuProvider(
                     (id, inventory, who) -> new DeliveryBoxMenu(id, inventory, box),
-                    Component.literal("Sumzon 宅配BOX")));
+                    Component.translatable("block.sum1rem0d.sumzon_delivery_box")));
             }
         }
         return InteractionResult.SUCCESS;

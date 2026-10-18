@@ -42,7 +42,7 @@ public final class AutomationMachineBlock extends BaseEntityBlock {
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){var machine=new AutomationMachineEntity(pos,state);AutomationProcessing.loaded(machine);return machine;}
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
         if(level.isClientSide())return InteractionResult.SUCCESS;
-        if(player instanceof ServerPlayer server)server.openMenu(new net.minecraft.world.SimpleMenuProvider((id,inventory,who)->new AutomationMenu(id,inventory,(AutomationMachineEntity)level.getBlockEntity(pos)),Component.literal(AutomationProcessing.label(kind))));
+        if(player instanceof ServerPlayer server)server.openMenu(new net.minecraft.world.SimpleMenuProvider((id,inventory,who)->new AutomationMenu(id,inventory,(AutomationMachineEntity)level.getBlockEntity(pos)),Component.translatable("block.sum1rem0d."+kind)));
         return InteractionResult.CONSUME;
     }
     @Override protected InteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){

@@ -17,7 +17,10 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.block.state.properties.SlabType;
 
 /** Native recipe/placement/loot/save checks for A03 mixed wool slabs and stairs. */
 final class MixedWoolShapesVerification {
@@ -45,24 +48,45 @@ final class MixedWoolShapesVerification {
             for (DyeColor color : DyeColor.values()) {
                 var wool = BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(color.getName() + "_wool"));
                 var input = slabInput(new ItemStack(wool), new ItemStack(wool), new ItemStack(wool));
-                var result = slabRecipe.assemble(input);
-                require(slabRecipe.matches(input, level) && result.is(ExtraContent.item("mixed_wool_slab"))
+                var result = craft(server, input, level);
+                var expectedItem = WoolShapeBackport.item(color, false);
+                var expectedId = Identifier.fromNamespaceAndPath(nativeWoolShapes() ? "minecraft" : "sum1rem0d", color.getName() + "_wool_slab");
+                var block = Block.byItem(expectedItem);
+                var woolBlock = Block.byItem(wool);
+                require(BuiltInRegistries.ITEM.getKey(expectedItem).equals(expectedId) && block instanceof SlabBlock
+                                && block.defaultBlockState().getSoundType().equals(woolBlock.defaultBlockState().getSoundType())
+                                && block.defaultBlockState().requiresCorrectToolForDrops() == woolBlock.defaultBlockState().requiresCorrectToolForDrops(),
+                        "Registered same-color slab has its version-appropriate ID and native slab behavior: " + expectedId + ", block=" + block.getClass().getName());
+                require(slabRecipe.matches(input, level) && result.is(expectedItem)
                         && result.getCount() == 6
-                        && result.get(DataComponents.DYED_COLOR).rgb() == (color.getTextureDiffuseColor() & 0xFFFFFF),
-                        "Three " + color.getName() + " wool blocks make six slabs with the same RGB");
+                        && result.get(DataComponents.DYED_COLOR) == null,
+                        "Three " + color.getName() + " wool blocks make six registered " + expectedId + " slabs without a custom color component");
+                var slabLoot = Block.getDrops(block.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.DOUBLE), level, slabPos, null, null, ItemStack.EMPTY);
+                require(!slabLoot.isEmpty() && slabLoot.stream().allMatch(drop -> drop.is(expectedItem))
+                                && slabLoot.stream().mapToInt(ItemStack::getCount).sum() == 2,
+                        "Double " + expectedId + " uses its real loot table to drop two matching slabs: " + slabLoot);
+                var normalSlabGrind = AutomationProcessing.grindResult(result);
+                require(normalSlabGrind.is(Items.STRING) && normalSlabGrind.getCount() == 1,
+                        "Grinding " + expectedId + " returns one string");
             }
             var mix = slabInput(
                     DyeTextiles.stack("mixed_wool", 0xFF0000),
                     wool(DyeColor.BLUE),
                     wool(DyeColor.WHITE));
             int expected = DyeTextiles.blend(List.of(0xFF0000, DyeColor.BLUE.getTextureDiffuseColor(), DyeColor.WHITE.getTextureDiffuseColor()));
-            var slabResult = slabRecipe.assemble(mix);
-            require(slabRecipe.matches(mix, level) && slabResult.getCount() == 6
+            var slabResult = craft(server, mix, level);
+            require(slabRecipe.matches(mix, level) && slabResult.is(ExtraContent.item("mixed_wool_slab")) && slabResult.getCount() == 6
                     && slabResult.get(DataComponents.DYED_COLOR).rgb() == expected,
                     "Mixed wool blocks and vanilla colors are averaged into the slab RGB");
             var slabGrind = AutomationProcessing.grindResult(slabResult);
             require(slabGrind.is(Items.STRING) && slabGrind.getCount() == 1,
                     "Jukebox grinder accepts a wool slab and returns one string");
+            int greenWoolRgb = DyeColor.GREEN.getTextureDiffuseColor() & 0xFFFFFF;
+            var customSlabInput = slabInput(DyeTextiles.stack("mixed_wool", greenWoolRgb), wool(DyeColor.GREEN), wool(DyeColor.GREEN));
+            var customSlabResult = craft(server, customSlabInput, level);
+            require(slabRecipe.matches(customSlabInput, level) && customSlabResult.is(ExtraContent.item("mixed_wool_slab"))
+                    && customSlabResult.getCount() == 6 && customSlabResult.get(DataComponents.DYED_COLOR).rgb() == greenWoolRgb,
+                    "A custom dyed wool input keeps the mixed-slab item even when all visible RGB colors match");
             slab.addProperty("allow_mixed_colors", false); store.update(draft, store.revision());
             require(!slabRecipe.matches(mix, level), "Slab Config can reject mixed-color inputs");
             slab.addProperty("allow_mixed_colors", true); store.update(draft, store.revision());
@@ -70,7 +94,7 @@ final class MixedWoolShapesVerification {
             var stairsRecipe = new ExtraCraftingRecipe("mixed_wool_stairs");
             var left = woolStairInput();
             var right = woolStairInputMirrored();
-            var stairResult = stairsRecipe.assemble(left);
+            var stairResult = craft(server, left, level);
             require(stairsRecipe.matches(left, level) && stairsRecipe.matches(right, level)
                     && stairResult.is(ExtraContent.item("mixed_wool_stairs")) && stairResult.getCount() == 4,
                     "Six wool blocks in either stair orientation make four stairs");
@@ -79,6 +103,36 @@ final class MixedWoolShapesVerification {
             var stairGrind = AutomationProcessing.grindResult(stairResult);
             require(stairGrind.is(Items.STRING) && stairGrind.getCount() == 2,
                     "Jukebox grinder accepts wool stairs and returns two strings");
+            for (DyeColor color : DyeColor.values()) {
+                var input = woolStairInput(color);
+                var result = craft(server, input, level);
+                var expectedItem = WoolShapeBackport.item(color, true);
+                var expectedId = Identifier.fromNamespaceAndPath(nativeWoolShapes() ? "minecraft" : "sum1rem0d", color.getName() + "_wool_stairs");
+                var block = Block.byItem(expectedItem);
+                var woolBlock = Block.byItem(BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(color.getName() + "_wool")));
+                require(BuiltInRegistries.ITEM.getKey(expectedItem).equals(expectedId) && block instanceof StairBlock
+                                && block.defaultBlockState().getSoundType().equals(woolBlock.defaultBlockState().getSoundType())
+                                && block.defaultBlockState().requiresCorrectToolForDrops() == woolBlock.defaultBlockState().requiresCorrectToolForDrops(),
+                        "Registered same-color stairs have their version-appropriate ID and native stair behavior: " + expectedId + ", block=" + block.getClass().getName());
+                require(stairsRecipe.matches(input, level) && result.is(expectedItem) && result.getCount() == 4
+                        && result.get(DataComponents.DYED_COLOR) == null,
+                        "Six " + color.getName() + " wool blocks make four registered " + expectedId + " stairs without a custom color component");
+                var stairLoot = Block.getDrops(block.defaultBlockState(), level, stairsPos, null, null, ItemStack.EMPTY);
+                require(!stairLoot.isEmpty() && stairLoot.stream().allMatch(drop -> drop.is(expectedItem))
+                                && stairLoot.stream().mapToInt(ItemStack::getCount).sum() == 1,
+                        expectedId + " uses its real loot table to drop one matching stair: " + stairLoot);
+                var normalStairGrind = AutomationProcessing.grindResult(result);
+                require(normalStairGrind.is(Items.STRING) && normalStairGrind.getCount() == 2,
+                        "Grinding " + expectedId + " returns two strings");
+            }
+            int redWoolRgb = DyeColor.RED.getTextureDiffuseColor() & 0xFFFFFF;
+            var customStairs = CraftingInput.of(3, 3, List.of(DyeTextiles.stack("mixed_wool", redWoolRgb), ItemStack.EMPTY, ItemStack.EMPTY,
+                    wool(DyeColor.RED), wool(DyeColor.RED), ItemStack.EMPTY,
+                    wool(DyeColor.RED), wool(DyeColor.RED), wool(DyeColor.RED)));
+            var customStairResult = craft(server, customStairs, level);
+            require(stairsRecipe.matches(customStairs, level) && customStairResult.is(ExtraContent.item("mixed_wool_stairs"))
+                    && customStairResult.getCount() == 4 && customStairResult.get(DataComponents.DYED_COLOR).rgb() == redWoolRgb,
+                    "A custom dyed wool input keeps the mixed-stairs item even when all visible RGB colors match");
 
             var invalidStairs = CraftingInput.of(3, 3, List.of(wool(DyeColor.WHITE), ItemStack.EMPTY, wool(DyeColor.WHITE),
                     wool(DyeColor.WHITE), ItemStack.EMPTY, ItemStack.EMPTY,
@@ -115,7 +169,7 @@ final class MixedWoolShapesVerification {
                     && slabEntity.item().get(DataComponents.DYED_COLOR).rgb() == expected
                     && stairsEntity.item().get(DataComponents.DYED_COLOR).rgb() == stairResult.get(DataComponents.DYED_COLOR).rgb(),
                     "Config OFF blocks new shape recipes but preserves placed colors and itemization");
-            passed.accept("Mixed wool slab/stairs recipes for all 16 colors, RGB mixing, both stair orientations, Config toggles, save/load and loot");
+            passed.accept("Per-version same-color wool slab/stair IDs, native material behavior and per-color double-slab/two-item and stair/one-item loot for all 16 colors, mixed/custom RGB, grinder string yields, both stair orientations, Config toggles, save/load and loot");
         } finally {
             store.update(original, store.revision());
             var slabEntity = level.getBlockEntity(slabPos); if (slabEntity != null) slabEntity.setRemoved();
@@ -127,6 +181,15 @@ final class MixedWoolShapesVerification {
         return CraftingInput.of(3, 3, List.of(wool(DyeColor.RED), ItemStack.EMPTY, ItemStack.EMPTY,
                 wool(DyeColor.BLUE), wool(DyeColor.WHITE), ItemStack.EMPTY,
                 wool(DyeColor.GREEN), wool(DyeColor.BLACK), wool(DyeColor.YELLOW)));
+    }
+    private static ItemStack craft(MinecraftServer server, CraftingInput input, net.minecraft.world.level.Level level) {
+        var recipe = server.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, input, level).orElse(null);
+        return recipe == null ? ItemStack.EMPTY : recipe.value().assemble(input);
+    }
+    private static CraftingInput woolStairInput(DyeColor color) {
+        return CraftingInput.of(3, 3, List.of(wool(color), ItemStack.EMPTY, ItemStack.EMPTY,
+                wool(color), wool(color), ItemStack.EMPTY,
+                wool(color), wool(color), wool(color)));
     }
     private static CraftingInput slabInput(ItemStack a, ItemStack b, ItemStack c) {
         return CraftingInput.of(3, 3, List.of(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY,
@@ -144,5 +207,12 @@ final class MixedWoolShapesVerification {
         var colors = new ArrayList<Integer>();
         for (ItemStack stack : input.items()) if (!stack.isEmpty()) colors.add(DyeTextiles.color(stack));
         return colors;
+    }
+    private static boolean nativeWoolShapes() {
+        //? if >=26.3 {
+        return true;
+        //?} else {
+        /*return false;
+        *///?}
     }
 }

@@ -37,7 +37,6 @@ public final class AutomationProcessing {
     static void loaded(AutomationMachineEntity entity){LOADED.add(entity);}
     static void unloaded(AutomationMachineEntity entity){LOADED.remove(entity);var actor=CLICKER_ACTORS.remove(entity);if(actor!=null)actor.discard();}
     public static boolean enabled(String kind){return switch(kind){case "automated_crafting_table","automated_crafting"->Rules.on("automated_crafting");case "jukebox_grinder"->Rules.on("jukebox_grinder");case "washing_cauldron"->Rules.on("washing_cauldron");case "tesla_coil"->Rules.on("tesla_coil");case "auto_clicker"->Rules.on("auto_clicker");default->false;};}
-    public static String label(String kind){return switch(kind){case "automated_crafting_table"->"自動作業台";case "jukebox_grinder"->"ジュークボックス粉砕機";case "washing_cauldron"->"水大釜洗浄機";case "tesla_coil"->"テスラコイル";case "auto_clicker"->"クリック代行機";default->"自動加工機";};}
     public static void tick(MinecraftServer server){
         for(var machine:List.copyOf(LOADED)){if(!(machine.getLevel() instanceof ServerLevel level)||level.getServer()!=server||machine.isRemoved())continue;tick(machine,level);}
         tickNativeVanilla(server);

@@ -13,7 +13,7 @@ public abstract class ExtraCreativeMixin {
   var key=BuiltInRegistries.CREATIVE_MODE_TAB.getKey((CreativeModeTab)(Object)this);if(key==null)return;String tab=key.getPath();var added=new ArrayList<ItemStack>();
   if(tab.equals("tools_and_utilities"))added.add(new ItemStack(ExtraContent.item("tamed_book")));
   if(tab.equals("redstone_blocks"))added.add(new ItemStack(ExtraContent.item("piston_base")));
-  if(tab.equals("colored_blocks"))for(var color:DyeColor.values()){int rgb=color.getTextureDiffuseColor();added.add(DyeTextiles.stack("mixed_wool",rgb));added.add(DyeTextiles.stack("mixed_wool_slab",rgb));added.add(DyeTextiles.stack("mixed_wool_stairs",rgb));}
+  if(tab.equals("colored_blocks")){for(var color:DyeColor.values()){int rgb=color.getTextureDiffuseColor();added.add(DyeTextiles.stack("mixed_wool",rgb));added.add(DyeTextiles.stack("mixed_wool_slab",rgb));added.add(DyeTextiles.stack("mixed_wool_stairs",rgb));}added.addAll(WoolShapeBackport.creativeStacks());}
   if(tab.equals("functional_blocks"))for(var color:DyeColor.values())added.add(DyeTextiles.stack("mixed_bed",color.getTextureDiffuseColor()));
   if(tab.equals("functional_blocks"))added.addAll(MobilityContent.creativeStacks());
   if(tab.equals("tools_and_utilities"))for(var name:PaxelContent.ITEMS)added.add(new ItemStack(PaxelContent.item(name.substring(0,name.length()-"_paxel".length()))));

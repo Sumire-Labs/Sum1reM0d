@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "sum1rem0d:block/purple_wool_slab"
+    },
+    "type=double": {
+      "model": "sum1rem0d:block/purple_wool"
+    },
+    "type=top": {
+      "model": "sum1rem0d:block/purple_wool_slab_top"
+    }
+  }
+}

@@ -6611,7 +6611,7 @@
   },
   {
     "id": "mixed_wool_slab",
-    "label": "混色ウールハーフブロック",
+    "label": "羊毛ハーフブロック",
     "implemented": true,
     "options": [
       {
@@ -6624,7 +6624,7 @@
       },
       {
         "key": "recipe_enabled",
-        "label": "レシピを有効",
+        "label": "同色・混色レシピを有効",
         "type": "BOOLEAN",
         "initial": true,
         "min": 0,
@@ -6640,18 +6640,18 @@
       },
       {
         "key": "allow_mixed_colors",
-        "label": "異なる色を混ぜる",
+        "label": "異色の羊毛も材料にする",
         "type": "BOOLEAN",
         "initial": true,
         "min": 0,
         "max": 0
       }
     ],
-    "applyTiming": "レシピと色混ぜはサーバー設定変更後すぐ適用。既存ブロックの色とアイテム化はOFF後も保持。"
+    "applyTiming": "通常色の形状アイテムは26.1〜26.2で補完登録。レシピ設定は次回クラフトから反映し、既存ブロックとアイテムは設定OFF後も保持。26.3ではOFF時も通常色のバニラレシピを維持する。"
   },
   {
     "id": "mixed_wool_stairs",
-    "label": "混色ウール階段",
+    "label": "羊毛階段",
     "implemented": true,
     "options": [
       {
@@ -6664,7 +6664,7 @@
       },
       {
         "key": "recipe_enabled",
-        "label": "レシピを有効",
+        "label": "同色・混色レシピを有効",
         "type": "BOOLEAN",
         "initial": true,
         "min": 0,
@@ -6680,13 +6680,28 @@
       },
       {
         "key": "allow_mixed_colors",
-        "label": "異なる色を混ぜる",
+        "label": "異色の羊毛も材料にする",
         "type": "BOOLEAN",
         "initial": true,
         "min": 0,
         "max": 0
       }
     ],
-    "applyTiming": "レシピと色混ぜはサーバー設定変更後すぐ適用。既存ブロックの色とアイテム化はOFF後も保持。"
+    "applyTiming": "通常色の形状アイテムは26.1〜26.2で補完登録。レシピ設定は次回クラフトから反映し、既存ブロックとアイテムは設定OFF後も保持。26.3ではOFF時も通常色のバニラレシピを維持する。"
+  },
+  {
+    "id": "creative_tab",
+    "label": "専用クリエイティブタブ",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "Sum1reM0dタブを表示",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
   }
 ]

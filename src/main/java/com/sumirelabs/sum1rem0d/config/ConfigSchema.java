@@ -100,6 +100,7 @@ public final class ConfigSchema {
                 throw new IllegalArgumentException("Unsupported configuration schema");
         }
         result.addProperty("schema_version", VERSION);
+        if(!result.has("defaults_revision"))result.addProperty("defaults_revision",204);
         if (!result.has("features")) result.add("features", new JsonObject());
         if (!result.get("features").isJsonObject()) throw new IllegalArgumentException("features must be an object");
         JsonObject features = result.getAsJsonObject("features");

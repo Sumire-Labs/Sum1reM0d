@@ -24,7 +24,8 @@ public final class ExtraEquipment {
    var material=new ArmorMaterial(Rules.i(feature,"armor_durability"),defense,Rules.i(feature,"enchantability"),net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_IRON,(float)Rules.n(feature,"toughness"),0,repair,ResourceKey.create(EquipmentAssets.ROOT_ID,ModContent.id(family)));
    return new Item(props.humanoidArmor(material,ArmorType.valueOf(part.toUpperCase(Locale.ROOT))));
   }
-  var material=new ToolMaterial(BlockTags.INCORRECT_FOR_STONE_TOOL,Rules.i(feature,"tool_durability"),(float)Rules.n(feature,"tool_speed"),(float)Rules.n(feature,"attack_bonus"),Rules.i(feature,"enchantability"),repair);
+  var miningTag=family.equals("emerald") && part.equals("pickaxe")?BlockTags.INCORRECT_FOR_IRON_TOOL:BlockTags.INCORRECT_FOR_STONE_TOOL;
+  var material=new ToolMaterial(miningTag,Rules.i(feature,"tool_durability"),(float)Rules.n(feature,"tool_speed"),(float)Rules.n(feature,"attack_bonus"),Rules.i(feature,"enchantability"),repair);
   props=switch(part){case "sword"->props.sword(material,3,-2.4f);case "pickaxe"->props.pickaxe(material,1,-2.8f);case "axe"->props.axe(material,6,-3.1f);case "shovel"->props.shovel(material,1.5f,-3);case "hoe"->props.hoe(material,0,-2);default->throw new IllegalArgumentException(name);};
   return new Item(props);
  }

@@ -18,7 +18,6 @@ public final class WikiScreen extends Screen {
     private int page, navigationPage, pages = 1;
     private int resultsCount;
     private int left, top, navWidth, right, contentWidth, panelHeight, bodyY, rows;
-    private long serverRevision, personalRevision;
     private EditBox search;
     private SearchSuggestionPopup suggestions;
     private List<FormattedCharSequence> lines = List.of();
@@ -34,13 +33,12 @@ public final class WikiScreen extends Screen {
         int totalWidth = Math.min(760, width - 20);
         left = (width - totalWidth) / 2; top = 36; panelHeight = Math.max(100, height - 70);
         navWidth = Math.min(132, Math.max(104, totalWidth / 3)); right = left + navWidth + 6; contentWidth = totalWidth - navWidth - 6;
-        serverRevision = ClientRules.revision; personalRevision = PersonalConfig.store().revision();
         search = addRenderableWidget(new EditBox(font, right, 8, Math.max(40, contentWidth - 52), 20, Component.literal("Wikiを検索")));
         search.setMaxLength(80); search.setHint(Component.literal("機能名・説明を検索")); search.setValue(searchText);
         suggestions = new SearchSuggestionPopup(search, ConfigSchema.features().stream().map(feature -> new com.sumirelabs.sum1rem0d.wiki.SearchSuggestions.Entry(feature.id(), feature.label(), String.join(" ", WikiContent.article(feature.id()).paragraphs()))).toList(), height, this::article);
         search.setResponder(value -> { searchText = value; suggestions.changed(value); }); suggestions.changed(searchText);
         addRenderableWidget(Button.builder(Component.literal("検索"), button -> submitSearch()).bounds(right + contentWidth - 48, 8, 48, 20).build());
-        navButton("導入", top + 8, () -> navigate("intro", null, null), view.equals("intro"));
+        navButton("はじめに", top + 8, () -> navigate("intro", null, null), view.equals("intro"));
         navButton("カテゴリ一覧", top + 30, () -> navigate("categories", null, null), view.equals("categories"));
         int visible = Math.max(1, (panelHeight - 82) / 20), count = WikiContent.categories().size();
         int navPages = Math.max(1, (count + visible - 1) / visible); navigationPage = Math.min(navigationPage, navPages - 1);
@@ -72,8 +70,7 @@ public final class WikiScreen extends Screen {
             rows = Math.max(1, available / 18); pages = Math.max(1, (articles.size() + rows - 1) / rows); page = Math.min(page, pages - 1);
             for (int i = 0; i < rows && page * rows + i < articles.size(); i++) {
                 var item = articles.get(page * rows + i);
-                String label = item.title() + (enabled(item.feature()) ? " [ON]" : " [OFF]");
-                var button = addRenderableWidget(Button.builder(Component.literal(label), widget -> article(item.feature())).bounds(right + 8, bodyY + i * 18, contentWidth - 16, 16).build());
+                var button = addRenderableWidget(Button.builder(Component.literal(item.title()), widget -> article(item.feature())).bounds(right + 8, bodyY + i * 18, contentWidth - 16, 16).build());
                 button.setTooltip(Tooltip.create(Component.literal(item.paragraphs().getFirst())));
             }
         }
@@ -87,27 +84,12 @@ public final class WikiScreen extends Screen {
         var button = addRenderableWidget(Button.builder(Component.literal(label), widget -> action.run()).bounds(left + 6, y, navWidth - 12, 18).build()); button.active = !selected;
     }
     private void submitSearch() { query = searchText.strip(); navigate(query.isEmpty() ? "categories" : "search", null, null); suggestions.dismiss(); }
-    private boolean enabled(String id) { return PersonalConfig.personal(id, "enabled") ? PersonalConfig.store().enabled(id) : ClientRules.enabled(id); }
     private List<String> articleParagraphs() {
-        var result = new ArrayList<>(WikiContent.article(feature).paragraphs()); result.add("現在の設定（説明中の数値は初期値の例です）");
-        var personalValues = PersonalConfig.store().snapshot().getAsJsonObject("features").getAsJsonObject(feature);
-        var commonValues = ClientRules.snapshot().getAsJsonObject("features").getAsJsonObject(feature);
-        for (var option : WikiContent.schema(feature).options()) {
-            boolean personal = PersonalConfig.personal(feature, option.key());
-            var values = personal ? personalValues : commonValues;
-            String value = values.get(option.key()).getAsString();
-            if (option.isBoolean()) value = values.get(option.key()).getAsBoolean() ? "ON" : "OFF";
-            else if (option.kind() == ConfigSchema.Kind.LIST || option.kind() == ConfigSchema.Kind.MAP) value = ConfigSchema.split(value).size() + "件";
-            else if (value.length() > 70) value = value.substring(0, 67) + "...";
-            result.add(option.label() + ": " + value + (personal ? "（個人）" : minecraft.getConnection() == null ? "（ローカル）" : "（サーバー）"));
-            result.add("  反映: " + ConfigTiming.description(feature, option.key()));
-        }
-        return result;
+        return WikiContent.article(feature).paragraphs();
     }
     private void turn(int change) { page = Math.max(0, Math.min(pages - 1, page + change)); rebuildWidgets(); }
     @Override public void tick() {
         if (!WikiRuntime.enabled()) { minecraft.gui.setScreen(parent); return; }
-        if (serverRevision != ClientRules.revision || personalRevision != PersonalConfig.store().revision()) rebuildWidgets();
     }
     @Override public boolean mouseScrolled(double x, double y, double horizontal, double vertical) { if (suggestions.scroll(x,y,vertical)) return true; if (vertical != 0) { turn(vertical < 0 ? 1 : -1); return true; } return super.mouseScrolled(x, y, horizontal, vertical); }
     @Override public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) { return suggestions.click(event) || super.mouseClicked(event, doubleClick); }
@@ -129,12 +111,9 @@ public final class WikiScreen extends Screen {
         VanillaGuiParts.panel(graphics, left, top, navWidth, panelHeight); VanillaGuiParts.panel(graphics, right, top, contentWidth, panelHeight);
         // Draw native widgets over the panel frames.
         super.extractRenderState(graphics, mouseX, mouseY, tick);
-        String heading = switch (view) { case "intro" -> "はじめに / 導入"; case "categories" -> "カテゴリ一覧"; case "category" -> WikiContent.category(category).title(); case "article" -> WikiContent.article(feature).title(); default -> "検索: " + query; };
+        String heading = switch (view) { case "intro" -> "はじめに"; case "categories" -> "カテゴリ一覧"; case "category" -> WikiContent.category(category).title(); case "article" -> WikiContent.article(feature).title(); default -> "検索: " + query; };
         graphics.textWithWordWrap(font, Component.literal(heading), right + 8, top + 7, contentWidth - 16, 0xFF303030);
         if (view.equals("article")) {
-            String state = enabled(feature) ? "設定: ON" : "設定: OFF";
-            if (com.sumirelabs.sum1rem0d.game.DailyEvents.FEATURES.contains(feature) && ClientGameState.received()) state += ClientGameState.daily(feature) ? " / 今日の異変" : " / 本日は非発動";
-            graphics.text(font, state, right + 8, top + 29, enabled(feature) ? 0xFF236B35 : 0xFF7A3838, false);
         }
         if (view.equals("intro") || view.equals("article")) {
             for (int i = 0; i < rows && page * rows + i < lines.size(); i++) graphics.text(font, lines.get(page * rows + i), right + 9, bodyY + i * 11, 0xFF404040, false);

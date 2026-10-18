@@ -11,6 +11,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.server.level.ServerPlayer;
 import com.sumirelabs.sum1rem0d.network.PaxelRecipeMapPayload;
 import com.sumirelabs.sum1rem0d.network.PlatformNetwork;
@@ -44,6 +47,7 @@ public final class PaxelContent {
             if (paxel == net.minecraft.world.item.Items.AIR || !paxel.builtInRegistryHolder().areComponentsBound()) continue;
             String namespace = List.of("emerald", "redstone", "lapis").contains(material) ? "sum1rem0d" : "minecraft";
             ItemStack pickaxe = toolStack(namespace, material + "_pickaxe");
+            ItemStack sword = toolStack(namespace, material + "_sword");
             ItemStack axe = toolStack(namespace, material + "_axe");
             ItemStack shovel = toolStack(namespace, material + "_shovel");
             var components = DataComponentMap.builder().addAll(paxel.components())
@@ -52,10 +56,32 @@ public final class PaxelContent {
                     // gold/netherite durability exactly once to the paxel too.
                     .set(DataComponents.MAX_DAMAGE, pickaxe.getOrDefault(DataComponents.MAX_DAMAGE, 0))
                     .set(DataComponents.DAMAGE, 0);
-            var modifiers = pickaxe.get(DataComponents.ATTRIBUTE_MODIFIERS);
+            var modifiers = paxelModifiers(pickaxe.get(DataComponents.ATTRIBUTE_MODIFIERS), sword.get(DataComponents.ATTRIBUTE_MODIFIERS));
             if (modifiers != null) components.set(DataComponents.ATTRIBUTE_MODIFIERS, modifiers);
             paxel.builtInRegistryHolder().bindComponents(components.build());
         }
+    }
+
+    /** Use the material sword's damage plus one while retaining pickaxe attack speed. */
+    static ItemAttributeModifiers paxelModifiers(ItemAttributeModifiers pickaxe, ItemAttributeModifiers sword) {
+        if (pickaxe == null || sword == null) return pickaxe;
+        var damageAttribute = Attributes.ATTACK_DAMAGE;
+        var entries = new ArrayList<ItemAttributeModifiers.Entry>();
+        for (var entry : pickaxe.modifiers())
+            if (!entry.attribute().equals(damageAttribute)) entries.add(entry);
+        boolean swordDamageFound = false;
+        for (var entry : sword.modifiers()) if (entry.attribute().equals(damageAttribute)) {
+            var modifier = entry.modifier();
+            entries.add(new ItemAttributeModifiers.Entry(entry.attribute(), new AttributeModifier(
+                    modifier.id(), modifier.amount() + 1, modifier.operation()), entry.slot()));
+            swordDamageFound = true;
+        }
+        if (!swordDamageFound) for (var entry : pickaxe.modifiers()) if (entry.attribute().equals(damageAttribute)) {
+            var modifier = entry.modifier();
+            entries.add(new ItemAttributeModifiers.Entry(entry.attribute(), new AttributeModifier(
+                    modifier.id(), modifier.amount() + 1, modifier.operation()), entry.slot()));
+        }
+        return new ItemAttributeModifiers(entries);
     }
 
     private static ItemStack toolStack(String namespace, String path) {

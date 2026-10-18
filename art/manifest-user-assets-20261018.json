@@ -1,0 +1,278 @@
+[
+  {
+    "name": "auto_clicker_front",
+    "source": "art/source/user-assets-20261018/auto_clicker_front.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/block/auto_clicker_front.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "7357a58c91dcc466206a02d44c20a00ea472eed5f5ceb966de8e78c75c256c8f",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "cigarette",
+    "source": "art/source/user-assets-20261018/cigarette.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/cigarette.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "0110f7babfe8671444e0e52412c65862257b0e563338d1546c3156cac5bb3553",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "copper_dust",
+    "source": "art/source/user-assets-20261018/copper_dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/copper_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "b25b8a299b1d12f68cecaaf3a6d08c39012ad5abc14521cfb51485f52f315f0f",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "copper_paxel",
+    "source": "art/source/user-assets-20261018/copper_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/copper_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "f6b55cdd4822fdad4742b5199294f9dad6cfe0c8526ef70f77aff55c85edbd2d",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "delivery_box",
+    "source": "art/source/user-assets-20261018/delivery_box.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/block/delivery_box_front.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "3a9784892e63a4e2cc2f1aae7f1380cd62aec2d86be08c8d03980987be2cd68b",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "diamond_paxel",
+    "source": "art/source/user-assets-20261018/diamond_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/diamond_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "1428b68731e15f2d8b42aea1d8e9acae8cbe73f0cf3097edf765fb16ef3b6f52",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "dust",
+    "source": "art/source/user-assets-20261018/dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/block/dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "654644cc132f6067858ecf64016e11f5424f8f801b1aebcfa79ee135cbc4bd79",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "emerald_paxel",
+    "source": "art/source/user-assets-20261018/emerald_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/emerald_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "7f3ba3c2b4153ea2c52fa1675b981cb2dbe537c5ec61f96e50f17851d940da55",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "gold_dust",
+    "source": "art/source/user-assets-20261018/gold_dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/gold_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "1becebe469deff8da3a52598e0f193708b7df907da7b2f41c80f32254aab48f5",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "golden_paxel",
+    "source": "art/source/user-assets-20261018/golden_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/golden_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "8f9445fa36d1f648a920e927c475d433500ec08138bffe84ad0a24a1ca31be9f",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "iron_dust",
+    "source": "art/source/user-assets-20261018/iron_dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/iron_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "339a0b4291dc66b5aac6bc7136b83e8f7a6d24bb207bda9d14d1f804899cf81c",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "iron_paxel",
+    "source": "art/source/user-assets-20261018/iron_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/iron_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "9d63badbc62c0f462e4ffe7b437e08b00745278e17836a6c4868aac47ef56da1",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "lapis_paxel",
+    "source": "art/source/user-assets-20261018/lapis_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/lapis_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "f9589d7a20a88fda8344cdaae04eaa3552c403a38690fc5e386920f02bf78c7b",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "life_berry",
+    "source": "art/source/user-assets-20261018/life_berry.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/life_berry.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "e71652605db6302d1050f8e176b2717306bb9919478220ae4d7b9f55e011902a",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "manyullyn_hoe",
+    "source": "art/source/user-assets-20261018/manyullyn_hoe.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/manyullyn_hoe.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "9917abaf827cd4e176741d51118b75d4ddbf612b2969d5794019960163ad9e23",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "manyullyn_paxel",
+    "source": "art/source/user-assets-20261018/manyullyn_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/manyullyn_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "d4789aae108769ca8b8de2e868216b460642deb4796fbe79d2331ecee4b2b8a1",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "milk_bundle",
+    "source": "art/source/user-assets-20261018/milk_bundle.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/milk_bundle.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "e0bc230d8f10595963c722bd83417f4bacf34e80662082742a7306bb3dea8efc",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "redstone_paxel",
+    "source": "art/source/user-assets-20261018/redstone_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/redstone_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "03127553fd412a1c0f0279c320123ed332eb6145c968924c987b74070079fe5b",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "stone_paxel",
+    "source": "art/source/user-assets-20261018/stone_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/stone_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "fafce847d975388eafcd40a9e904729b39d41f16e9bfa43bb44a7d852ac263a2",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "washed_copper_dust",
+    "source": "art/source/user-assets-20261018/washed_copper_dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/washed_copper_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "40e41bfb2922a04b4f1d4727a5f5457a30646b5c0a61e2b213884f979534541e",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "washed_gold_dust",
+    "source": "art/source/user-assets-20261018/washed_gold_dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/washed_gold_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "a7df331c56e853d6a5ceb63ef91d9443d2f4148fa9fdaa72f545d7cfb6a2a19e",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "washed_iron_dust",
+    "source": "art/source/user-assets-20261018/washed_iron_dust.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/washed_iron_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "18fc27b8bfa276e1041a9401e1dec2df09df25dce815dcc9d42fe5de3df1b101",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  },
+  {
+    "name": "wooden_paxel",
+    "source": "art/source/user-assets-20261018/wooden_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/wooden_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "sha256": "fb3cc9c1a78b63f71f67d0a4efdf13be8df49caed3d4b93e47130a0940bcaccb",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
+  }
+]

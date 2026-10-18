@@ -70,7 +70,7 @@ public final class DailyTextures {
             return new Resource(original.source(), () -> new ByteArrayInputStream(json));
         }
         if (!path.endsWith(".png")) return original;
-        if ((mask & 4) != 0 && path.equals("textures/entity/fish/pufferfish.png")) {
+        if ((mask & 4) != 0 && (path.equals("textures/entity/fish/pufferfish.png") || path.equals("textures/item/pufferfish.png"))) {
             try {
                 byte[] texture = programmerArtTexture(path);
                 return new Resource(original.source(), () -> new ByteArrayInputStream(texture));

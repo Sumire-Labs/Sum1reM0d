@@ -113,11 +113,11 @@ final class CauldronFixVerification {
             var drops = ServerVerification.spawnedIn(level).stream().filter(entity -> !prior.contains(entity))
                     .filter(ItemEntity.class::isInstance).map(ItemEntity.class::cast)
                     .filter(item -> item.position().distanceToSqr(Vec3.atCenterOf(pos)) < 16)
-                    .filter(item -> item.getItem().is(MobilityContent.cauldronBlock("large_cauldron").asItem())).toList();
+                    .filter(item -> item.getItem().is(Blocks.CAULDRON.asItem())).toList();
             require(level.getBlockState(pos).isAir() && level.getBlockState(pos.east()).isAir()
-                    && drops.size() == 1 && drops.getFirst().getItem().getCount() == 1,
-                    "Breaking any footprint cell removes the whole cauldron and drops one item [drops="+drops.size()+"]");
-            passed.accept("Large cauldron is pickaxe-mineable and drops once per complete footprint");
+                    && drops.size() == 1 && drops.getFirst().getItem().getCount() == 2,
+                    "Breaking any footprint cell removes the whole cauldron and drops two vanilla cauldrons once [drops="+drops.size()+"]");
+            passed.accept("Large cauldron is pickaxe-mineable and drops two vanilla cauldrons once per complete footprint");
         } finally { player.discard(); }
     }
 

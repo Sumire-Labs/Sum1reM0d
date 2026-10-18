@@ -57,12 +57,14 @@ public final class WorldSurvivalRules {
   for(var player:server.getPlayerList().getPlayers())for(var pos:BlockPos.betweenClosed(player.blockPosition().offset(-radius,-radius,-radius),player.blockPosition().offset(radius,radius,radius))){
    var level=player.level();if(!level.hasChunkAt(pos))continue;var block=level.getBlockState(pos);if(!block.is(Blocks.END_ROD)||!emitted.add(level.dimension().toString()+pos.asLong()))continue;
    var facing=block.getValue(EndRodBlock.FACING);double x=pos.getX()+.5+facing.getStepX()*.55,y=pos.getY()+.5+facing.getStepY()*.55,z=pos.getZ()+.5+facing.getStepZ()*.55;
-   //? if >=26.2 {
-   ParticleOptions particle=new GeyserParticleOptions(ParticleTypes.GEYSER_PLUME,Rules.i("endrod_steam","height"));
-   //?} else {
-   /*ParticleOptions particle=ParticleTypes.CLOUD;
-   *///?}
-   level.sendParticles(particle,x,y,z,Rules.i("endrod_steam","count"),.03,.03,.03,.02);
+   int count=Rules.i("endrod_steam","count"),height=Rules.i("endrod_steam","height");
+   double speed=Math.max(.02,Math.min(.32,height*.02));
+   for(int i=0;i<count;i++){
+    double ox=(level.getRandom().nextDouble()-.5)*.06,oy=(level.getRandom().nextDouble()-.5)*.06,oz=(level.getRandom().nextDouble()-.5)*.06;
+    // A zero particle count encodes one particle with this exact initial velocity in the native particle packet.
+    level.sendParticles(ParticleTypes.CLOUD,x+ox,y+oy,z+oz,0,
+      facing.getStepX(),facing.getStepY(),facing.getStepZ(),speed);
+   }
   }
  }
  public static void infestation(ServerLevel level,BlockPos pos){

@@ -18,6 +18,7 @@ public final class AutomationContent {
     public static final List<String> ITEMS=List.of("iron_dust","copper_dust","gold_dust","washed_iron_dust","washed_copper_dust","washed_gold_dust");
     public static final MenuType<AutomationMenu> MENU=new MenuType<>(AutomationMenu::new,FeatureFlags.DEFAULT_FLAGS);
     private AutomationContent(){}
+    public static boolean retiredItem(net.minecraft.world.item.Item item){var id=BuiltInRegistries.ITEM.getKey(item);return id.getNamespace().equals("sum1rem0d")&&List.of("automated_crafting_table","washing_cauldron","tesla_coil").contains(id.getPath());}
     public static Block block(String name){return BuiltInRegistries.BLOCK.getValue(ModContent.id(name));}
     public static Item item(String name){return BuiltInRegistries.ITEM.getValue(ModContent.id(name));}
     public static boolean needsLegacySulfur(){return BuiltInRegistries.ITEM.getOptional(net.minecraft.resources.Identifier.withDefaultNamespace("sulfur")).orElse(Items.AIR)==Items.AIR;}
@@ -30,7 +31,7 @@ public final class AutomationContent {
     }
     public static Item createBlockItem(String name){return new BlockItem(block(name),new Item.Properties().setId(ResourceKey.create(Registries.ITEM,ModContent.id(name))));}
     public static Item createItem(String name){return new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,ModContent.id(name))).stacksTo(64));}
-    public static List<ItemStack> creativeStacks(){var out=new ArrayList<ItemStack>();for(var id:BLOCKS)if(!id.equals("automated_crafting_table"))out.add(new ItemStack(item(id)));for(var id:MATERIAL_BLOCKS)out.add(new ItemStack(item(id)));for(var id:ITEMS)out.add(new ItemStack(item(id)));if(sulfur()!=Items.AIR)out.add(new ItemStack(sulfur()));return List.copyOf(out);}
+    public static List<ItemStack> creativeStacks(){var out=new ArrayList<ItemStack>();for(var id:BLOCKS)if(!retiredItem(item(id)))out.add(new ItemStack(item(id)));for(var id:MATERIAL_BLOCKS)out.add(new ItemStack(item(id)));for(var id:ITEMS)out.add(new ItemStack(item(id)));if(sulfur()!=Items.AIR)out.add(new ItemStack(sulfur()));return List.copyOf(out);}
     public static BlockEntityType<AutomationMachineEntity> createType(){
         var blocks=BLOCKS.stream().map(AutomationContent::block).toArray(Block[]::new);
         //? if fabric {

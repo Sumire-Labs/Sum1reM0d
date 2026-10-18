@@ -28,11 +28,17 @@ public final class ConfigStore {
         Path reading = path;
         try {
             if (Files.exists(path)) {
-                values = ConfigSchema.normalize(read(path));
+                var original=read(path);var migrated=ConfigDefaults204.migrate(original);
+                values = ConfigSchema.normalize(migrated);
+                if(!migrated.equals(original)){
+                    var backup=path.resolveSibling(path.getFileName()+".before-2.0.4");
+                    if(!Files.exists(backup))Files.copy(path,backup);
+                    save(values);
+                }
             } else {
                 Path legacy = path.resolveSibling(path.getFileName().toString().replaceFirst("\\.json5$", ".json"));
                 if (json5 && Files.exists(legacy)) reading = legacy;
-                JsonObject migrated = json5 && Files.exists(legacy) ? ConfigSchema.normalize(read(legacy)) : values;
+                JsonObject migrated = json5 && Files.exists(legacy) ? ConfigSchema.normalize(ConfigDefaults204.migrate(read(legacy))) : values;
                 save(migrated, json5 && Files.exists(legacy) ? Files.readString(legacy,StandardCharsets.UTF_8) : null); values = migrated;
             }
         } catch (IOException | RuntimeException exception) {

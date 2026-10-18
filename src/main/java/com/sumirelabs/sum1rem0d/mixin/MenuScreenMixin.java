@@ -17,9 +17,9 @@ public abstract class MenuScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void sum1rem0d$configButton(CallbackInfo callback) {
         if ((Object) this instanceof PauseScreen pause && !pause.showsPauseMenu()) return;
-        addRenderableWidget(Button.builder(Component.literal("Sum1reM0d"),
+        addRenderableWidget(Button.builder(Component.literal("Sum1reM0d Config"),
             button -> minecraft.gui.setScreen(new ConfigScreen((Screen) (Object) this)))
-            .bounds(5, 5, 100, 20).build());
+            .bounds(5, 5, 120, 20).build());
         var wiki = addRenderableWidget(Button.builder(Component.literal("Sum1reM0d Wiki"),
             button -> minecraft.gui.setScreen(new com.sumirelabs.sum1rem0d.client.WikiScreen((Screen) (Object) this)))
             .bounds(5, 29, 100, 20).build());

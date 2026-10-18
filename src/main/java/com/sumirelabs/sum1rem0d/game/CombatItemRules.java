@@ -57,8 +57,6 @@ public final class CombatItemRules {
         if (!hasMeleeDamage(weapon)) return damage;
         if (Rules.on("wooden_nerf") && (id.startsWith("minecraft:wooden_") || paxel && path.equals("wooden_paxel")))
             return damage * (float) Rules.n("wooden_nerf", "attack_multiplier");
-        if (Rules.on("netherite_upgrade") && (id.startsWith("minecraft:netherite_") || paxel && path.equals("netherite_paxel")))
-            return damage + (float) Rules.n("netherite_upgrade", "attack_bonus");
         return damage;
     }
 

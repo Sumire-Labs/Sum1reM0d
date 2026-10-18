@@ -59,39 +59,25 @@ final class CombatItemRulesVerification {
             netherite.addProperty("enabled", true); netherite.addProperty("durability_multiplier", 2); netherite.addProperty("attack_bonus", 2);
             netherite.addProperty("armor_toughness_bonus", 2);
             store.update(draft, store.revision());
-            var toughness = attacker.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS);
-            require(toughness != null, "Player exposes the armor toughness attribute");
-            var foreignToughness = net.minecraft.resources.Identifier.fromNamespaceAndPath("verification", "foreign_toughness");
-            toughness.addOrUpdateTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-                    foreignToughness, 1, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE));
-            attacker.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(Items.NETHERITE_HELMET));
-            attacker.setItemSlot(net.minecraft.world.entity.EquipmentSlot.CHEST, new ItemStack(Items.NETHERITE_CHESTPLATE));
-            double twoPieceToughness = toughness.getValue();
-            NetheriteArmorToughnessRules.tick(attacker);
-            require(Math.abs(toughness.getValue() - twoPieceToughness - 4) < 0.001,
-                    "Each equipped netherite armor piece adds its configured transient toughness bonus");
-            attacker.setItemSlot(net.minecraft.world.entity.EquipmentSlot.CHEST, ItemStack.EMPTY);
-            double afterUnequip = toughness.getValue();
-            NetheriteArmorToughnessRules.tick(attacker);
-            require(Math.abs(toughness.getValue() - afterUnequip + 2) < 0.001,
-                    "Removing one netherite armor piece removes only that slot's toughness modifier");
-            attacker.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, ItemStack.EMPTY);
-            attacker.setItemSlot(net.minecraft.world.entity.EquipmentSlot.LEGS, new ItemStack(Items.NETHERITE_LEGGINGS));
-            NetheriteArmorToughnessRules.tick(attacker);
-            double beforeToughnessOff = toughness.getValue();
-            netherite.addProperty("enabled", false); store.update(draft, store.revision());
-            NetheriteArmorToughnessRules.tick(attacker);
-            require(Math.abs(toughness.getValue() - beforeToughnessOff + 2) < 0.001 && toughness.hasModifier(foreignToughness),
-                    "Netherite Config OFF removes its own transient bonus while preserving another modifier");
-            netherite.addProperty("enabled", true); store.update(draft, store.revision());
-            NetheriteArmorToughnessRules.tick(attacker);
-            attacker.setItemSlot(net.minecraft.world.entity.EquipmentSlot.LEGS, ItemStack.EMPTY);
-            NetheriteArmorToughnessRules.tick(attacker);
-            require(toughness.hasModifier(foreignToughness), "Unequipping netherite armor does not remove another source's toughness modifier");
+            var netheriteSword = new ItemStack(Items.NETHERITE_SWORD);
+            double[] attackBonus = {0};
+            netheriteSword.forEachModifier(net.minecraft.world.entity.EquipmentSlot.MAINHAND, (attribute, modifier) -> {
+                if (attribute.equals(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE)
+                        && modifier.id().getNamespace().equals("sum1rem0d")) attackBonus[0] += modifier.amount();
+            });
+            require(Math.abs(attackBonus[0] - 2) < 0.001, "Netherite attack bonus appears in the native modifier stream used by tooltips and combat");
+            var netheriteHelmet = new ItemStack(Items.NETHERITE_HELMET);
+            double[] toughnessBonus = {0};
+            netheriteHelmet.forEachModifier(net.minecraft.world.entity.EquipmentSlot.HEAD, (attribute, modifier) -> {
+                if (attribute.equals(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS)
+                        && modifier.id().equals(ModContent.id("netherite_toughness_head"))) toughnessBonus[0] += modifier.amount();
+            });
+            require(Math.abs(toughnessBonus[0] - 2) < 0.001, "Netherite armor toughness bonus appears in its native tooltip/equipment modifier stream");
             PaxelContent.refreshDefaults();
             for (String material : PaxelContent.MATERIALS) {
                 String namespace = List.of("emerald", "redstone", "lapis").contains(material) ? "sum1rem0d" : "minecraft";
                 var pickaxe = BuiltInRegistries.ITEM.getOptional(Identifier.fromNamespaceAndPath(namespace, material + "_pickaxe")).orElseThrow().getDefaultInstance();
+                var sword = BuiltInRegistries.ITEM.getOptional(Identifier.fromNamespaceAndPath(namespace, material + "_sword")).orElseThrow().getDefaultInstance();
                 var paxel = new ItemStack(PaxelContent.item(material));
                 int rawDamage = pickaxe.get(DataComponents.MAX_DAMAGE);
                 int expectedDamage = material.equals("golden") ? rawDamage * 1000 : material.equals("netherite") ? rawDamage * 2 : rawDamage;
@@ -101,14 +87,24 @@ final class CombatItemRulesVerification {
                 float expectedSpeed = material.equals("wooden") ? baseSpeed * 0.25f : baseSpeed;
                 require(Math.abs(paxel.getDestroySpeed(Blocks.STONE.defaultBlockState()) - expectedSpeed) < 0.001f,
                         "Paxel " + material + " mines at its material speed with only the configured wooden modifier");
+                var paxelAttrs = paxel.get(DataComponents.ATTRIBUTE_MODIFIERS);
+                var pickAttrs = pickaxe.get(DataComponents.ATTRIBUTE_MODIFIERS);
+                var swordAttrs = sword.get(DataComponents.ATTRIBUTE_MODIFIERS);
+                var attack = net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
+                var attackTotal = paxelAttrs.modifiers().stream().filter(entry -> entry.attribute().equals(attack)).mapToDouble(entry -> entry.modifier().amount()).sum();
+                var swordAttack = swordAttrs.modifiers().stream().filter(entry -> entry.attribute().equals(attack)).mapToDouble(entry -> entry.modifier().amount()).sum();
+                var pickSpeed = pickAttrs.modifiers().stream().filter(entry -> entry.attribute().equals(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED)).mapToDouble(entry -> entry.modifier().amount()).sum();
+                var paxelSpeed = paxelAttrs.modifiers().stream().filter(entry -> entry.attribute().equals(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED)).mapToDouble(entry -> entry.modifier().amount()).sum();
+                require(Math.abs(attackTotal - swordAttack - 1) < 0.001 && Math.abs(paxelSpeed - pickSpeed) < 0.001,
+                        "Paxel " + material + " has its material sword's attack damage plus one and keeps pickaxe attack speed");
                 attacker.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, paxel);
-                float expectedAttack = material.equals("wooden") ? 2 : material.equals("netherite") ? 10 : 8;
+                float expectedAttack = material.equals("wooden") ? 2 : 8;
                 require(Math.abs(CombatItemRules.incomingDamage(victim, victim.damageSources().playerAttack(attacker), 8) - expectedAttack) < 0.001f,
                         "Paxel " + material + " receives the correct one-time melee rebalance");
             }
             attacker.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.NETHERITE_SWORD));
-            require(Math.abs(CombatItemRules.incomingDamage(victim, victim.damageSources().playerAttack(attacker), 8) - 10) < 0.001f,
-                    "Actual netherite weapons receive one attack bonus");
+            require(Math.abs(CombatItemRules.incomingDamage(victim, victim.damageSources().playerAttack(attacker), 8) - 8) < 0.001f,
+                    "Netherite attack bonus is not added a second time by the damage hook");
             attacker.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.NETHERITE_INGOT));
             require(Math.abs(CombatItemRules.incomingDamage(victim, victim.damageSources().playerAttack(attacker), 8) - 8) < 0.001f,
                     "Netherite ingots and scraps do not receive a weapon damage bonus");

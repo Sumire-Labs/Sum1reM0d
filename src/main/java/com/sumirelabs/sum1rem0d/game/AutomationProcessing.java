@@ -208,6 +208,7 @@ public final class AutomationProcessing {
     static int attackTeslaTargets(ServerLevel level,BlockPos origin,double radius,float damage){
         var box=new AABB(origin).inflate(Math.max(0,radius));int hits=0;
         for(var target:level.getEntitiesOfClass(LivingEntity.class,box,LivingEntity::isAlive)){
+            if(target.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(origin))>radius*radius)continue;
             if(target instanceof Player&&!Rules.b("tesla_coil","affect_players"))continue;
             if(attackTeslaTarget(level,origin,target,damage))hits++;
         }

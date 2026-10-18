@@ -19,6 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class SeatBlockMixin {
     @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
     private void sum1rem0d$sit(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
-        if (WorldMobility.trySit(level, pos, state, player)) cir.setReturnValue(InteractionResult.SUCCESS);
+        if (WorldMobility.trySit(level, pos, state, player)) cir.setReturnValue(InteractionResult.CONSUME);
     }
 }

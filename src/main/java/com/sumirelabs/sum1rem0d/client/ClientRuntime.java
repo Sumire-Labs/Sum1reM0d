@@ -20,7 +20,7 @@ public final class ClientRuntime {
         ClientRules.accept(payload);
         var after = ClientRules.snapshot().getAsJsonObject("features");
         var mc = Minecraft.getInstance();
-        if (mc.level != null && java.util.List.of("upside_down_grass", "diamond_disguise", "furnace_textures", "sideways_nylium", "glow_wire").stream().anyMatch(id -> !before.get(id).equals(after.get(id))))
+        if (mc.level != null && java.util.List.of("upside_down_grass", "diamond_disguise", "furnace_textures", "sideways_nylium", "glow_wire", "sugar_wire", "gunpowder_wire").stream().anyMatch(id -> !before.get(id).equals(after.get(id))))
             mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
     }
     public static void accept(GameStatePayload payload) {
@@ -77,6 +77,7 @@ public final class ClientRuntime {
         ClientKeys.tick(mc);
         LastToolBack.tick(mc);
         LastToolBackSmoke.tick(mc);
+        ClockHudOverlay.tick();
         BrowserOverlays.tick();
         AfkLights.tick();
         if (mc.player == null) { cameraTicks = 0; redTicks = 0; cameraActive = false; return; }
@@ -97,7 +98,6 @@ public final class ClientRuntime {
         var mc = Minecraft.getInstance();
         BrowserOverlays.renderHud(graphics);
         BrowserOverlays.renderWorldMedia(graphics);
-        ClockHudOverlay.render(graphics);
         if (mc.player == null || !ClientGameState.received()) return;
         if (redTicks > 0 && ClientRules.enabled("sheep_red")) {
             int alpha = (int) (ClientRules.number("sheep_red", "opacity") * 255);

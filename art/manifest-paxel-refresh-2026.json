@@ -1,75 +1,75 @@
 [
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one wooden PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to warm oak wood head: dark brown border, medium oak brown, tan, cream highlights. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/wooden_paxel.png",
     "name": "wooden_paxel",
-    "sha256": "8a9b6c709e768bfe66bd882ab9a76a5745b62684289fe00a0c5b24f154a4dc83",
+    "source": "art/source/user-assets-20261018/wooden_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/wooden_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/wooden_paxel-ai.png"
+    "sha256": "fb3cc9c1a78b63f71f67d0a4efdf13be8df49caed3d4b93e47130a0940bcaccb",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one stone PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to stone head: nearly black border, charcoal, medium neutral gray, light gray. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/stone_paxel.png",
     "name": "stone_paxel",
-    "sha256": "8f054a13fb8c9c79dd981116d7538230434b8565445c116ef4de2083c8107727",
+    "source": "art/source/user-assets-20261018/stone_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/stone_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/stone_paxel-ai.png"
+    "sha256": "fafce847d975388eafcd40a9e904729b39d41f16e9bfa43bb44a7d852ac263a2",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one copper PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to copper head: dark brown border, dark burnt orange, copper orange, pale peach. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/copper_paxel.png",
     "name": "copper_paxel",
-    "sha256": "82b86f3bce7c4b8d3b106988a769517acf8e2dc2e5ffa39b97318920be13581e",
+    "source": "art/source/user-assets-20261018/copper_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/copper_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/copper_paxel-ai.png"
+    "sha256": "f6b55cdd4822fdad4742b5199294f9dad6cfe0c8526ef70f77aff55c85edbd2d",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Reference image is a Mekanism diamond paxel, provided ONLY as a visual explanation of its compact combined multi-tool. Create an ORIGINAL IRON PAXEL for a different Minecraft mod with a similar readable arrangement: long brown diagonal handle lower-left to upper-right; compact connected metal head in upper-right with a curved pickaxe prong to upper-left, a broad axe blade on its right and a small shovel edge below it. Do not create three separate full-size tools. DO NOT copy the exact reference pixels. Modern vanilla Minecraft style. VERY IMPORTANT: use just a 16 by 16 LOGICAL PIXEL grid, enlarged uniformly to fill the image, with thick single-pixel clusters and no tiny subpixels or antialiasing. One logical pixel transparent margin on every side; whole head visible and not cut off. The head should occupy about 8 by 8 logical pixels, the handle about 8 diagonal logical pixels, total sprite about 14 by 14 pixels. Iron head: 4 tones charcoal outline, medium gray, silver, pale gray highlight. Handle: dark brown outline, brown and tan highlight, 2px wide. True transparent background, no shadows outside the sprite, no text, no border, no glow. Readable at native 16x16 inventory scale. Output just one transparent inventory sprite.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/iron_paxel.png",
     "name": "iron_paxel",
-    "sha256": "9f5f5ca73154a9096a8e3c3baf919509270372227518704774d850ea9af3ca5a",
+    "source": "art/source/user-assets-20261018/iron_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/iron_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/iron_paxel-ai.png"
+    "sha256": "9d63badbc62c0f462e4ffe7b437e08b00745278e17836a6c4868aac47ef56da1",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one golden PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to gold head: dark ochre border, amber, golden yellow, pale yellow highlight. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/golden_paxel.png",
     "name": "golden_paxel",
-    "sha256": "82924a70cbcf4371517f01d32058971873e6427e199cbfc2cd12a34c772f3bec",
+    "source": "art/source/user-assets-20261018/golden_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/golden_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/golden_paxel-ai.png"
+    "sha256": "8f9445fa36d1f648a920e927c475d433500ec08138bffe84ad0a24a1ca31be9f",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one diamond PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to diamond head: dark teal outline, turquoise, cyan, pale icy cyan highlight. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/diamond_paxel.png",
     "name": "diamond_paxel",
-    "sha256": "d18d35d36fea6bb0cd4713542dc3eb36baadc3b6623b4541851b613eb78dbded",
+    "source": "art/source/user-assets-20261018/diamond_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/diamond_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/diamond_paxel-ai.png"
+    "sha256": "1428b68731e15f2d8b42aea1d8e9acae8cbe73f0cf3097edf765fb16ef3b6f52",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
     "tool": "built-in image_gen",
@@ -84,51 +84,51 @@
     "source": "art/source/paxel-refresh-2026/netherite_paxel-ai.png"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one emerald PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to emerald head: very dark green border, green, bright emerald green, pale mint highlights. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/emerald_paxel.png",
     "name": "emerald_paxel",
-    "sha256": "00b76d7bb0f41f552523bf6061b908d361e2ebd6e2071746df81b10015fe8590",
+    "source": "art/source/user-assets-20261018/emerald_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/emerald_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/emerald_paxel-ai.png"
+    "sha256": "7f3ba3c2b4153ea2c52fa1675b981cb2dbe537c5ec61f96e50f17851d940da55",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one redstone PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to redstone head: dark maroon border, crimson, red, coral highlights. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/redstone_paxel.png",
     "name": "redstone_paxel",
-    "sha256": "b20307e7a443e8f51dbe7fc5d10b8c95bff129837954623d15b626dd2209f351",
+    "source": "art/source/user-assets-20261018/redstone_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/redstone_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/redstone_paxel-ai.png"
+    "sha256": "03127553fd412a1c0f0279c320123ed332eb6145c968924c987b74070079fe5b",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one lapis PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to lapis lazuli head: navy outline, deep royal blue, bright cobalt blue, pale blue highlights. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/lapis_paxel.png",
     "name": "lapis_paxel",
-    "sha256": "0d8bdd0a6aa6d99ed4fc8c0c4eed35d8878d1d2df97c71f7780756c501a8bc60",
+    "source": "art/source/user-assets-20261018/lapis_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/lapis_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/lapis_paxel-ai.png"
+    "sha256": "f9589d7a20a88fda8344cdaae04eaa3552c403a38690fc5e386920f02bf78c7b",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   },
   {
-    "tool": "built-in image_gen",
-    "prompt": "Create one manyullyn PAXEL item texture by editing this reference. Preserve the compact Mekanism-inspired combined pickaxe+axe+shovel shape, diagonal wood handle, framing and transparent background exactly. ONLY change the iron tool head material to manyullyn head: very dark plum outline, rich purple, violet, pale lavender highlights. Keep handle wooden brown. Strict Minecraft pixel art, 16x16 logical pixels, large readable clusters, crisp nearest-neighbor hard squares, no antialiasing, no glow. Whole tool inside canvas with one transparent pixel margin. One sprite, no text.",
-    "asset": "src/main/resources/assets/sum1rem0d/textures/item/manyullyn_paxel.png",
     "name": "manyullyn_paxel",
-    "sha256": "74c94d6c5bfbb31fa47571ddd254c3d9e18f6dadfc35f26a03c74132ff202269",
+    "source": "art/source/user-assets-20261018/manyullyn_paxel.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/manyullyn_paxel.png",
     "size": [
       16,
       16
     ],
-    "source": "art/source/paxel-refresh-2026/manyullyn_paxel-ai.png"
+    "sha256": "d4789aae108769ca8b8de2e868216b460642deb4796fbe79d2331ecee4b2b8a1",
+    "tool": "user-provided PNG",
+    "provenance": "Downloads/Sum1reM0d-New-Assets"
   }
 ]

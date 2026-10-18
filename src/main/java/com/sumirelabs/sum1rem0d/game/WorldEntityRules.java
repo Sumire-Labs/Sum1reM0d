@@ -16,8 +16,20 @@ public final class WorldEntityRules {
  private record BurstBudget(long tick,int count){}
  private static final Map<ServerLevel,BurstBudget> BURSTS=new WeakHashMap<>();
  private static final Map<LivingEntity,Boolean> DEAD=new WeakHashMap<>();
+ private static final Map<net.minecraft.world.entity.monster.Creeper,Long> CREEPER_SHEARS_COOLDOWN=new WeakHashMap<>();
  private static final ThreadLocal<Integer> DEPTH=ThreadLocal.withInitial(()->0);
  private WorldEntityRules(){}
+ public static boolean shearCreeper(net.minecraft.world.entity.player.Player player,Entity target){
+  if(!(target instanceof net.minecraft.world.entity.monster.Creeper creeper)||!(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)
+    ||!serverPlayer.isAlive()||serverPlayer.entityTags().contains(AutomationMachineActor.TAG)||!Rules.on("creeper_shears")||player.isSpectator()||!player.isShiftKeyDown()||!creeper.isAlive())return false;
+  long now=creeper.level().getGameTime();long cooldown=Math.max(0,Math.min(72000,Rules.i("creeper_shears","cooldown")));
+  Long ready=CREEPER_SHEARS_COOLDOWN.get(creeper);if(ready!=null&&now<ready)return false;
+  int count=Math.max(0,Math.min(64,Rules.i("creeper_shears","initial_drop")));if(count==0)return false;
+  ItemStack drop=new ItemStack(Items.GUNPOWDER,count);
+  if(!player.getInventory().add(drop)&&!drop.isEmpty())player.drop(drop,false,net.minecraft.util.Prediction.SERVER_ONLY);
+  CREEPER_SHEARS_COOLDOWN.put(creeper,now+cooldown);
+  return true;
+ }
  public static void tick(LivingEntity entity){
   if(!(entity.level() instanceof ServerLevel level)||!entity.isAlive())return;
   if(entity instanceof net.minecraft.world.entity.monster.Creeper creeper&&Rules.on("powered_creeper")&&!creeper.isIgnited()){

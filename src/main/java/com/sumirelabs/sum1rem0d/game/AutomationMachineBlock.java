@@ -48,7 +48,7 @@ public final class AutomationMachineBlock extends BaseEntityBlock {
     @Override protected InteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){
         if(level.isClientSide()&&(!kind.equals("washing_cauldron")||!stack.is(Items.WATER_BUCKET)||state.getValue(WATER_LEVEL)>=3))AutomationMenu.recordClientTarget(level,pos);
         if(!kind.equals("washing_cauldron")||!stack.is(Items.WATER_BUCKET)||state.getValue(WATER_LEVEL)>=3)return super.useItemOn(stack,state,level,pos,player,hand,hit);
-        if(!level.isClientSide()){level.setBlock(pos,state.setValue(WATER_LEVEL,3),3);if(!player.getAbilities().instabuild)player.setItemInHand(hand,new ItemStack(Items.BUCKET));level.playSound(null,pos,net.minecraft.sounds.SoundEvents.BUCKET_EMPTY,net.minecraft.sounds.SoundSource.BLOCKS,1,1);}
+        if(!level.isClientSide()){level.setBlock(pos,state.setValue(WATER_LEVEL,3),3);if(!player.getAbilities().instabuild)player.setItemInHand(hand,net.minecraft.world.item.ItemUtils.createFilledResult(stack,player,new ItemStack(Items.BUCKET)));level.playSound(null,pos,net.minecraft.sounds.SoundEvents.BUCKET_EMPTY,net.minecraft.sounds.SoundSource.BLOCKS,1,1);}
         return InteractionResult.SUCCESS;
     }
 }

@@ -274,13 +274,16 @@ public final class WorldMobility {
         return enabled("seat_blocks") && (
                 Rules.b("seat_blocks", "allow_stairs") && state.is(net.minecraft.tags.BlockTags.STAIRS)
                 || Rules.b("seat_blocks", "allow_slabs") && state.is(net.minecraft.tags.BlockTags.SLABS)
-                || Rules.b("seat_blocks", "allow_mushrooms") && (state.is(net.minecraft.world.level.block.Blocks.BROWN_MUSHROOM_BLOCK)
-                || state.is(net.minecraft.world.level.block.Blocks.RED_MUSHROOM_BLOCK) || state.is(net.minecraft.world.level.block.Blocks.MUSHROOM_STEM)));
+                || Rules.b("seat_blocks", "allow_mushrooms")
+                && net.minecraft.core.registries.BuiltInRegistries.BLOCK.getOptional(Identifier.withDefaultNamespace("shelf_mushroom"))
+                        .map(state::is).orElse(false));
     }
 
     public static boolean trySit(net.minecraft.world.level.Level level, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, Player player) {
-        if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer) || !enabled("seat_blocks") || player.isPassenger() || !player.isAlive()) return false;
+        if (!enabled("seat_blocks") || player.isPassenger() || !player.isAlive()) return false;
         if (!validSeatBlock(state)) return false;
+        if (level.isClientSide()) return true;
+        if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer)) return false;
         if (!server.hasChunkAt(pos)) return false;
         var existing = server.getEntitiesOfClass(SeatEntity.class, new AABB(pos).inflate(0.5, 1, 0.5))
                 .stream().filter(seat -> seat.anchorPos().equals(pos)).findFirst().orElse(null);

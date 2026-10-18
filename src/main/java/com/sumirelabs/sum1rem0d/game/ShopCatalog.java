@@ -17,7 +17,7 @@ public final class ShopCatalog {
   Map.entry("minecraft:iron_sword",120L),Map.entry("minecraft:diamond_sword",1200L),Map.entry("minecraft:netherite_sword",4000L),Map.entry("minecraft:iron_pickaxe",160L),Map.entry("minecraft:diamond_pickaxe",1500L),Map.entry("minecraft:netherite_pickaxe",5000L),
   Map.entry("minecraft:enchanted_golden_apple",5000L),Map.entry("minecraft:elytra",12000L),Map.entry("minecraft:totem_of_undying",4000L));
  public static boolean allowed(ItemStack stack){
-  if(stack.isEmpty() || BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(ModContent.id("automated_crafting_table")) || Rules.matches(stack,Rules.list("sumzon","excluded_items")))return false;
+  if(stack.isEmpty() || AutomationContent.retiredItem(stack.getItem()) || Rules.matches(stack,Rules.list("sumzon","excluded_items")))return false;
   if(!Rules.b("sumzon","allow_technical")){String path=BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();if(path.endsWith("_spawn_egg") || List.of("test_block","test_instance_block","command_block","chain_command_block","repeating_command_block","structure_block","jigsaw","barrier","light","structure_void","debug_stick","bedrock","spawner","end_portal_frame").contains(path))return false;}
   return true;
  }

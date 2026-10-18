@@ -149,7 +149,6 @@ public final class CopperChestScreen extends AbstractContainerScreen<ChestMenu> 
             int trackX = leftPos + 172;
             graphics.fill(trackX, scrollTrackY(), trackX + 4, scrollTrackY() + scrollTrackHeight(), 0xFF8C8272);
             graphics.fill(trackX - 1, scrollThumbY(), trackX + 4, scrollThumbY() + scrollThumbHeight(), 0xFF524B40);
-            graphics.text(font, (firstRow + 1) + "–" + (firstRow + visibleRows) + "/" + containerRows, leftPos + 115, topPos + visibleRows * 18 + 20, 0xFF606060, false);
         }
     }
 

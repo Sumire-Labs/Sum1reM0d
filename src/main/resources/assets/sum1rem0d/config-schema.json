@@ -3459,6 +3459,14 @@
         "initial": "minecraft:nether_portal,minecraft:end_portal,minecraft:end_gateway",
         "min": 0,
         "max": 65536
+      },
+      {
+        "key": "force_air",
+        "label": "前方ブロックを強制消滅させる",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
       }
     ]
   },
@@ -5092,7 +5100,7 @@
         "label": "上下位置",
         "type": "DECIMAL",
         "initial": 0.35,
-        "min": -0.25,
+        "min": -0.6,
         "max": 1
       },
       {
@@ -5377,7 +5385,7 @@
       },
       {
         "key": "height",
-        "label": "間欠泉の高さ",
+        "label": "蒸気の移動速度",
         "type": "INTEGER",
         "initial": 3,
         "min": 1,
@@ -5634,7 +5642,7 @@
         "key": "range",
         "label": "感電範囲（ブロック）",
         "type": "DECIMAL",
-        "initial": 4,
+        "initial": 10,
         "min": 1,
         "max": 16
       },
@@ -6107,7 +6115,7 @@
         "key": "inside_speed",
         "label": "葉の中の速度倍率",
         "type": "DECIMAL",
-        "initial": 0.5,
+        "initial": 0.6,
         "min": 0,
         "max": 1
       }
@@ -6177,7 +6185,7 @@
       },
       {
         "key": "allow_mushrooms",
-        "label": "サルノコシカケ",
+        "label": "サルノコシカケにも座れる",
         "type": "BOOLEAN",
         "initial": true,
         "min": 0,
@@ -6470,6 +6478,22 @@
         "initial": true,
         "min": 0,
         "max": 1
+      },
+      {
+        "key": "signal_tint",
+        "label": "信号強度で明るさを変える",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "minimum_brightness",
+        "label": "信号0の明るさ（%）",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
       }
     ]
   },
@@ -6517,6 +6541,22 @@
         "initial": true,
         "min": 0,
         "max": 1
+      },
+      {
+        "key": "signal_tint",
+        "label": "信号強度で明るさを変える",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "minimum_brightness",
+        "label": "信号0の明るさ（%）",
+        "type": "INTEGER",
+        "initial": 20,
+        "min": 0,
+        "max": 100
       }
     ]
   },
@@ -6963,6 +7003,60 @@
         "initial": false,
         "min": 0,
         "max": 1
+      }
+    ]
+  },
+  {
+    "id": "stackable_fluids",
+    "label": "ポーション・中身入りバケツのスタック",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "stack_size",
+        "label": "最大スタック数",
+        "type": "INTEGER",
+        "initial": 16,
+        "min": 1,
+        "max": 64
+      }
+    ]
+  },
+  {
+    "id": "creeper_shears",
+    "label": "クリーパーから火薬を取る",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "initial_drop",
+        "label": "1回の火薬個数",
+        "type": "INTEGER",
+        "initial": 1,
+        "min": 0,
+        "max": 64
+      },
+      {
+        "key": "cooldown",
+        "label": "再取得までの待機tick",
+        "type": "INTEGER",
+        "initial": 200,
+        "min": 0,
+        "max": 72000
       }
     ]
   }

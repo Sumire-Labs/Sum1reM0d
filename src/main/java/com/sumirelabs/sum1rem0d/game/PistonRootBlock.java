@@ -26,9 +26,13 @@ public final class PistonRootBlock extends Block {
  @Override public void setPlacedBy(Level level,BlockPos pos,BlockState state,LivingEntity entity,ItemStack stack){
   if(!(level instanceof ServerLevel server) || !Rules.on("piston_base"))return;
   var target=pos.relative(state.getValue(BlockStateProperties.FACING));if(!level.hasChunkAt(target))return;
-  var victim=level.getBlockState(target);if(victim.isAir() || Rules.matches(victim,Rules.list("piston_base","excluded_blocks")))return;
+  var victim=level.getBlockState(target);boolean force=Rules.b("piston_base","force_air");if(victim.isAir() || !force&&Rules.matches(victim,Rules.list("piston_base","excluded_blocks")))return;
   if(entity instanceof Player player && !server.mayInteract(player,target))return;
-  if(!Rules.b("piston_base","destroy_block_entities") && level.getBlockEntity(target)!=null)return;
-  level.removeBlock(target,false);
+  if(!force&&!Rules.b("piston_base","destroy_block_entities") && level.getBlockEntity(target)!=null)return;
+  if(force){
+   if(level.getBlockEntity(target) instanceof net.minecraft.world.Container container)container.clearContent();
+   level.removeBlockEntity(target);
+   level.setBlock(target,Blocks.AIR.defaultBlockState(),3);
+  }else level.removeBlock(target,false);
  }
 }

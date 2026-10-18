@@ -1,0 +1,14 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "content": "minecraft:block/water_still",
+    "particle": "minecraft:block/water_still"
+  },
+  "elements": [{
+    "from": [0, 9.49, 0],
+    "to": [16, 9.5, 16],
+    "faces": {
+      "up": {"texture": "#content","tintindex":0}
+    }
+  }]
+}

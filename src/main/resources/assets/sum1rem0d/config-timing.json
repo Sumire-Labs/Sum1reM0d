@@ -344,6 +344,24 @@
     "mixed_concrete": {
       "default": "次のクラフト判定から反映。次tickでレシピ表示と作業中の結果を更新。既存ブロックの色と回収は保持"
     },
+    "mixed_concrete_slab": {
+      "default": "次のレシピ検索・クラフトから反映。設置済みスラブと色付きアイテムは保持",
+      "options": {
+        "enabled": "次回のクラフト判定・アイテム化から反映。",
+        "recipe_enabled": "次回のレシピ検索から反映。",
+        "recipe_output": "次回クラフトから反映。",
+        "allow_mixed_colors": "次回クラフトから反映。"
+      }
+    },
+    "mixed_concrete_stairs": {
+      "default": "次のレシピ検索・クラフトから反映。設置済み階段と色付きアイテムは保持",
+      "options": {
+        "enabled": "次回のクラフト判定・アイテム化から反映。",
+        "recipe_enabled": "次回のレシピ検索から反映。",
+        "recipe_output": "次回クラフトから反映。",
+        "allow_mixed_colors": "次回クラフトから反映。"
+      }
+    },
     "piston_base": {
       "default": "次の配置/クラフトから反映。配置済みの根本は再発動しない"
     },
@@ -430,7 +448,7 @@
       "default": "有効な候補として翌朝のビジュアル抽選から反映"
     },
     "sperm_whale": {
-      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+      "default": "粒子量・高さ・広がりは次の潮吹きから適用"
     },
     "shield_mob_clone": {
       "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
@@ -452,7 +470,7 @@
       }
     },
     "stumble_enchantment": {
-      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+      "default": "遅延は次の攻撃で予約する追撃から適用。OFFで予約中の追撃も停止"
     },
     "sneak_speed": {
       "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
@@ -488,7 +506,7 @@
       "default": "クライアント設定変更後に即時反映。"
     },
     "last_tool_back": {
-      "default": "クライアント設定変更は即時反映。手に持つツールを切り替えた次の描画から直前のツールをローカルプレイヤーの背中に表示。"
+      "default": "位置・角度・縮尺は次の描画フレームから適用（個人設定）"
     },
     "japanese_ime": {
       "default": "クライアント設定変更後に即時反映。26.x本体のSDL TextInput/PreeditEvent経路を利用。"
@@ -555,7 +573,8 @@
         "damage": "次の放電から適用",
         "interval_ticks": "次の放電から適用",
         "affect_players": "次の放電から適用"
-      }
+      },
+      "default": "次の攻撃から適用。対象なしでは無音・無粒子。攻撃音は1回の作動につき1度のみ"
     },
     "auto_clicker": {
       "options": {
@@ -680,7 +699,8 @@
       "default": "レシピと収納はサーバー設定変更後すぐ反映。既存アイテムと収納内容は保持。",
       "options": {
         "enabled": "次回クラフトから反映。OFF中も既存の瓶入り牛乳は飲める。",
-        "milk_bundle_enabled": "次回収納から反映。OFFにしても収納済み瓶は取り出せる。"
+        "milk_bundle_enabled": "次回収納から反映。OFFにしても収納済み瓶は取り出せる。",
+        "milk_bundle_capacity": "次回の収納・ツールチップ計算から反映。上限を下げても保存済みの瓶は残り、上限数まで追加収納を止める。"
       }
     },
     "cat_meat": {
@@ -775,6 +795,12 @@
         "recipe_output": "次回クラフトから反映。",
         "allow_mixed_colors": "次回クラフトから反映。"
       }
+    },
+    "compatible_damage_enchantments": {
+      "default": "次のエンチャント・金床合成から適用。既存エンチャントは保持"
+    },
+    "chestplate_knockback": {
+      "default": "次の付与・近接被弾から適用。既存エンチャントは保持"
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.sumirelabs.sum1rem0d.mixin;
 
 import com.sumirelabs.sum1rem0d.game.Rules;
+import com.sumirelabs.sum1rem0d.game.CombatEnchantRules;
 import com.sumirelabs.sum1rem0d.game.SneakSpeedContent;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
@@ -24,5 +25,13 @@ public interface NeoForgeSneakSpeedItemExtensionMixin {
             return;
         }
         if (Rules.b("sneak_speed", "boots_enabled") && SneakSpeedContent.isBoot(stack)) cir.setReturnValue(true);
+    }
+
+    @Inject(method = "isPrimaryItemFor", at = @At("HEAD"), cancellable = true, remap = false)
+    default void sum1rem0d$allowKnockbackChestplate(ItemStack stack, Holder<Enchantment> enchantment,
+            CallbackInfoReturnable<Boolean> cir) {
+        if (CombatEnchantRules.isKnockback(enchantment.value()) && CombatEnchantRules.supportsChestplate(stack)) {
+            cir.setReturnValue(true);
+        }
     }
 }

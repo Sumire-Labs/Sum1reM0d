@@ -59,7 +59,7 @@ public final class AutomationProcessing {
         TESLA_RODS.removeIf(key->{ServerLevel level=findLevel(server,key.dimension());if(level==null)return true;var pos=BlockPos.of(key.pos());if(!level.hasChunkAt(pos))return false;var state=level.getBlockState(pos);if(!BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString().equals("minecraft:lightning_rod"))return true;if(!Rules.on("tesla_coil"))return false;
             var heavy=pos.above();if(!level.hasChunkAt(heavy)||!BuiltInRegistries.BLOCK.getKey(level.getBlockState(heavy).getBlock()).toString().equals("minecraft:heavy_core"))return false;
             boolean powered=level.hasNeighborSignal(pos)||(state.hasProperty(BlockStateProperties.POWERED)&&state.getValue(BlockStateProperties.POWERED));if(!powered)return false;
-            long now=level.getGameTime();if(now<TESLA_NEXT.getOrDefault(key,Long.MIN_VALUE))return false;double radius=Rules.n("tesla_coil","range"),damage=Rules.n("tesla_coil","damage");var bounds=new AABB(pos).inflate(radius);for(var target:level.getEntitiesOfClass(LivingEntity.class,bounds,LivingEntity::isAlive))if(!(target instanceof Player)||Rules.b("tesla_coil","affect_players"))target.hurtServer(level,level.damageSources().lightningBolt(),(float)damage);TESLA_NEXT.put(key,now+Math.max(1,Rules.i("tesla_coil","interval_ticks")));level.playSound(null,pos,net.minecraft.sounds.SoundEvents.LIGHTNING_BOLT_IMPACT,net.minecraft.sounds.SoundSource.BLOCKS,.6F,1F);return false;});
+            long now=level.getGameTime();if(now<TESLA_NEXT.getOrDefault(key,Long.MIN_VALUE))return false;double radius=Rules.n("tesla_coil","range"),damage=Rules.n("tesla_coil","damage");attackTeslaTargets(level,pos,radius,(float)damage);TESLA_NEXT.put(key,now+Math.max(1,Rules.i("tesla_coil","interval_ticks")));return false;});
     }
     private static void tick(AutomationMachineEntity machine,ServerLevel level){
         String kind=machine.kind();if(!enabled(kind))return;
@@ -204,7 +204,37 @@ public final class AutomationProcessing {
         return level.getEntitiesOfClass(net.minecraft.world.entity.Entity.class,bounds,entity->entity!=actor&&entity.isPickable()&&entity.isAlive()&&(!(entity instanceof Player player)||!player.isSpectator()))
                 .stream().min(Comparator.comparingDouble(entity->entity.distanceToSqr(Vec3.atCenterOf(actor.blockPosition())))).orElse(null);
     }
-    private static void tesla(AutomationMachineEntity machine,ServerLevel level){if(!level.hasNeighborSignal(machine.getBlockPos()))return;if(machine.cooldown()>0){machine.cooldown(machine.cooldown()-1);return;}double radius=Rules.n("tesla_coil","range"),damage=Rules.n("tesla_coil","damage");var box=new AABB(machine.getBlockPos()).inflate(radius);for(var entity:level.getEntitiesOfClass(LivingEntity.class,box,target->target.isAlive())){if(entity instanceof Player&&!Rules.b("tesla_coil","affect_players"))continue;entity.hurtServer(level,level.damageSources().lightningBolt(),(float)damage);}machine.cooldown(Math.max(1,Rules.i("tesla_coil","interval_ticks")));}
+    private static void tesla(AutomationMachineEntity machine,ServerLevel level){if(!level.hasNeighborSignal(machine.getBlockPos()))return;if(machine.cooldown()>0){machine.cooldown(machine.cooldown()-1);return;}double radius=Rules.n("tesla_coil","range"),damage=Rules.n("tesla_coil","damage");attackTeslaTargets(level,machine.getBlockPos(),radius,(float)damage);machine.cooldown(Math.max(1,Rules.i("tesla_coil","interval_ticks")));}
+    static int attackTeslaTargets(ServerLevel level,BlockPos origin,double radius,float damage){
+        var box=new AABB(origin).inflate(Math.max(0,radius));int hits=0;
+        for(var target:level.getEntitiesOfClass(LivingEntity.class,box,LivingEntity::isAlive)){
+            if(target instanceof Player&&!Rules.b("tesla_coil","affect_players"))continue;
+            if(attackTeslaTarget(level,origin,target,damage))hits++;
+        }
+        if(hits>0){
+        if(Rules.b("tesla_coil","attack_sound")){
+            float volume=(float)Math.clamp(Rules.n("tesla_coil","sound_volume"),0,1);
+            if(volume>0)level.playSound(null,origin,net.minecraft.sounds.SoundEvents.LIGHTNING_BOLT_IMPACT,net.minecraft.sounds.SoundSource.BLOCKS,volume,1F);
+        }
+        }
+        return hits;
+    }
+    static boolean attackTeslaTarget(ServerLevel level,BlockPos origin,LivingEntity target,float damage){
+        if(!target.isAlive()||!target.hurtServer(level,level.damageSources().lightningBolt(),damage))return false;
+        if(Rules.b("tesla_coil","attack_effects")){
+            int density=Math.clamp(Rules.i("tesla_coil","particle_density"),0,16);
+            if(density>0){
+                double sx=origin.getX()+.5,sy=origin.getY()+.7,sz=origin.getZ()+.5;
+                double ex=target.getX(),ey=target.getY()+target.getBbHeight()*.5,ez=target.getZ();
+                for(int i=0;i<density;i++){
+                    double t=(i+.5)/density;
+                    level.sendParticles(net.minecraft.core.particles.ParticleTypes.ELECTRIC_SPARK,
+                            sx+(ex-sx)*t,sy+(ey-sy)*t,sz+(ez-sz)*t,1,.025,.025,.025,.01);
+                }
+            }
+        }
+        return true;
+    }
     private static void clicker(AutomationMachineEntity machine,ServerLevel level){if(machine.cooldown()>0){machine.cooldown(machine.cooldown()-1);if(machine.cooldown()>0)return;}boolean powered=level.hasNeighborSignal(machine.getBlockPos());if(!powered){if(machine.lastPowered())machine.lastPowered(false);return;}if(!machine.lastPowered())machine.lastPowered(true);var target=machine.getBlockPos().relative(machine.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING));if(!level.hasChunkAt(target))return;
         var actor=CLICKER_ACTORS.computeIfAbsent(machine,ignored->AutomationMachineActor.create(level,machine));if(actor.isRemoved()){CLICKER_ACTORS.remove(machine);actor=AutomationMachineActor.create(level,machine);CLICKER_ACTORS.put(machine,actor);}
         actor.setPos(Vec3.atCenterOf(machine.getBlockPos()));actor.setYRot(machine.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot());

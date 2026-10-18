@@ -82,6 +82,8 @@
     "CakeNutritionMixin",
     "CombatItemRulesMixin",
     "CombatDamageRulesMixin",
+    "CombatEnchantCompatibilityMixin",
+    "ChestplateKnockbackMixin",
     "ShieldCloneMixin",
     "WindChargeBlackHoleMixin",
     "LifeBerryRespawnMixin",

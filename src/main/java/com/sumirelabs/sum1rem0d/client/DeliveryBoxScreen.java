@@ -54,12 +54,16 @@ public final class DeliveryBoxScreen extends AbstractContainerScreen<DeliveryBox
         permission.setMessage(Component.literal(row!=null&&permitted(row.get("id").getAsString())?"許可を解除":"利用を許可"));
     }
     @Override protected void containerTick() { super.containerTick(); if(target!=null)updateButtons(); }
+    @Override protected void extractLabels(GuiGraphicsExtractor g,int x,int y) {
+        g.text(font,title,8,5,0xFF404040,false);
+        int firstInventorySlot=27;
+        int inventoryY=menu.slots.size()>firstInventorySlot?menu.slots.get(firstInventorySlot).y-12:72;
+        g.text(font,"所持品",8,inventoryY,0xFF404040,false);
+    }
     @Override public void extractBackground(GuiGraphicsExtractor g,int x,int y,float delta) {
         super.extractBackground(g,x,y,delta);
         VanillaGuiParts.panel(g,leftPos,topPos,imageWidth,imageHeight);
         for(var slot:menu.slots) VanillaGuiParts.slot(g,leftPos+slot.x,topPos+slot.y);
-        g.text(font,"宅配BOXの中身",leftPos+8,topPos+5,0xFF404040,false);
-        g.text(font,"所持品",leftPos+8,topPos+73,0xFF404040,false);
         g.text(font,isOwner()?"許可プレイヤー設定":"所有者だけが許可を変更できます",leftPos+188,topPos+7,0xFF404040,false);
         var row=selectedPlayer();
         if(row!=null)g.text(font,permitted(row.get("id").getAsString())?"現在: 許可済み":"現在: 許可なし",leftPos+188,topPos+77,0xFF404040,false);

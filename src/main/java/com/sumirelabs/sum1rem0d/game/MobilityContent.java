@@ -56,6 +56,7 @@ public final class MobilityContent {
     public static Block createCauldronBlock(String name) {
         int depth = name.equals("huge_cauldron") ? 2 : 1;
         return new LargeCauldronBlock(depth, BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON)
+                .requiresCorrectToolForDrops()
                 .pushReaction(
                         //? if >=26.3 {
                         net.minecraft.world.level.material.PushReaction.IMMOVEABLE

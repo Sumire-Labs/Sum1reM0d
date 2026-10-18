@@ -4,23 +4,11 @@
     "content": "minecraft:block/powder_snow",
     "particle": "minecraft:block/powder_snow"
   },
-  "elements": [
-    {
-      "to": [
-        16,
-        9,
-        16
-      ],
-      "from": [
-        0,
-        8.99,
-        0
-      ],
-      "faces": {
-        "up": {
-          "texture": "#content"
-        }
-      }
+  "elements": [{
+    "from": [0, 5.8233, 0],
+    "to": [16, 5.8333, 16],
+    "faces": {
+      "up": {"texture": "#content"}
     }
-  ]
+  }]
 }

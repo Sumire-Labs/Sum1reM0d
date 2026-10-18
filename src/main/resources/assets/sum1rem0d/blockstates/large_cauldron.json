@@ -1,122 +1,491 @@
 {
   "multipart": [
     {
+      "when": {
+        "part": "0",
+        "z_axis": "false"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_shell_x0"
-      },
-      "when": {
-        "z_axis": "false",
-        "part": "0"
       }
     },
     {
+      "when": {
+        "part": "1",
+        "z_axis": "false"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_shell_x1"
-      },
-      "when": {
-        "z_axis": "false",
-        "part": "1"
       }
     },
     {
+      "when": {
+        "part": "0",
+        "z_axis": "true"
+      },
       "apply": {
         "y": 90,
         "model": "sum1rem0d:block/large_cauldron_shell_x0"
-      },
-      "when": {
-        "z_axis": "true",
-        "part": "0"
       }
     },
     {
+      "when": {
+        "part": "1",
+        "z_axis": "true"
+      },
       "apply": {
         "y": 90,
         "model": "sum1rem0d:block/large_cauldron_shell_x1"
-      },
-      "when": {
-        "z_axis": "true",
-        "part": "1"
       }
     },
     {
+      "when": {
+        "volume_shared": "false",
+        "level": "1",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_water_1"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "2",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_water_2"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "3",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_water_3"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "1",
+        "contents": "water"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_water_1"
-      },
-      "when": {
-        "contents": "water",
-        "level": "1"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "2",
+        "contents": "water"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_water_2"
-      },
-      "when": {
-        "contents": "water",
-        "level": "2"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "3",
+        "contents": "water"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_water_3"
-      },
-      "when": {
-        "contents": "water",
-        "level": "3"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "4",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_4"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "5",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_5"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "6",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "7",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "8",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "9",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "10",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "11",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "12",
+        "contents": "water"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "1",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_powder_snow_1"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "2",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_powder_snow_2"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "3",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_powder_snow_3"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "1",
+        "contents": "powder_snow"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_powder_snow_1"
-      },
-      "when": {
-        "contents": "powder_snow",
-        "level": "1"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "2",
+        "contents": "powder_snow"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_powder_snow_2"
-      },
-      "when": {
-        "contents": "powder_snow",
-        "level": "2"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "3",
+        "contents": "powder_snow"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_powder_snow_3"
-      },
-      "when": {
-        "contents": "powder_snow",
-        "level": "3"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "4",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_4"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "5",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_5"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "6",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "7",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "8",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "9",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "10",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "11",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "12",
+        "contents": "powder_snow"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "1",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_lava_1"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "2",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_lava_2"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "false",
+        "level": "3",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_legacy_lava_3"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "1",
+        "contents": "lava"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_lava_1"
-      },
-      "when": {
-        "contents": "lava",
-        "level": "1"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "2",
+        "contents": "lava"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_lava_2"
-      },
-      "when": {
-        "contents": "lava",
-        "level": "2"
       }
     },
     {
+      "when": {
+        "volume_shared": "true",
+        "level": "3",
+        "contents": "lava"
+      },
       "apply": {
         "model": "sum1rem0d:block/large_cauldron_lava_3"
-      },
+      }
+    },
+    {
       "when": {
-        "contents": "lava",
-        "level": "3"
+        "volume_shared": "true",
+        "level": "4",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_4"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "5",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_5"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "6",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "7",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "8",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "9",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "10",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "11",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
+      }
+    },
+    {
+      "when": {
+        "volume_shared": "true",
+        "level": "12",
+        "contents": "lava"
+      },
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_6"
       }
     }
   ]

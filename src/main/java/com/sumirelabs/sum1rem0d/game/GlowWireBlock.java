@@ -26,16 +26,19 @@ public final class GlowWireBlock extends Block {
   if(logical==Direction.NORTH)return Direction.DOWN;if(logical==Direction.SOUTH)return Direction.UP;
   Direction east=switch(face){case NORTH->Direction.EAST;case SOUTH->Direction.WEST;case EAST->Direction.SOUTH;default->Direction.NORTH;};return logical==Direction.EAST?east:east.getOpposite();
  }
- public Iterable<Direction> directions(BlockGetter level,BlockPos pos){var face=level.getBlockState(pos).getValue(ATTACHMENT);var result=new ArrayList<Direction>();for(var local:Direction.Plane.HORIZONTAL)result.add(planeDirection(face,local));return result;}
+ public Iterable<Direction> directions(BlockGetter level,BlockPos pos){var current=level.getBlockState(pos);if(!current.is(this))return List.of();var face=current.getValue(ATTACHMENT);var result=new ArrayList<Direction>();for(var local:Direction.Plane.HORIZONTAL)result.add(planeDirection(face,local));return result;}
  public BlockPos connection(BlockGetter level,BlockPos pos,Direction direction){
-  var n=pos.relative(direction);if(level instanceof Level live && !live.hasChunkAt(n))return null;if(level.getBlockState(n).is(this)&&level.getBlockState(n).getValue(ATTACHMENT)==level.getBlockState(pos).getValue(ATTACHMENT))return n;
-  if(level.getBlockState(pos).getValue(ATTACHMENT)!=Direction.UP)return null;
+  var state=level.getBlockState(pos);return state.is(this)?connection(level,pos,direction,state):null;
+ }
+ private BlockPos connection(BlockGetter level,BlockPos pos,Direction direction,BlockState state){
+  var n=pos.relative(direction);if(level instanceof Level live && !live.hasChunkAt(n))return null;if(level.getBlockState(n).is(this)&&level.getBlockState(n).getValue(ATTACHMENT)==state.getValue(ATTACHMENT))return n;
+  if(state.getValue(ATTACHMENT)!=Direction.UP)return null;
   if(!level.getBlockState(pos.above()).isRedstoneConductor(level,pos.above()) && level.getBlockState(n).isFaceSturdy(level,n,Direction.UP) && level.getBlockState(n.above()).is(this))return n.above();
   if(!level.getBlockState(n).isRedstoneConductor(level,n) && level.getBlockState(n.below()).is(this))return n.below();return null;
  }
  public BlockState connections(BlockGetter level,BlockPos pos,BlockState state){
   int count=0;Direction only=null;
-  for(var local:Direction.Plane.HORIZONTAL){var dir=planeDirection(state.getValue(ATTACHMENT),local);var neighbor=pos.relative(dir);var target=connection(level,pos,dir);if(level instanceof Level live && !live.hasChunkAt(neighbor)){state=state.setValue(SIDES.get(local),RedstoneSide.NONE);continue;}var other=level.getBlockState(neighbor);boolean source=other.isSignalSource() && !other.is(Blocks.REDSTONE_WIRE) && !(other.getBlock() instanceof GlowWireBlock);
+  for(var local:Direction.Plane.HORIZONTAL){var dir=planeDirection(state.getValue(ATTACHMENT),local);var neighbor=pos.relative(dir);var target=connection(level,pos,dir,state);if(level instanceof Level live && !live.hasChunkAt(neighbor)){state=state.setValue(SIDES.get(local),RedstoneSide.NONE);continue;}var other=level.getBlockState(neighbor);boolean source=other.isSignalSource() && !other.is(Blocks.REDSTONE_WIRE) && !(other.getBlock() instanceof GlowWireBlock);
    if(other.getBlock() instanceof RepeaterBlock)source=other.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis()==dir.getAxis();
    var side=target!=null?(target.getY()>pos.getY()?RedstoneSide.UP:RedstoneSide.SIDE):source?RedstoneSide.SIDE:RedstoneSide.NONE;
    state=state.setValue(SIDES.get(local),side);if(side!=RedstoneSide.NONE){count++;only=local;}

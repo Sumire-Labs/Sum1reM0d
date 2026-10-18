@@ -48,6 +48,15 @@ public final class ServerVerification {
             var candidate = config.snapshot();
             candidate.getAsJsonObject("features").getAsJsonObject("hopper_breaker").addProperty("interval", 1);
             config.update(candidate, config.revision());
+            if (Boolean.getBoolean("sum1rem0d.patch203Verify")) {
+                WirePlacementVerification.verify(server, ServerVerification::passed);
+                MachineMenuVerification.verify(server, ServerVerification::passed);
+                TeslaFeedbackVerification.verify(server, ServerVerification::passed);
+                CauldronFixVerification.verify(server, ServerVerification::passed);
+                MixedConcreteShapesVerification.verify(server, ServerVerification::passed);
+                CombatEnchantPatchVerification.verify(server, ServerVerification::passed);
+                MilkBundleCapacityVerification.verify(server, ServerVerification::passed);
+            } else {
             testRegisteredConfig(server);
             testSmelting(level, state);
             testSmeltingTransfers(server, level, state);
@@ -86,6 +95,7 @@ public final class ServerVerification {
             NetherChangesVerification.verify(server, ServerVerification::passed);
             CombatConcreteVerification.verify(server, ServerVerification::passed);
             RemainingVerification.verify(server, ServerVerification::passed);
+            }
             if (!GROUP_FAILURES.isEmpty()) throw new AssertionError(String.join("; ", GROUP_FAILURES));
             report.addProperty("success", true);
             Sum1reM0d.LOGGER.info("SERVER_VERIFY: all {} checks passed", PASSED.size());

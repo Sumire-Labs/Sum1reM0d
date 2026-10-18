@@ -18,6 +18,7 @@ public final class LastToolBack {
         if (mc.player == null || !enabled()) { clear(); return; }
         if (playerId != mc.player.getId()) { clear(); playerId = mc.player.getId(); }
         observeHeld(mc, mc.player.getMainHandItem());
+        refreshRenderState(mc);
     }
 
     private static void observeHeld(Minecraft mc, ItemStack held) {
@@ -32,6 +33,10 @@ public final class LastToolBack {
 
     private static void setLast(Minecraft mc, ItemStack stack) {
         last = stack.copy();
+        refreshRenderState(mc);
+    }
+
+    private static void refreshRenderState(Minecraft mc) {
         RENDER_STATE.clear();
         if (!last.isEmpty() && mc.player != null)
             mc.getItemModelResolver().updateForNonLiving(RENDER_STATE, last, ItemDisplayContext.FIXED, mc.player);

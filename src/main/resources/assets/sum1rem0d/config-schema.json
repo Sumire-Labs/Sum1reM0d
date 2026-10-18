@@ -3344,6 +3344,86 @@
     ]
   },
   {
+    "id": "mixed_concrete_slab",
+    "label": "混色コンクリートハーフブロック",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "クラフトレシピを有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "recipe_output",
+        "label": "レシピ出力数",
+        "type": "INTEGER",
+        "initial": 6,
+        "min": 1,
+        "max": 64
+      },
+      {
+        "key": "allow_mixed_colors",
+        "label": "異なる色のコンクリートを材料に使う",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "applyTiming": "設定変更後、次回のレシピ検索・クラフトから反映。既存ブロックと色付きアイテムは保持。"
+  },
+  {
+    "id": "mixed_concrete_stairs",
+    "label": "混色コンクリート階段",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "クラフトレシピを有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "recipe_output",
+        "label": "レシピ出力数",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 1,
+        "max": 64
+      },
+      {
+        "key": "allow_mixed_colors",
+        "label": "異なる色のコンクリートを材料に使う",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "applyTiming": "設定変更後、次回のレシピ検索・クラフトから反映。既存ブロックと色付きアイテムは保持。"
+  },
+  {
     "id": "piston_base",
     "label": "ピストンの根本",
     "implemented": true,
@@ -4462,6 +4542,30 @@
         "initial": "#minecraft:swords,#minecraft:axes,minecraft:feather",
         "min": 0,
         "max": 4096
+      },
+      {
+        "key": "spout_particles",
+        "label": "潮吹きの粒子量",
+        "type": "INTEGER",
+        "initial": 160,
+        "min": 0,
+        "max": 1024
+      },
+      {
+        "key": "spout_height",
+        "label": "潮吹きの高さ（ブロック）",
+        "type": "DECIMAL",
+        "initial": 3,
+        "min": 0.2,
+        "max": 12
+      },
+      {
+        "key": "spout_width",
+        "label": "潮吹きの広がり",
+        "type": "DECIMAL",
+        "initial": 0.65,
+        "min": 0.05,
+        "max": 3
       }
     ]
   },
@@ -4672,6 +4776,22 @@
         "initial": 1,
         "min": 1,
         "max": 255
+      },
+      {
+        "key": "delay_ticks",
+        "label": "追撃までの遅延（tick）",
+        "type": "INTEGER",
+        "initial": 4,
+        "min": 0,
+        "max": 40
+      },
+      {
+        "key": "hit_feedback",
+        "label": "追撃時の音・粒子",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
       }
     ]
   },
@@ -4950,6 +5070,46 @@
         "initial": true,
         "min": 0,
         "max": 0
+      },
+      {
+        "key": "scale",
+        "label": "背中ツールの大きさ",
+        "type": "DECIMAL",
+        "initial": 0.45,
+        "min": 0.2,
+        "max": 0.8
+      },
+      {
+        "key": "offset_x",
+        "label": "左右位置",
+        "type": "DECIMAL",
+        "initial": 0,
+        "min": -0.25,
+        "max": 0.25
+      },
+      {
+        "key": "offset_y",
+        "label": "上下位置",
+        "type": "DECIMAL",
+        "initial": 0.35,
+        "min": -0.25,
+        "max": 1
+      },
+      {
+        "key": "offset_z",
+        "label": "背中からの距離",
+        "type": "DECIMAL",
+        "initial": 0.18,
+        "min": 0,
+        "max": 0.35
+      },
+      {
+        "key": "rotation",
+        "label": "斜めの角度",
+        "type": "DECIMAL",
+        "initial": 90,
+        "min": -180,
+        "max": 180
       }
     ]
   },
@@ -5501,6 +5661,38 @@
         "initial": false,
         "min": 0,
         "max": 1
+      },
+      {
+        "key": "attack_effects",
+        "label": "攻撃時の電撃エフェクト",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "attack_sound",
+        "label": "攻撃時の音",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "sound_volume",
+        "label": "攻撃音量",
+        "type": "DECIMAL",
+        "initial": 0.3,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "particle_density",
+        "label": "電撃一筋の粒子数",
+        "type": "INTEGER",
+        "initial": 12,
+        "min": 0,
+        "max": 16
       }
     ]
   },
@@ -6150,6 +6342,14 @@
         "initial": true,
         "min": 0,
         "max": 0
+      },
+      {
+        "key": "milk_bundle_capacity",
+        "label": "牛乳専用Bundleの容量（本）",
+        "type": "INTEGER",
+        "initial": 64,
+        "min": 16,
+        "max": 99
       }
     ],
     "applyTiming": "レシピと収納はConfig変更後すぐ反映。作成済みボトルとBundleの中身はOFF後も保持し、収納を無効にした場合も取り出し可能。"
@@ -6699,6 +6899,68 @@
         "label": "Sum1reM0dタブを表示",
         "type": "BOOLEAN",
         "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "compatible_damage_enchantments",
+    "label": "攻撃系エンチャントの併用",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": "chestplate_knockback",
+    "label": "胸装備のノックバック反撃",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "strength_per_level",
+        "label": "レベルごとのノックバック強度",
+        "type": "DECIMAL",
+        "initial": 0.8,
+        "min": 0,
+        "max": 10
+      },
+      {
+        "key": "chance",
+        "label": "反撃確率（%）",
+        "type": "DECIMAL",
+        "initial": 100,
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "affect_players",
+        "label": "プレイヤーにも反撃",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "affect_projectiles",
+        "label": "飛び道具の攻撃元にも反撃",
+        "type": "BOOLEAN",
+        "initial": false,
         "min": 0,
         "max": 1
       }

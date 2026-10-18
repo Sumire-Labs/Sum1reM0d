@@ -52,7 +52,7 @@ final class AutomationVerification {
             verifyWasherAcrossChunk(level, passed);
             verifyWasherWithMergedCauldrons(level, config, passed);
             verifyJukeboxInventory(server, level, passed);
-            verifyTesla(server, level, passed);
+            TeslaFeedbackVerification.verify(server, passed);
             verifyMachinePersistence(server, level, passed);
             verifyIndependentClicker(server, level, passed);
         } finally {
@@ -236,19 +236,6 @@ final class AutomationVerification {
             require(inventory.getItem(inventory.getSelectedSlot()).is(AutomationContent.item("iron_dust"))&&inventory.getItem(inventory.getSelectedSlot()).getCount()==2,"Output simulation includes the slot freed by consuming one held item");
             passed.accept("Vanilla jukebox full-main-inventory refusal, successful output and held-input freed-slot simulation");
         } finally { player.discard(); }
-    }
-
-    private static void verifyTesla(MinecraftServer server, ServerLevel level, Consumer<String> passed) {
-        var rod = new BlockPos(15, 240, 800);
-        ServerVerification.place(level, rod, BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("lightning_rod")).defaultBlockState().setValue(BlockStateProperties.POWERED, true));
-        ServerVerification.place(level, rod.above(), BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("heavy_core")).defaultBlockState());
-        var animal = BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("sheep")).create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
-        require(animal instanceof net.minecraft.world.entity.LivingEntity, "Sheep entity type available for tesla test");
-        animal.setPos(rod.getX() + .5, rod.getY(), rod.getZ() + 1.5); level.addFreshEntity(animal); ServerVerification.spawned(animal);
-        float health = ((net.minecraft.world.entity.LivingEntity) animal).getHealth();
-        AutomationProcessing.trackTeslaRod(level, rod); AutomationProcessing.tickNativeTesla(server);
-        require(((net.minecraft.world.entity.LivingEntity) animal).getHealth() < health, "Powered vanilla rod with heavy core above emits damage");
-        passed.accept("Native lightning rod/heavy-core powered tesla setup damages a nearby animal");
     }
 
     private static void verifyMachinePersistence(MinecraftServer server, ServerLevel level, Consumer<String> passed) throws Exception {

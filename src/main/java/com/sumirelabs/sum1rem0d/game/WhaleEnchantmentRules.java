@@ -55,8 +55,16 @@ public final class WhaleEnchantmentRules {
         long cooldown = Math.max(0, Rules.i("sperm_whale", "spout_cooldown_ticks"));
         if (now - last >= cooldown) {
             LAST_SPOUT.put(attacker.getUUID(), now);
-            level.sendParticles(ParticleTypes.BUBBLE, attacker.getX(), attacker.getY() + attacker.getBbHeight(), attacker.getZ(), 20, 0.4, 0.8, 0.4, 0.08);
-            level.sendParticles(ParticleTypes.SPLASH, attacker.getX(), attacker.getY() + attacker.getBbHeight(), attacker.getZ(), 12, 0.3, 0.6, 0.3, 0.04);
+            int count=Math.clamp(Rules.i("sperm_whale","spout_particles"),0,1024);
+            double height=Rules.n("sperm_whale","spout_height"),width=Rules.n("sperm_whale","spout_width");
+            if(count>0){
+                int steps=Math.max(4,Math.min(12,(int)(height*4)));
+                for(int i=0;i<steps;i++){
+                    double t=(i+.5)/steps,spread=width*(.15+.85*t);
+                    level.sendParticles(ParticleTypes.SPLASH,attacker.getX(),attacker.getY()+attacker.getBbHeight()+height*t,attacker.getZ(),Math.max(1,count/steps),spread,.08,spread,.06);
+                }
+                level.sendParticles(ParticleTypes.FALLING_WATER,attacker.getX(),attacker.getY()+attacker.getBbHeight()+height,attacker.getZ(),Math.max(1,count/4),width,.1,width,.015);
+            }
         }
     }
 

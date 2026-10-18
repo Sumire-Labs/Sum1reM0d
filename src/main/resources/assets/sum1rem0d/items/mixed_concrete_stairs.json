@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "sum1rem0d:block/mixed_concrete_stairs",
+    "tints": [{ "type": "minecraft:dye", "default": -1 }]
+  }
+}

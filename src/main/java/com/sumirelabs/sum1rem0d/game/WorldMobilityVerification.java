@@ -424,19 +424,19 @@ public final class WorldMobilityVerification {
                 && level.getBlockState(pair).getValue(LargeCauldronBlock.PART) == 0
                 && level.getBlockState(pair.east()).getValue(LargeCauldronBlock.PART) == 1,
                 "East-west 2x1 footprint part order");
-        require(level.getBlockState(pair).getValue(LargeCauldronBlock.LEVEL) == 2
-                && level.getBlockState(pair.east()).getValue(LargeCauldronBlock.LEVEL) == 1,
-                "Native water levels survive 2x1 conversion");
+        require(level.getBlockState(pair).getValue(LargeCauldronBlock.LEVEL) == 3
+                && level.getBlockState(pair.east()).getValue(LargeCauldronBlock.LEVEL) == 3,
+                "Native water levels sum into one continuous 2x1 surface");
         require(large.isWater(level.getBlockState(pair)) && large.availableWater(level, pair) == 3
                 && large.availableWater(level, pair.east()) == 3, "Large cauldron exposes water availability from any footprint cell");
         require(!large.consumeWater(level, pair, 4) && large.availableWater(level, pair) == 3,
                 "Large cauldron refuses an overdraw without changing persisted water");
         require(large.consumeWater(level, pair.east(), 1) && large.availableWater(level, pair) == 2
                 && level.getBlockState(pair).getValue(LargeCauldronBlock.LEVEL) == 2
-                && level.getBlockState(pair.east()).getValue(LargeCauldronBlock.LEVEL) == 0
+                && level.getBlockState(pair.east()).getValue(LargeCauldronBlock.LEVEL) == 2
                 && large.isWater(level.getBlockState(pair)) && large.isWater(level.getBlockState(pair.east())),
                 "Consuming one automation water unit persists across the complete footprint");
-        passed.accept("Native cauldron merge: 2x1 conversion preserves each water cell");
+        passed.accept("Native cauldron merge: 2x1 conversion preserves total water and synchronizes surface levels");
 
         BlockPos vertical = pair.south(8);
         ServerVerification.place(level, vertical, Blocks.WATER_CAULDRON.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_CAULDRON, 1));
@@ -445,10 +445,10 @@ public final class WorldMobilityVerification {
                 && level.getBlockState(vertical).getValue(LargeCauldronBlock.Z_AXIS)
                 && level.getBlockState(vertical.south()).getValue(LargeCauldronBlock.PART) == 1,
                 "North-south vanilla pair forms a z-axis 2x1 footprint");
-        require(level.getBlockState(vertical).getValue(LargeCauldronBlock.LEVEL) == 1
-                && level.getBlockState(vertical.south()).getValue(LargeCauldronBlock.LEVEL) == 3,
-                "Z-axis conversion preserves cell amounts");
-        passed.accept("Native cauldron merge: north-south orientation is saved and restored");
+        require(level.getBlockState(vertical).getValue(LargeCauldronBlock.LEVEL) == 4
+                && level.getBlockState(vertical.south()).getValue(LargeCauldronBlock.LEVEL) == 4,
+                "Z-axis conversion sums water into a continuous surface");
+        passed.accept("Native cauldron merge: north-south orientation and shared water volume survive");
 
         BlockPos square = new BlockPos(2600, 240, 32);
         ServerVerification.place(level, square, Blocks.WATER_CAULDRON.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_CAULDRON, 1));
@@ -458,10 +458,9 @@ public final class WorldMobilityVerification {
         require(level.getBlockState(square).getBlock() == huge && level.getBlockState(square.east()).getBlock() == huge
                 && level.getBlockState(square.south()).getBlock() == huge && level.getBlockState(square.east().south()).getBlock() == huge,
                 "Four adjacent native cauldrons form a 2x2 footprint");
-        int[] expected = {1, 2, 3, 1};
-        for (int index = 0; index < 4; index++) require(level.getBlockState(square.offset(index % 2, 0, index / 2)).getValue(LargeCauldronBlock.LEVEL) == expected[index],
-                "2x2 native merge retains cell level " + index);
-        passed.accept("Native cauldron merge: 2x2 footprint retains all four cell levels");
+        for (int index = 0; index < 4; index++) require(level.getBlockState(square.offset(index % 2, 0, index / 2)).getValue(LargeCauldronBlock.LEVEL) == 7,
+                "2x2 native merge synchronizes total volume at cell " + index);
+        passed.accept("Native cauldron merge: 2x2 footprint preserves total water with a shared surface");
 
         BlockPos partlyEmpty = square.south(8);
         for (int index = 0; index < 4; index++) {
@@ -500,8 +499,8 @@ public final class WorldMobilityVerification {
             actor.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));
             require(large.useItemOn(actor.getItemInHand(InteractionHand.MAIN_HAND), level.getBlockState(buckets), level, buckets, actor, InteractionHand.MAIN_HAND, hit) == InteractionResult.CONSUME
                     && actor.getItemInHand(InteractionHand.MAIN_HAND).is(Items.BUCKET), "A second water bucket fills the remaining 2x1 unit");
-            require(level.getBlockState(buckets).getValue(LargeCauldronBlock.LEVEL) == 3
-                    && level.getBlockState(buckets.east()).getValue(LargeCauldronBlock.LEVEL) == 3, "Six units fill both 2x1 cells");
+            require(level.getBlockState(buckets).getValue(LargeCauldronBlock.LEVEL) == 6
+                    && level.getBlockState(buckets.east()).getValue(LargeCauldronBlock.LEVEL) == 6, "Six units fill the complete 2x1 footprint at one height");
             actor.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));
             require(large.useItemOn(actor.getItemInHand(InteractionHand.MAIN_HAND), level.getBlockState(buckets), level, buckets, actor, InteractionHand.MAIN_HAND, hit) == InteractionResult.FAIL
                     && actor.getItemInHand(InteractionHand.MAIN_HAND).is(Items.WATER_BUCKET), "A third water bucket is rejected at full capacity");
@@ -509,7 +508,7 @@ public final class WorldMobilityVerification {
             require(large.useItemOn(actor.getItemInHand(InteractionHand.MAIN_HAND), level.getBlockState(buckets), level, buckets, actor, InteractionHand.MAIN_HAND, hit) == InteractionResult.CONSUME
                     && actor.getItemInHand(InteractionHand.MAIN_HAND).is(Items.WATER_BUCKET), "Empty bucket drains exactly one 3-unit water bucket");
             require(level.getBlockState(buckets).getValue(LargeCauldronBlock.LEVEL) == 3
-                    && level.getBlockState(buckets.east()).getValue(LargeCauldronBlock.LEVEL) == 0, "Draining preserves the remaining 3 units");
+                    && level.getBlockState(buckets.east()).getValue(LargeCauldronBlock.LEVEL) == 3, "Draining preserves the remaining 3 units at one height");
 
             option.addProperty("enabled", false); config.update(draft, config.revision());
             actor.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));

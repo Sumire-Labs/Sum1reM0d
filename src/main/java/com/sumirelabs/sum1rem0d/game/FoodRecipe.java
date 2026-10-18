@@ -56,7 +56,7 @@ public final class FoodRecipe extends CustomRecipe {
         contents = new BundleContents.Mutable(BundleContents.EMPTY);
         //?}
         input.items().stream().filter(stack -> !stack.isEmpty() && stack.is(FoodContent.item("bottled_milk")))
-                .findFirst().ifPresent(stack -> contents.tryInsert(stack.copyWithCount(1)));
+                .findFirst().ifPresent(stack -> contents.tryInsert(MilkBundleItem.prepareMilkStack(stack.copyWithCount(1), MilkBundleItem.capacity())));
         bundle.set(DataComponents.BUNDLE_CONTENTS, contents.toImmutable());
         return bundle;
     }

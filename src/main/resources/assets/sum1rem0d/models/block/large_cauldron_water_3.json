@@ -4,24 +4,11 @@
     "content": "minecraft:block/water_still",
     "particle": "minecraft:block/water_still"
   },
-  "elements": [
-    {
-      "to": [
-        16,
-        15,
-        16
-      ],
-      "from": [
-        0,
-        14.99,
-        0
-      ],
-      "faces": {
-        "up": {
-          "tintindex": 0,
-          "texture": "#content"
-        }
-      }
+  "elements": [{
+    "from": [0, 9.49, 0],
+    "to": [16, 9.5, 16],
+    "faces": {
+      "up": {"texture": "#content","tintindex":0}
     }
-  ]
+  }]
 }

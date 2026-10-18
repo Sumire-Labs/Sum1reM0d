@@ -8,8 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.cauldron.CauldronInteractions;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,15 +17,17 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -37,16 +38,19 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** A save-safe connected cauldron footprint; each cell persists its own 0..3 fluid level in blockstate. */
+/** A save-safe connected cauldron footprint; each segment stores the same total fluid volume for one continuous surface. */
 public final class LargeCauldronBlock extends AbstractCauldronBlock {
     public static final IntegerProperty PART = IntegerProperty.create("part", 0, 3);
-    public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 3);
+    /** Shared total liquid units for the whole footprint; old per-cell saves migrate on first interaction. */
+    public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 12);
     public static final BooleanProperty Z_AXIS = BooleanProperty.create("z_axis");
+    public static final BooleanProperty VOLUME_SHARED = BooleanProperty.create("volume_shared");
     public static final EnumProperty<Contents> CONTENTS = EnumProperty.create("contents", Contents.class);
     private static final ThreadLocal<Boolean> REPLACING_FOOTPRINT = ThreadLocal.withInitial(() -> false);
     private final int depth;
@@ -70,13 +74,19 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
         //? if <26.3 {
         this.CODEC = simpleCodec(p -> new LargeCauldronBlock(depth, p));
         //?}
-        registerDefaultState(stateDefinition.any().setValue(PART, 0).setValue(Z_AXIS, false).setValue(CONTENTS, Contents.EMPTY)
-                .setValue(LEVEL, 0));
+        registerDefaultState(stateDefinition.any().setValue(PART, 0).setValue(Z_AXIS, false).setValue(VOLUME_SHARED, false)
+                .setValue(CONTENTS, Contents.EMPTY).setValue(LEVEL, 0));
     }
 
     public int depth() { return depth; }
-    @Override public boolean isFull(BlockState state) { return state.getValue(LEVEL) >= 3; }
-    @Override protected double getContentHeight(BlockState state) { return 6.0 / 16.0 + state.getValue(LEVEL) * (3.0 / 16.0); }
+    @Override public boolean isFull(BlockState state) {
+        return state.getValue(LEVEL) >= (state.getValue(VOLUME_SHARED) ? depth * 6 : 3);
+    }
+    @Override protected double getContentHeight(BlockState state) {
+        if (!state.getValue(VOLUME_SHARED)) return 6.0 / 16.0 + state.getValue(LEVEL) * (3.0 / 16.0);
+        int capacity = depth * 6;
+        return (4.0 + 11.0 * Math.min(state.getValue(LEVEL), capacity) / capacity) / 16.0;
+    }
 
     @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return footprintShape(state);
@@ -154,7 +164,7 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
     }
 
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(PART, Z_AXIS, CONTENTS, LEVEL);
+        builder.add(PART, Z_AXIS, VOLUME_SHARED, CONTENTS, LEVEL);
     }
 
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -178,6 +188,8 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
             BlockPos cell = cell(pos, state.getValue(Z_AXIS), x, z);
             level.setBlock(cell, defaultBlockState().setValue(PART, part).setValue(Z_AXIS, state.getValue(Z_AXIS)), 3);
         }
+        Footprint placed = read(level, pos);
+        if (placed != null) write(level, placed, placed.total(), placed.contents());
         if (depth == 1 && level instanceof ServerLevel server && WorldMobility.enabled("large_cauldron") && Rules.b("large_cauldron", "auto_merge")) {
             tryMergeWithAdjacent(server, pos);
         }
@@ -206,7 +218,72 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
         if (stack.is(Items.LAVA_BUCKET)) return addBucket(stack, state, level, pos, player, hand, Contents.LAVA);
         if (stack.is(Items.POWDER_SNOW_BUCKET)) return addBucket(stack, state, level, pos, player, hand, Contents.POWDER_SNOW);
         if (stack.is(Items.BUCKET)) return takeBucket(stack, state, level, pos, player, hand);
-        return super.useItemOn(stack, state, level, pos, player, hand, hit);
+        Footprint footprint = read(level, root(pos, state.getValue(PART), state));
+        if (footprint == null) return InteractionResult.FAIL;
+        var dispatcher = switch (footprint.contents()) {
+            case WATER -> CauldronInteractions.WATER;
+            case LAVA -> CauldronInteractions.LAVA;
+            case POWDER_SNOW -> CauldronInteractions.POWDER_SNOW;
+            case EMPTY -> CauldronInteractions.EMPTY;
+        };
+        var interaction = dispatcher.get(stack);
+        if (interaction == net.minecraft.core.cauldron.CauldronInteraction.DEFAULT) return InteractionResult.TRY_WITH_EMPTY_HAND;
+        BlockState proxy = interactionState(footprint.contents(), footprint.total(), footprint.capacity());
+        if (level.isClientSide()) return interaction.interact(proxy, level, pos, player, hand, stack);
+
+        boolean previous = REPLACING_FOOTPRINT.get();
+        REPLACING_FOOTPRINT.set(true);
+        try {
+            int delta = interactionVolumeDelta(footprint.contents(), stack);
+            InteractionResult result = interaction.interact(proxy, level, pos, player, hand, stack);
+            if (result.consumesAction()) {
+                int nextAmount = Math.max(0, Math.min(footprint.capacity(), footprint.total() + delta));
+                Contents nextContents = nextAmount == 0 ? Contents.EMPTY : footprint.contents() == Contents.EMPTY ? Contents.WATER : footprint.contents();
+                write(level, footprint, nextAmount, nextContents);
+            }
+            return result;
+        } finally { REPLACING_FOOTPRINT.set(previous); }
+    }
+
+    private static BlockState interactionState(Contents contents, int amount, int capacity) {
+        return switch (contents) {
+            case WATER -> Blocks.WATER_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON,
+                    Math.max(1, Math.min(3, amount * 3 / Math.max(1, capacity))));
+            case LAVA -> Blocks.LAVA_CAULDRON.defaultBlockState();
+            case POWDER_SNOW -> Blocks.POWDER_SNOW_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON, 3);
+            case EMPTY -> Blocks.CAULDRON.defaultBlockState();
+        };
+    }
+
+    private static int interactionVolumeDelta(Contents contents, ItemStack stack) {
+        if (isWaterPotion(stack)) return 1;
+        if (contents == Contents.WATER) {
+            if (stack.is(Items.GLASS_BOTTLE) || stack.is(ItemTags.CAULDRON_CAN_REMOVE_DYE)) return -1;
+            var patterns = stack.get(DataComponents.BANNER_PATTERNS);
+            if (patterns != null && !patterns.layers().isEmpty()) return -1;
+            if (net.minecraft.world.level.block.Block.byItem(stack.getItem()) instanceof net.minecraft.world.level.block.ShulkerBoxBlock) return -1;
+        }
+        return 0;
+    }
+
+    private static boolean isWaterPotion(ItemStack stack) {
+        if (!stack.is(Items.POTION)) return false;
+        PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
+        return potion != null && potion.is(Potions.WATER);
+    }
+
+    @Override protected boolean canReceiveStalactiteDrip(Fluid fluid) {
+        return WorldMobility.enabled("large_cauldron") && (fluid == Fluids.WATER || fluid == Fluids.LAVA);
+    }
+
+    @Override protected void receiveStalactiteDrip(BlockState state, Level level, BlockPos pos, Fluid fluid) {
+        if (level.isClientSide()) return;
+        BlockPos root = root(pos, state.getValue(PART), state);
+        Footprint footprint = read(level, root);
+        Contents incoming = fluid == Fluids.WATER ? Contents.WATER : fluid == Fluids.LAVA ? Contents.LAVA : Contents.EMPTY;
+        if (footprint == null || incoming == Contents.EMPTY || footprint.total() >= footprint.capacity()
+                || footprint.contents() != Contents.EMPTY && footprint.contents() != incoming) return;
+        write(level, footprint, footprint.total() + 1, incoming);
     }
 
     private InteractionResult addBucket(ItemStack input, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, Contents contents) {
@@ -237,9 +314,10 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
         return InteractionResult.CONSUME;
     }
 
-    private record Footprint(List<BlockPos> cells, Contents contents, int total, int capacity) {}
+    private record Footprint(List<BlockPos> cells, List<BlockState> states, Contents contents, int total, int capacity, boolean legacyDistribution) {}
     private Footprint read(Level level, BlockPos root) {
-        List<BlockPos> cells = new ArrayList<>(2 * depth); Contents common = Contents.EMPTY; int total = 0;
+        List<BlockPos> cells = new ArrayList<>(2 * depth); List<BlockState> states = new ArrayList<>(2 * depth);
+        Contents common = Contents.EMPTY; int sum = 0, sharedLevel = -1; boolean allShared = true, equalLegacy = true;
         for (int z = 0; z < depth; z++) for (int x = 0; x < 2; x++) {
             BlockPos cell = cell(root, depth == 1 && level.getBlockState(root).getValue(Z_AXIS), x, z);
             if (!level.hasChunkAt(cell)) return null;
@@ -248,20 +326,30 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
             Contents cellContents = current.getValue(CONTENTS); int amount = current.getValue(LEVEL);
             if (amount > 0 && common != Contents.EMPTY && common != cellContents) return null;
             if (amount > 0) common = cellContents;
-            total += amount; cells.add(cell);
+            if (sharedLevel < 0) sharedLevel = amount; else if (sharedLevel != amount) equalLegacy = false;
+            if (!current.getValue(VOLUME_SHARED)) allShared = false;
+            sum += amount; cells.add(cell); states.add(current);
         }
-        return new Footprint(List.copyOf(cells), common, total, cells.size() * 3);
+        boolean legacy = !allShared || !equalLegacy;
+        int total = legacy ? sum : Math.max(0, sharedLevel);
+        return new Footprint(List.copyOf(cells), List.copyOf(states), common, total, cells.size() * 3, legacy);
     }
 
     private void write(Level level, BlockPos root, int amount, Contents contents) {
-        Footprint footprint = read(level, root); if (footprint == null) return;
+        Footprint footprint = read(level, root); if (footprint != null) write(level, footprint, amount, contents);
+    }
+
+    /** Writes one total volume to every segment so connected liquid surfaces always share a height. */
+    private void write(Level level, Footprint footprint, int amount, Contents contents) {
         boolean previous = REPLACING_FOOTPRINT.get(); REPLACING_FOOTPRINT.set(true);
         try {
-            int remaining = Math.max(0, Math.min(footprint.capacity(), amount));
-            Contents stored = remaining == 0 ? Contents.EMPTY : contents;
+            int storedAmount = Math.max(0, Math.min(footprint.capacity(), amount));
+            Contents stored = storedAmount == 0 ? Contents.EMPTY : contents;
             for (int index = 0; index < footprint.cells().size(); index++) {
-                BlockPos cell = footprint.cells().get(index); int levelAmount = Math.min(3, remaining); remaining -= levelAmount;
-                BlockState next = level.getBlockState(cell).setValue(CONTENTS, stored).setValue(LEVEL, levelAmount);
+                BlockPos cell = footprint.cells().get(index);
+                BlockState current = level.getBlockState(cell);
+                if (current.getBlock() != this) current = footprint.states().get(index);
+                BlockState next = current.setValue(CONTENTS, stored).setValue(LEVEL, storedAmount).setValue(VOLUME_SHARED, true);
                 level.setBlock(cell, next, 3);
             }
         } finally { REPLACING_FOOTPRINT.set(previous); }
@@ -287,8 +375,8 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
         if (huge != null) {
             for (int rootX = 0; rootX <= 1; rootX++) for (int rootZ = 0; rootZ <= 1; rootZ++) {
                 BlockPos root = placedPos.offset(-rootX, 0, -rootZ);
-                List<BlockPos> cells = new ArrayList<>(4); List<Contents> types = new ArrayList<>(4); int[] amounts = new int[4];
-                boolean complete = true, includesVanilla = false; Contents common = Contents.EMPTY;
+                boolean complete = true, includesVanilla = false; Contents common = Contents.EMPTY; int total = 0;
+                var countedLargeRoots = new java.util.HashSet<BlockPos>();
                 for (int z = 0; z < 2 && complete; z++) for (int x = 0; x < 2; x++) {
                     BlockPos cell = root.offset(x, 0, z);
                     if (!level.hasChunkAt(cell)) { complete = false; break; }
@@ -297,7 +385,11 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
                     Contents content; int amount;
                     if (cauldron instanceof LargeCauldronBlock large) {
                         if (large.depth() != 1) { complete = false; break; }
-                        content = current.getValue(CONTENTS); amount = current.getValue(LEVEL);
+                        BlockPos smallRoot = large.root(cell, current.getValue(PART), current);
+                        if (!countedLargeRoots.add(smallRoot)) continue;
+                        Footprint footprint = large.read(level, smallRoot);
+                        if (footprint == null) { complete = false; break; }
+                        content = footprint.contents(); amount = footprint.total();
                     } else {
                         includesVanilla = true;
                         content = nativeContents(current);
@@ -305,10 +397,11 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
                     }
                     if (amount > 0 && common != Contents.EMPTY && common != content) { complete = false; break; }
                     if (amount > 0) common = content;
-                    int index = x + z * 2; cells.add(cell); types.add(content); amounts[index] = amount;
+                    total += amount;
                 }
                 if (!complete || !includesVanilla || !validSmallGroups(level, root)) continue;
-                if (applyFootprint(level, huge, root, false, types, amounts)) return;
+                if (total > huge.depth() * 6) continue;
+                if (applyFootprint(level, huge, root, false, common, total)) return;
             }
         }
 
@@ -325,10 +418,8 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
             Contents common = firstAmount > 0 ? firstType : secondAmount > 0 ? secondType : Contents.EMPTY;
             BlockPos root = direction.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? neighbor : placedPos;
             boolean zAxis = direction.getAxis() == Direction.Axis.Z;
-            List<Contents> types = List.of(common, common);
-            int[] amounts = direction.getAxisDirection() == Direction.AxisDirection.NEGATIVE
-                    ? new int[] {secondAmount, firstAmount} : new int[] {firstAmount, secondAmount};
-            if (applyFootprint(level, large, root, zAxis, types, amounts)) return;
+            if (firstAmount + secondAmount > large.depth() * 6) continue;
+            if (applyFootprint(level, large, root, zAxis, common, firstAmount + secondAmount)) return;
         }
     }
 
@@ -364,15 +455,16 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
     }
 
     private static boolean applyFootprint(ServerLevel level, LargeCauldronBlock target, BlockPos root, boolean zAxis,
-            List<Contents> types, int[] amounts) {
+            Contents contents, int amount) {
         boolean previous = REPLACING_FOOTPRINT.get(); REPLACING_FOOTPRINT.set(true);
         try {
             int expected = target.depth() * 2;
-            if (types.size() != expected || amounts.length != expected) return false;
+            if (amount < 0 || amount > expected * 3) return false;
+            Contents stored = amount == 0 ? Contents.EMPTY : contents;
             for (int index = 0; index < expected; index++) {
                 int x = index % 2, z = index / 2;
                 BlockState converted = target.defaultBlockState().setValue(PART,index).setValue(Z_AXIS,zAxis)
-                        .setValue(CONTENTS,types.get(index)).setValue(LEVEL,amounts[index]);
+                        .setValue(VOLUME_SHARED,true).setValue(CONTENTS,stored).setValue(LEVEL,amount);
                 level.setBlock(target.cell(root,zAxis,x,z),converted,3);
             }
             return true;
@@ -392,23 +484,10 @@ public final class LargeCauldronBlock extends AbstractCauldronBlock {
             Footprint a = read(level, placedRoot), b = other.read(level, otherRoot);
             if (a == null || b == null || a.contents() != Contents.EMPTY && b.contents() != Contents.EMPTY && a.contents() != b.contents()) continue;
             Contents contents = a.contents() == Contents.EMPTY ? b.contents() : a.contents();
-            int[] amounts = new int[4];
-            // Rebuild arrays in row-major 2x2 order, keeping each old cell's own fluid amount.
-            for (int part = 0; part < 2; part++) {
-                int currentIndex = zAxis ? (perpendicular < 0 ? 1 : 0) + part * 2 : part + (perpendicular < 0 ? 1 : 0) * 2;
-                int otherIndex = zAxis ? (perpendicular < 0 ? 0 : 1) + part * 2 : part + (perpendicular < 0 ? 0 : 1) * 2;
-                amounts[currentIndex] = level.getBlockState(cell(placedRoot,zAxis,part,0)).getValue(LEVEL);
-                amounts[otherIndex] = level.getBlockState(cell(otherRoot,zAxis,part,0)).getValue(LEVEL);
-            }
+            int total = a.total() + b.total();
+            if (total > other.depth() * 6) continue;
             BlockPos mergedRoot = zAxis ? (perpendicular < 0 ? otherRoot : placedRoot) : (perpendicular < 0 ? otherRoot : placedRoot);
-            boolean previous = REPLACING_FOOTPRINT.get(); REPLACING_FOOTPRINT.set(true);
-            try {
-                for (int z = 0; z < 2; z++) for (int x = 0; x < 2; x++) {
-                    int index=x+z*2; BlockPos cell=mergedRoot.offset(x,0,z);
-                    BlockState upgraded=other.defaultBlockState().setValue(PART,index).setValue(Z_AXIS,false).setValue(CONTENTS,contents).setValue(LEVEL,amounts[index]);
-                    level.setBlock(cell,upgraded,3);
-                }
-            } finally { REPLACING_FOOTPRINT.set(previous); }
+            applyFootprint(level, other, mergedRoot, false, contents, total);
             return;
         }
     }

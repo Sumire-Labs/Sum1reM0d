@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 public final class ExtraCraftingRecipe extends CustomRecipe {
  public static final RecipeSerializer<ExtraCraftingRecipe> SERIALIZER=new RecipeSerializer<>(Codec.STRING.fieldOf("feature").xmap(ExtraCraftingRecipe::new,r->r.feature),StreamCodec.ofMember((r,b)->b.writeUtf(r.feature,64),b->new ExtraCraftingRecipe(b.readUtf(64))));
  private final String feature;
- public ExtraCraftingRecipe(String feature){if(!feature.equals("piston_base") && !feature.equals("tamed_book") && !feature.equals("mixed_wool") && !feature.equals("mixed_bed") && !feature.equals("mixed_wool_slab") && !feature.equals("mixed_wool_stairs") && !ExtraEquipment.ITEMS.contains(feature))throw new IllegalArgumentException(feature);this.feature=feature;}
+ public ExtraCraftingRecipe(String feature){if(!feature.equals("piston_base") && !feature.equals("tamed_book") && !feature.equals("mixed_wool") && !feature.equals("mixed_bed") && !feature.equals("mixed_wool_slab") && !feature.equals("mixed_wool_stairs") && !feature.equals("mixed_concrete_slab") && !feature.equals("mixed_concrete_stairs") && !ExtraEquipment.ITEMS.contains(feature))throw new IllegalArgumentException(feature);this.feature=feature;}
  @Override public boolean matches(CraftingInput input,Level level){return !assemble(input).isEmpty();}
  @Override public ItemStack assemble(CraftingInput input){
   if(ExtraEquipment.ITEMS.contains(feature))return ExtraEquipment.craft(feature,input);
@@ -15,6 +15,7 @@ public final class ExtraCraftingRecipe extends CustomRecipe {
   if(feature.equals("mixed_wool"))return DyeTextiles.dye(input,feature);
   if(feature.equals("mixed_bed"))return DyeTextiles.bed(input);
   if(feature.equals("mixed_wool_slab")||feature.equals("mixed_wool_stairs"))return DyeTextiles.woolShape(input,feature);
+  if(feature.equals("mixed_concrete_slab")||feature.equals("mixed_concrete_stairs"))return DyeTextiles.concreteShape(input,feature);
   if(feature.equals("tamed_book")){
    ItemStack book=ItemStack.EMPTY;int sugar=0;
    for(var stack:input.items())if(!stack.isEmpty()){if(stack.is(Items.WRITABLE_BOOK) && book.isEmpty())book=stack;else if(stack.is(Items.SUGAR))sugar++;else return ItemStack.EMPTY;}

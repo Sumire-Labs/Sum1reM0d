@@ -30,7 +30,7 @@ public final class AutomationContent {
     }
     public static Item createBlockItem(String name){return new BlockItem(block(name),new Item.Properties().setId(ResourceKey.create(Registries.ITEM,ModContent.id(name))));}
     public static Item createItem(String name){return new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,ModContent.id(name))).stacksTo(64));}
-    public static List<ItemStack> creativeStacks(){var out=new ArrayList<ItemStack>();for(var id:BLOCKS)out.add(new ItemStack(item(id)));for(var id:MATERIAL_BLOCKS)out.add(new ItemStack(item(id)));for(var id:ITEMS)out.add(new ItemStack(item(id)));if(sulfur()!=Items.AIR)out.add(new ItemStack(sulfur()));return List.copyOf(out);}
+    public static List<ItemStack> creativeStacks(){var out=new ArrayList<ItemStack>();for(var id:BLOCKS)if(!id.equals("automated_crafting_table"))out.add(new ItemStack(item(id)));for(var id:MATERIAL_BLOCKS)out.add(new ItemStack(item(id)));for(var id:ITEMS)out.add(new ItemStack(item(id)));if(sulfur()!=Items.AIR)out.add(new ItemStack(sulfur()));return List.copyOf(out);}
     public static BlockEntityType<AutomationMachineEntity> createType(){
         var blocks=BLOCKS.stream().map(AutomationContent::block).toArray(Block[]::new);
         //? if fabric {

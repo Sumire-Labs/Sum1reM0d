@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "sum1rem0d:mixed_concrete",
-    "sum1rem0d:piston_base"
+    "sum1rem0d:piston_base",
+    "sum1rem0d:large_cauldron",
+    "sum1rem0d:huge_cauldron",
+    "sum1rem0d:mixed_concrete_slab",
+    "sum1rem0d:mixed_concrete_stairs"
   ]
 }

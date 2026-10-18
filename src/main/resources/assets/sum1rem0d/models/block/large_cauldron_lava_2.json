@@ -4,23 +4,11 @@
     "content": "minecraft:block/lava_still",
     "particle": "minecraft:block/lava_still"
   },
-  "elements": [
-    {
-      "to": [
-        16,
-        12,
-        16
-      ],
-      "from": [
-        0,
-        11.99,
-        0
-      ],
-      "faces": {
-        "up": {
-          "texture": "#content"
-        }
-      }
+  "elements": [{
+    "from": [0, 7.6567, 0],
+    "to": [16, 7.6667, 16],
+    "faces": {
+      "up": {"texture": "#content"}
     }
-  ]
+  }]
 }

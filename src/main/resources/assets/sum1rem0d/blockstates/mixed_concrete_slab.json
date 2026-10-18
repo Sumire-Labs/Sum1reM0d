@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "sum1rem0d:block/mixed_concrete_slab"
+    },
+    "type=double": {
+      "model": "sum1rem0d:block/mixed_concrete"
+    },
+    "type=top": {
+      "model": "sum1rem0d:block/mixed_concrete_slab_top"
+    }
+  }
+}

@@ -41,11 +41,12 @@ public final class AutomationMachineBlock extends BaseEntityBlock {
     @Override public BlockState getStateForPlacement(BlockPlaceContext context){return defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING,context.getHorizontalDirection().getOpposite());}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){var machine=new AutomationMachineEntity(pos,state);AutomationProcessing.loaded(machine);return machine;}
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
-        if(level.isClientSide())return InteractionResult.SUCCESS;
+        if(level.isClientSide()){AutomationMenu.recordClientTarget(level,pos);return InteractionResult.SUCCESS;}
         if(player instanceof ServerPlayer server)server.openMenu(new net.minecraft.world.SimpleMenuProvider((id,inventory,who)->new AutomationMenu(id,inventory,(AutomationMachineEntity)level.getBlockEntity(pos)),Component.translatable("block.sum1rem0d."+kind)));
         return InteractionResult.CONSUME;
     }
     @Override protected InteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){
+        if(level.isClientSide()&&(!kind.equals("washing_cauldron")||!stack.is(Items.WATER_BUCKET)||state.getValue(WATER_LEVEL)>=3))AutomationMenu.recordClientTarget(level,pos);
         if(!kind.equals("washing_cauldron")||!stack.is(Items.WATER_BUCKET)||state.getValue(WATER_LEVEL)>=3)return super.useItemOn(stack,state,level,pos,player,hand,hit);
         if(!level.isClientSide()){level.setBlock(pos,state.setValue(WATER_LEVEL,3),3);if(!player.getAbilities().instabuild)player.setItemInHand(hand,new ItemStack(Items.BUCKET));level.playSound(null,pos,net.minecraft.sounds.SoundEvents.BUCKET_EMPTY,net.minecraft.sounds.SoundSource.BLOCKS,1,1);}
         return InteractionResult.SUCCESS;

@@ -28,6 +28,7 @@ final class WhaleStumbleVerification {
             whale.addProperty("bonus_duration_ticks", 200);
             var stumble = features.getAsJsonObject("stumble_enchantment");
             stumble.addProperty("enabled", true);
+            stumble.addProperty("delay_ticks", 0);
             stumble.addProperty("extra_damage", 4);
             stumble.addProperty("maximum_level", 1);
             store.update(draft, store.revision());

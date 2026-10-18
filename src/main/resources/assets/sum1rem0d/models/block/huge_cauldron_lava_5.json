@@ -1,0 +1,14 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "content": "minecraft:block/lava_still",
+    "particle": "minecraft:block/lava_still"
+  },
+  "elements": [{
+    "from": [0, 8.5733, 0],
+    "to": [16, 8.5833, 16],
+    "faces": {
+      "up": {"texture": "#content"}
+    }
+  }]
+}

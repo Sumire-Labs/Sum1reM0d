@@ -39,6 +39,7 @@ public final class Gameplay {
         AutomationProcessing.tick(server);
         SecondOffhandService.tick(server);
         WhaleEnchantmentRules.tick(server);
+        StumbleStrikeRules.tick(server);
         for(var level:server.getAllLevels())WindChargeBlackHole.tick(level);
         RemainingLiveVerification.tick(server);
         CoinServicesMultiplayerVerification.tick(server);

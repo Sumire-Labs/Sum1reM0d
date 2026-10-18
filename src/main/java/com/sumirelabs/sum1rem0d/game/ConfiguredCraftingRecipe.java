@@ -76,6 +76,8 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
     }
     @Override public ItemStack assemble(CraftingInput input) {
         if (!Rules.on(feature)) return ItemStack.EMPTY;
+        // Automation now runs on the vanilla Crafter; keep the old registered block solely for save compatibility.
+        if (feature.equals("automated_crafting")) return ItemStack.EMPTY;
         if(feature.equals("sumzon_delivery_box"))return Rules.b(feature,"recipe_enabled")?new ItemStack(DeliveryBoxContent.item()):ItemStack.EMPTY;
         if(feature.equals("sulfur_gunpowder"))return Rules.b(feature,"enabled")?new ItemStack(Items.GUNPOWDER,4):ItemStack.EMPTY;
         String automationBlock=switch(feature){case "automated_crafting"->"automated_crafting_table";case "jukebox_grinder"->"jukebox_grinder";case "washing_cauldron"->"washing_cauldron";case "tesla_coil"->"tesla_coil";case "auto_clicker"->"auto_clicker";default->null;};

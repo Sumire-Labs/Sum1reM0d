@@ -14,7 +14,7 @@ public final class WalletScreen extends Screen {
     private Button depositButton, coinButton, rollButton;
     private String amountText="10", lastPlayers="";
     private int left,top,page;
-    public WalletScreen(Screen parent){super(Component.literal("Sum1reコ↑イン↓ 財布"));this.parent=parent;}
+    public WalletScreen(Screen parent){super(Component.literal("Sum1re Wallet"));this.parent=parent;}
     static JsonObject state(){var root=ClientGameState.snapshot();return root.has("economy")?root.getAsJsonObject("economy"):new JsonObject();}
     static long number(JsonObject json,String key){return json.has(key)?json.get(key).getAsLong():0;}
     static void request(String action,String target,long amount,long revision){PlatformClientNetwork.economy(new com.sumirelabs.sum1rem0d.network.EconomyRequestPayload(action,target,amount,revision));}
@@ -29,13 +29,13 @@ public final class WalletScreen extends Screen {
             button("断る",left+152,top+112,140,()->request("decline","",0,0));
         }
         var players=state.has("players")?state.getAsJsonArray("players"):new JsonArray();int pages=Math.max(1,(players.size()+1)/2);page=Math.min(page,pages-1);
-        for(int i=0;i<2&&page*2+i<players.size();i++){var player=players.get(page*2+i).getAsJsonObject();button(player.get("name").getAsString()+" に取引依頼",left+8,top+152+i*22,284,()->request("invite",player.get("id").getAsString(),0,0));}
+        button("更新",left+208,top+132,84,()->request("refresh","",0,0));
+        for(int i=0;i<2&&page*2+i<players.size();i++){var player=players.get(page*2+i).getAsJsonObject();button(player.get("name").getAsString()+" に取引依頼",left+8,top+156+i*22,284,()->request("invite",player.get("id").getAsString(),0,0));}
         var prev=button("◀",left+8,top+202,30,()->{page--;rebuildWidgets();});prev.active=page>0;
         var next=button("▶",left+42,top+202,30,()->{page++;rebuildWidgets();});next.active=page+1<pages;
         button("閉じる",left+208,top+202,84,this::onClose);
         var bank=button("XP銀行",left+80,top+202,120,()->minecraft.gui.setScreen(new BankScreen(this)));bank.active=ClientRules.enabled("xp_bank")&&state().has("xpPoints");
         lastPlayers=players.toString()+state.has("inviteRevision")+(state.has("inviteRevision")?state.get("inviteRevision"):"");
-        button("Sumzon",left+208,top+24,84,()->minecraft.gui.setScreen(new ShopScreen(this)));
         updateWalletButtons(); request("refresh","",0,0);
     }
     private String modeReason(){if(minecraft.player==null||!minecraft.player.isAlive()||minecraft.player.isSpectator())return "現在の状態では入出金できません";if(minecraft.player.isCreative()&&!ClientRules.bool("economy","allow_creative_wallet"))return "クリエ入出金はサーバー設定で許可できます";if(minecraft.player.containerMenu!=minecraft.player.inventoryMenu)return "取引・作業画面を閉じてください";return "";}

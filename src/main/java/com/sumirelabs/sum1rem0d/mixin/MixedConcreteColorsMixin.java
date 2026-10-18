@@ -14,8 +14,9 @@ public abstract class MixedConcreteColorsMixin {
  @Inject(method="createDefault",at=@At("RETURN"))
  private static void sum1rem0d$register(CallbackInfoReturnable<BlockColors> cir){
   var colors=cir.getReturnValue();
-  colors.register(List.of(sum1rem0d$COLOR),MixedConcrete.block(),ExtraContent.block("mixed_wool"));
+  colors.register(List.of(sum1rem0d$COLOR),MixedConcrete.block(),ExtraContent.block("mixed_wool"),ExtraContent.block("mixed_wool_slab"),ExtraContent.block("mixed_wool_stairs"));
   colors.register(List.of(sum1rem0d$COLOR,sum1rem0d$WHITE),ExtraContent.block("mixed_bed"));
-  colors.register(List.of(com.sumirelabs.sum1rem0d.client.GlowWireTint.INSTANCE),ExtraContent.block("glow_wire"));
+  colors.register(List.of(com.sumirelabs.sum1rem0d.client.GlowWireTint.INSTANCE),ExtraContent.block("glow_wire"),ExtraContent.block("sugar_wire"),ExtraContent.block("gunpowder_wire"));
+  colors.register(List.of(BlockTintSources.water()),MobilityContent.largeCauldron(),MobilityContent.hugeCauldron());
  }
 }

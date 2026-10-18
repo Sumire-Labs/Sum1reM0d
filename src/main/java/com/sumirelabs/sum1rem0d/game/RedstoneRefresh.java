@@ -60,7 +60,7 @@ public final class RedstoneRefresh {
         var store = Sum1reM0d.config(); var previous = SETTINGS.get(server); long revision = store.revision();
         if (previous == null || previous.revision != revision) {
             var features = store.snapshot().getAsJsonObject("features"); var settings = new JsonObject();
-            for (String feature : List.of("redstone_inversion", "comparator_division", "glow_wire")) settings.add(feature, features.get(feature));
+            for (String feature : List.of("redstone_inversion", "comparator_division", "glow_wire", "sugar_wire", "gunpowder_wire")) settings.add(feature, features.get(feature));
             SETTINGS.put(server, new Settings(revision, settings));
             if(previous==null || !settings.equals(previous.values))GlowstoneWiring.invalidate(server);
             if (previous == null || !settings.equals(previous.values)) for (var entry : LEVELS.entrySet()) if (entry.getKey().getServer() == server) entry.getValue().chunks.values().forEach(entry.getValue().pending::addAll);

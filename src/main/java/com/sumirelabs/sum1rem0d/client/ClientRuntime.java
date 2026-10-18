@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public final class ClientRuntime {
     public static int cameraTicks, redTicks;
+    private static long lastWorldAdSerial, lastDeathMediaSerial;
     private static boolean cameraActive;
     private static float originalYaw, originalPitch, lockedYaw, lockedPitch;
     private static boolean inputActivity;
@@ -27,6 +28,18 @@ public final class ClientRuntime {
         applyState(payload);
     }
     static void applyState(GameStatePayload payload) {
+        var state = com.google.gson.JsonParser.parseString(payload.json()).getAsJsonObject();
+        long worldAdSerial = state.has("worldAdSerial") ? state.get("worldAdSerial").getAsLong() : 0;
+        long deathMediaSerial = state.has("deathMediaSerial") ? state.get("deathMediaSerial").getAsLong() : 0;
+        String deathMediaSource = state.has("deathMediaSource") ? state.get("deathMediaSource").getAsString() : "";
+        if (worldAdSerial > lastWorldAdSerial) {
+            BrowserOverlays.triggerWorldAd(state.has("worldAdTicks") ? state.get("worldAdTicks").getAsInt() : 100);
+            lastWorldAdSerial = worldAdSerial;
+        }
+        if (deathMediaSerial > lastDeathMediaSerial) {
+            BrowserOverlays.playDeathMedia(deathMediaSource);
+            lastDeathMediaSerial = deathMediaSerial;
+        }
         boolean nylium = ClientGameState.daily("sideways_nylium");
         boolean grass = ClientGameState.daily("upside_down_grass"), ore = ClientGameState.daily("diamond_disguise");
         int permutation = (int) ClientGameState.number("furnacePermutation", -1);
@@ -40,6 +53,10 @@ public final class ClientRuntime {
         var mc = Minecraft.getInstance();
         if (mc.level != null && (nylium != ClientGameState.daily("sideways_nylium") || grass != ClientGameState.daily("upside_down_grass") || ore != ClientGameState.daily("diamond_disguise") || permutation != (int) ClientGameState.number("furnacePermutation", -1))) mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
     }
+    public static void resetWorldMediaSerials() {
+        lastWorldAdSerial = 0; lastDeathMediaSerial = 0;
+        BrowserOverlays.stopWorldMedia();
+    }
     public static void tick() {
         var mc = Minecraft.getInstance();
         EquipmentDefaultsClient.tick();
@@ -50,12 +67,16 @@ public final class ClientRuntime {
         ClientSmoke.tick(mc);
         NetworkSmoke.tick(mc);
         BrowserSmoke.tick(mc);
+        ImeSmoke.tick(mc);
         ToastSmoke.tick(mc);
         ViewerSmoke.tick(mc);
+        MobilityClientSmoke.tick(mc);
         EmiSmoke.tick(mc);
         MultiplayerSmoke.tick(mc);
         TradeToastSmoke.tick(mc); SearchSuggestionSmoke.tick(mc); ChatPrivacySmoke.tick(mc); CoinServicesSmoke.tick(mc); EconomySmoke.tick(mc); WikiSmoke.tick(mc); WikiRuntime.tick(mc);
         ClientKeys.tick(mc);
+        LastToolBack.tick(mc);
+        LastToolBackSmoke.tick(mc);
         BrowserOverlays.tick();
         AfkLights.tick();
         if (mc.player == null) { cameraTicks = 0; redTicks = 0; cameraActive = false; return; }
@@ -74,6 +95,9 @@ public final class ClientRuntime {
     public static void input() { inputActivity = true; }
     public static void overlay(GuiGraphicsExtractor graphics) {
         var mc = Minecraft.getInstance();
+        BrowserOverlays.renderHud(graphics);
+        BrowserOverlays.renderWorldMedia(graphics);
+        ClockHudOverlay.render(graphics);
         if (mc.player == null || !ClientGameState.received()) return;
         if (redTicks > 0 && ClientRules.enabled("sheep_red")) {
             int alpha = (int) (ClientRules.number("sheep_red", "opacity") * 255);

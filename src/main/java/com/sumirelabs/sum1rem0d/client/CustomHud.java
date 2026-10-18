@@ -11,12 +11,7 @@ final class CustomHud {
     var mc = Minecraft.getInstance();
     if (mc.gui.hud.isHidden()) return;
     if (ClientRules.enabled("economy") && PersonalConfig.store().bool("economy", "hud"))
-      draw(
-          g,
-          "economy",
-          Long.toString(WalletScreen.number(WalletScreen.state(), "balance")),
-          0,
-          false);
+      drawCoin(g, Long.toString(WalletScreen.number(WalletScreen.state(), "balance")));
     if (ClientRules.enabled("cleanliness") && PersonalConfig.store().bool("cleanliness", "hud")) {
       double max = ClientRules.number("cleanliness", "maximum"),
           value = ClientGameState.number("cleanliness", max);
@@ -27,6 +22,27 @@ final class CustomHud {
           Math.max(0, Math.min(1, value / max)),
           PersonalConfig.store().bool("cleanliness", "hud_bar"));
     }
+  }
+
+  private static void drawCoin(GuiGraphicsExtractor g, String value) {
+    var mc = Minecraft.getInstance();
+    var config = PersonalConfig.store();
+    String prefix = config.text("economy", "hud_label");
+    String text = (prefix.isBlank() ? "" : prefix + " ") + value;
+    boolean icon = config.bool("economy", "hud_icon");
+    int width = (icon ? 22 : 6) + mc.font.width(text), height = 18;
+    var p = HudLayout.place(g.guiWidth(), g.guiHeight(), width, height,
+        config.integer("economy", "hud_anchor"), config.integer("economy", "hud_x"),
+        config.integer("economy", "hud_y"), config.number("economy", "hud_scale"));
+    int x = (int)Math.floor(p.x()), y = (int)Math.floor(p.y());
+    int alpha = (int)Math.round(config.number("economy", "hud_background_opacity") * 255);
+    g.pose().pushMatrix();
+    g.pose().scale(p.scale());
+    if (alpha > 0) g.fill(x, y, x + width, y + height, alpha << 24);
+    if(icon)g.item(new net.minecraft.world.item.ItemStack(com.sumirelabs.sum1rem0d.game.ModContent.coin()), x + 1, y + 1);
+    g.text(mc.font, text, x + (icon?19:3), y + 5, color("economy", "hud_text_color"),
+        config.bool("economy", "hud_shadow"));
+    g.pose().popMatrix();
   }
 
   private static int color(String feature, String key) {

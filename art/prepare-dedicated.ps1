@@ -4,7 +4,7 @@ Add-Type -AssemblyName System.Drawing
 if(-not ('TextureExport' -as [type])){Add-Type -Path (Join-Path $PSScriptRoot 'TextureExport.cs')}
 $taskRoot=Split-Path -Parent $PSScriptRoot
 $taskFiles=Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'source/dedicated-2026') -Filter '*-ai.png'
-$taskTiles=@('mixed_wool','mixed_concrete','ardite_ore','manyullyn_block','piston_base_side','piston_base_front','bed_wood','glow_wire_dot','glow_wire_line')
+$taskTiles=@('mixed_wool','mixed_concrete','ardite_ore','manyullyn_block','piston_base_side','piston_base_front','bed_wood','glow_wire_dot','glow_wire_line','delivery_box_front','dust','auto_clicker_front')
 foreach($taskFile in $taskFiles){
  $taskName=$taskFile.BaseName -replace '-ai$',''
  if($taskName -match '^(emerald|redstone|lapis|manyullyn)_(sword|pickaxe|axe|shovel|hoe|helmet|chestplate|leggings|boots)$'){continue}

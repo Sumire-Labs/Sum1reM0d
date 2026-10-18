@@ -76,7 +76,8 @@ public final class ConfigScreen extends Screen {
             .filter(feature -> !options(feature).isEmpty())
             .filter(feature -> (feature.id() + " " + feature.label()).toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT)))
             .toList();
-        int rows = Math.max(1, (height - 145) / 24);
+        // Compact feature rows expose materially more settings per page on small windows.
+        int rows = Math.max(1, (height - 136) / 20);
         int pages = Math.max(1, (filtered.size() + rows - 1) / rows);
         page = Math.min(page, pages - 1);
         for (int index = page * rows; index < Math.min(filtered.size(), (page + 1) * rows); index++) {
@@ -85,7 +86,7 @@ public final class ConfigScreen extends Screen {
             String label = feature.label() + " [" + state + "]";
             Button entry = addRenderableWidget(Button.builder(Component.literal(label),
                 button -> minecraft.gui.setScreen(new FeatureScreen(this, feature)))
-                .bounds(left, 70 + (index - page * rows) * 24, panel, 20).build());
+                .bounds(left, 64 + (index - page * rows) * 20, panel, 18).build());
             entry.active = draft != null && !pending;
         }
         Button previous = addRenderableWidget(Button.builder(Component.literal("◀"), button -> { page--; rebuildWidgets(); })
@@ -146,7 +147,7 @@ public final class ConfigScreen extends Screen {
         graphics.centeredText(font, title, width / 2, 13, 0xFFFFFFFF);
         String scope = personal ? "個人設定 / 他のプレイヤーには影響しません" : online ? (ClientRules.editable ? "サーバー設定 / 変更可能" : "サーバー設定 / 閲覧のみ") : "このインスタンスの標準設定";
         graphics.centeredText(font, scope, width / 2, 28, 0xFFB8C6DA);
-        graphics.centeredText(font, "ページ " + (page + 1) + " / 各機能の詳細から調整できます", width / 2, height - 64, 0xFFB8C6DA);
+        graphics.centeredText(font, "ページ " + (page + 1) + " / 表示件数を増やしました", width / 2, height - 64, 0xFFB8C6DA);
         graphics.centeredText(font, font.plainSubstrByWidth(status, width - 16), width / 2, height - 42, 0xFFFFD180);
         suggestions.render(graphics, font, mouseX, mouseY);
     }

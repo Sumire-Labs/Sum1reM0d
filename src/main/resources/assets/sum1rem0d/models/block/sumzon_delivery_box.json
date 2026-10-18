@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "sum1rem0d:block/delivery_box_front",
+    "north": "sum1rem0d:block/delivery_box_front",
+    "south": "minecraft:block/barrel_side",
+    "east": "minecraft:block/barrel_side",
+    "west": "minecraft:block/barrel_side",
+    "up": "minecraft:block/barrel_top",
+    "down": "minecraft:block/barrel_bottom"
+  }
+}

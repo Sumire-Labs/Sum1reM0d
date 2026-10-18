@@ -14,6 +14,8 @@ public abstract class PlayerConnectionMixin {
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     private void sum1rem0d$join(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         com.sumirelabs.sum1rem0d.game.Economy.recover(player);
+        com.sumirelabs.sum1rem0d.game.WorldMobility.clearCrawl(player);
+        com.sumirelabs.sum1rem0d.game.WorldMobility.onPlayerJoin(player);
         var data = WorldState.get(player.level().getServer()).player(player);
         data.lastClock = player.level().getOverworldClockTime(); data.afkTicks = 0; data.exposureTicks = 0; data.sleepTicks = 0; data.sleepAwarded = false; data.lastX = Double.NaN;
     }
@@ -23,6 +25,8 @@ public abstract class PlayerConnectionMixin {
         com.sumirelabs.sum1rem0d.game.CoinServicesMultiplayerVerification.leaving(player);
         com.sumirelabs.sum1rem0d.game.RemainingLiveVerification.leaving(player);
         com.sumirelabs.sum1rem0d.game.Economy.leaving(player);
+        com.sumirelabs.sum1rem0d.game.WorldMobility.clearCrawl(player);
+        com.sumirelabs.sum1rem0d.game.WorldMobility.releasePlayerLeashes(player);
         var data = WorldState.get(player.level().getServer()).player(player);
         data.lastClock = Long.MIN_VALUE; data.afkTicks = 0; data.exposureTicks = 0; data.sleepTicks = 0; data.lastX = Double.NaN;
     }

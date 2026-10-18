@@ -41,6 +41,7 @@ final class RemainingVerification {
    var root=new ExtraCraftingRecipe("piston_base");var rootInput=CraftingInput.of(3,2,List.of(item("cobblestone"),item("iron_ingot"),item("cobblestone"),item("cobblestone"),item("redstone"),item("cobblestone")));
    require(root.matches(rootInput,level) && root.assemble(rootInput).is(ExtraContent.item("piston_base")),"Piston lower two rows recipe");
    var pos=new BlockPos(1900,240,0);var block=(PistonRootBlock)ExtraContent.block("piston_base");var bs=block.defaultBlockState().setValue(BlockStateProperties.FACING,Direction.EAST);
+   require(bs.is(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)&&new ItemStack(Items.IRON_PICKAXE).getDestroySpeed(bs)>new ItemStack(Items.STICK).getDestroySpeed(bs),"Piston base uses native pickaxe mining tag and speed");
    for(var facing:Direction.values()){
     var body=block.defaultBlockState().setValue(BlockStateProperties.FACING,facing);
     var vanilla=Blocks.PISTON.defaultBlockState().setValue(BlockStateProperties.FACING,facing).setValue(BlockStateProperties.EXTENDED,true);

@@ -1,0 +1,26 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "content": "minecraft:block/powder_snow",
+    "particle": "minecraft:block/powder_snow"
+  },
+  "elements": [
+    {
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "from": [
+        0,
+        11.99,
+        0
+      ],
+      "faces": {
+        "up": {
+          "texture": "#content"
+        }
+      }
+    }
+  ]
+}

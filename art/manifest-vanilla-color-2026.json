@@ -228,23 +228,23 @@
     "path": "textures/entity/equipment/humanoid_baby/emerald.png"
   },
   {
-    "method": "GPT material palette projected onto unchanged vanilla pixels",
-    "height": 16,
     "native": "textures/item/iron_sword.png",
-    "sha256": "c0de40c54383bf8945eb5577942fc0a96e9a9ccf270f562d255e3b2b4cd7b8de",
     "width": 16,
+    "sha256": "89da32ec27bf5c6ae0680f10bd25a61f347d830b5da276f7cc3a0c3d3cfbdeab",
+    "path": "textures/item/redstone_sword.png",
+    "height": 16,
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
     "palette": [
-      82,
+      57,
       0,
-      12,
-      50,
-      33,
-      11,
-      251,
-      114,
-      126
-    ],
-    "path": "textures/item/redstone_sword.png"
+      6,
+      154,
+      3,
+      13,
+      154,
+      112,
+      44
+    ]
   },
   {
     "method": "GPT material palette projected onto unchanged vanilla pixels",
@@ -304,23 +304,23 @@
     "path": "textures/item/redstone_shovel.png"
   },
   {
-    "method": "GPT material palette projected onto unchanged vanilla pixels",
-    "height": 16,
     "native": "textures/item/iron_hoe.png",
-    "sha256": "739be65711c4cd826f40bc6969e95d5c0d48ed1eb5eb361ff3716a67e5e2381b",
     "width": 16,
+    "sha256": "cc71ada6b6386eeaf36e29fe893c31fc86ac2686cf0b2101a040aa6bfd1112c9",
+    "path": "textures/item/redstone_hoe.png",
+    "height": 16,
+    "method": "GPT material palette projected onto unchanged vanilla pixels",
     "palette": [
-      61,
-      1,
-      7,
-      50,
-      37,
-      17,
-      162,
-      122,
-      49
-    ],
-    "path": "textures/item/redstone_hoe.png"
+      57,
+      0,
+      6,
+      154,
+      3,
+      13,
+      154,
+      112,
+      44
+    ]
   },
   {
     "method": "GPT material palette projected onto unchanged vanilla pixels",

@@ -31,10 +31,30 @@ public final class DyeTextiles {
   boolean same=colors.stream().distinct().count()==1;if(!Rules.b("mixed_bed","allow_mixed_wool") && !same)return ItemStack.EMPTY;
   if(same && !custom)return ItemStack.EMPTY;return stack("mixed_bed",blend(colors));
  }
+ public static ItemStack woolShape(CraftingInput input,String feature){
+  if(!List.of("mixed_wool_slab","mixed_wool_stairs").contains(feature)||!Rules.on(feature)||!Rules.b(feature,"recipe_enabled"))return ItemStack.EMPTY;
+  int[] slots;
+  if(feature.equals("mixed_wool_slab")){
+   if(input.width()!=3||input.height()<1)return ItemStack.EMPTY;slots=null;
+   for(int row=0;row<input.height()&&slots==null;row++){int[] candidate=new int[]{row*input.width(),row*input.width()+1,row*input.width()+2};if(patternMatches(input,candidate))slots=candidate;}
+   if(slots==null)return ItemStack.EMPTY;
+  }else{
+   if(input.width()!=3||input.height()!=3)return ItemStack.EMPTY;
+   int[] left=new int[]{0,3,6,4,7,8},right=new int[]{2,5,8,4,7,6};
+   if(patternMatches(input,left))slots=left;else if(patternMatches(input,right))slots=right;else return ItemStack.EMPTY;
+  }
+  int output=Math.max(1,Rules.i(feature,"recipe_output"));
+  if(input.items().stream().filter(s->!s.isEmpty()).count()!=slots.length)return ItemStack.EMPTY;
+  var colors=new ArrayList<Integer>();
+  for(int slot:slots){var wool=input.getItem(slot);if(!kind(wool,"wool"))return ItemStack.EMPTY;colors.add(color(wool));}
+  if(!Rules.b(feature,"allow_mixed_colors")&&colors.stream().distinct().count()>1)return ItemStack.EMPTY;
+  return stack(feature,blend(colors)).copyWithCount(output);
+ }
+ private static boolean patternMatches(CraftingInput input,int[] slots){var occupied=new HashSet<Integer>();for(int slot:slots)occupied.add(slot);for(int i=0;i<input.items().size();i++)if(input.getItem(i).isEmpty()==occupied.contains(i))return false;return true;}
  @SuppressWarnings("unchecked") public static <T extends Recipe<?>> RecipeHolder<T> priority(CraftingInput input,Level level){
   if(!(level instanceof net.minecraft.server.level.ServerLevel server))return null;
-  for(String id:List.of("mixed_bed","mixed_wool")){
-   var result=id.equals("mixed_bed")?bed(input):dye(input,id);if(result.isEmpty())continue;
+  for(String id:List.of("mixed_bed","mixed_wool_slab","mixed_wool_stairs","mixed_wool")){
+   var result=id.equals("mixed_bed")?bed(input):id.equals("mixed_wool_slab")||id.equals("mixed_wool_stairs")?woolShape(input,id):dye(input,id);if(result.isEmpty())continue;
    var key=ResourceKey.create(Registries.RECIPE,ModContent.id(id));return (RecipeHolder<T>)server.getServer().getRecipeManager().byKey(key).orElse(null);
   }return null;
  }
@@ -42,5 +62,7 @@ public final class DyeTextiles {
   var bed=ExtraContent.block("mixed_bed");var states=new HashSet<>(bed.getStateDefinition().getPossibleStates());states.removeIf(s->s.getValue(BlockStateProperties.BED_PART)!=BedPart.HEAD);
   com.sumirelabs.sum1rem0d.mixin.PathPoiAccess.sum1rem0d$register(BuiltInRegistries.POINT_OF_INTEREST_TYPE.getOrThrow(PoiTypes.HOME),states);
   ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool"),30,60);
+  ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool_slab"),30,60);
+  ((com.sumirelabs.sum1rem0d.mixin.FireRegistrationAccess)Blocks.FIRE).sum1rem0d$flammable(ExtraContent.block("mixed_wool_stairs"),30,60);
  }
 }

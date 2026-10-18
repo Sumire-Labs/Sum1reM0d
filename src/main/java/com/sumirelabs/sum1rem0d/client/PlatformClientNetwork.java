@@ -40,6 +40,23 @@ public final class PlatformClientNetwork {
         if (connection != null && connection.hasChannel(ActivityPayload.TYPE)) ClientPacketDistributor.sendToServer(new ActivityPayload());
         *///?}
     }
+    public static void crawl(com.sumirelabs.sum1rem0d.network.CrawlPayload request) {
+        //? if fabric {
+        if (ClientPlayNetworking.canSend(com.sumirelabs.sum1rem0d.network.CrawlPayload.TYPE)) ClientPlayNetworking.send(request);
+        //?} elif neoforge {
+        /*var connection = Minecraft.getInstance().getConnection();
+        if (connection != null && connection.hasChannel(com.sumirelabs.sum1rem0d.network.CrawlPayload.TYPE)) ClientPacketDistributor.sendToServer(request);
+        *///?}
+    }
+    public static void secondOffhand() {
+        var request = new com.sumirelabs.sum1rem0d.network.SecondOffhandRequestPayload();
+        //? if fabric {
+        if (ClientPlayNetworking.canSend(com.sumirelabs.sum1rem0d.network.SecondOffhandRequestPayload.TYPE)) ClientPlayNetworking.send(request);
+        //?} elif neoforge {
+        /*var connection = Minecraft.getInstance().getConnection();
+        if (connection != null && connection.hasChannel(com.sumirelabs.sum1rem0d.network.SecondOffhandRequestPayload.TYPE)) ClientPacketDistributor.sendToServer(request);
+        *///?}
+    }
     public static void shop(com.sumirelabs.sum1rem0d.network.ShopRequestPayload request) {
         //? if fabric {
         if(net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.canSend(com.sumirelabs.sum1rem0d.network.ShopRequestPayload.TYPE))net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(request);

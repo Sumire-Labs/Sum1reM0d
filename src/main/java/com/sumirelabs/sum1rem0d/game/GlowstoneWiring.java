@@ -22,12 +22,13 @@ public final class GlowstoneWiring {
  private static BlockState rawState(BlockState state){if(state.getBlock() instanceof RedstoneTorchBlock && RedstoneGameplay.part("torches"))return state.setValue(BlockStateProperties.LIT,!state.getValue(BlockStateProperties.LIT));if(state.getBlock() instanceof RepeaterBlock && RedstoneGameplay.part("repeaters"))return state.setValue(BlockStateProperties.POWERED,!state.getValue(BlockStateProperties.POWERED));return state;}
  public static Set<BlockPos> update(ServerLevel level,BlockPos start,boolean force){
   if(UPDATING.get() || !(level.getBlockState(start).getBlock() instanceof GlowWireBlock block))return Set.of();var processed=PROCESSED.computeIfAbsent(level,l->new HashMap<>());if(!force && processed.getOrDefault(start,Long.MIN_VALUE)==level.getGameTime())return Set.of();
+  String feature=block.feature();
   UPDATING.set(true);dirty=false;
   try{
-   var nodes=new LinkedHashSet<BlockPos>();var queue=new ArrayDeque<BlockPos>();queue.add(start.immutable());int limit=Rules.i("glow_wire","wire_limit");
-   while(!queue.isEmpty() && nodes.size()<limit){var p=queue.removeFirst();if(nodes.contains(p) || !level.hasChunkAt(p) || !level.getBlockState(p).is(block))continue;nodes.add(p);for(var d:Direction.Plane.HORIZONTAL){var n=block.connection(level,p,d);if(n!=null)queue.add(n.immutable());}}
+   var nodes=new LinkedHashSet<BlockPos>();var queue=new ArrayDeque<BlockPos>();queue.add(start.immutable());int limit=Rules.i(feature,"wire_limit");
+   while(!queue.isEmpty() && nodes.size()<limit){var p=queue.removeFirst();if(nodes.contains(p) || !level.hasChunkAt(p) || !level.getBlockState(p).is(block))continue;nodes.add(p);for(var d:block.directions(level,p)){var n=block.connection(level,p,d);if(n!=null)queue.add(n.immutable());}}
    var powers=new HashMap<BlockPos,Integer>();var frontier=new PriorityQueue<Map.Entry<BlockPos,Integer>>((a,b)->Integer.compare(b.getValue(),a.getValue()));boolean hasInput=false;
-   boolean enabled=Rules.on("glow_wire"),inverse=Rules.b("glow_wire","opposite_redstone")?!RedstoneGameplay.part("wire"):Rules.b("glow_wire","inverted");
+   boolean enabled=Rules.on(feature),inverse=Rules.b(feature,"opposite_redstone")?!RedstoneGameplay.part("wire"):Rules.b(feature,"inverted");
    READING.set(true);
    try{if(enabled)for(var p:nodes){int strongest=0;boolean input=false;
     for(var d:Direction.values()){var n=p.relative(d);if(!level.hasChunkAt(n))continue;var state=level.getBlockState(n);if(state.getBlock() instanceof GlowWireBlock || state.getBlock() instanceof RedstoneWireBlock)continue;
@@ -37,7 +38,7 @@ public final class GlowstoneWiring {
     if(input){hasInput=true;int power=inverse?15-strongest:strongest;powers.put(p,power);if(power>0)frontier.add(Map.entry(p,power));}
    }}finally{READING.set(false);}
    if(enabled && inverse && !hasInput && !nodes.isEmpty()){var anchor=nodes.stream().min(Comparator.comparingLong(BlockPos::asLong)).orElseThrow();powers.put(anchor,15);frontier.add(Map.entry(anchor,15));}
-   while(!frontier.isEmpty()){var e=frontier.remove();if(e.getValue()!=powers.getOrDefault(e.getKey(),0) || e.getValue()<=1)continue;for(var d:Direction.Plane.HORIZONTAL){var n=block.connection(level,e.getKey(),d);if(n!=null && nodes.contains(n) && powers.getOrDefault(n,0)<e.getValue()-1){powers.put(n,e.getValue()-1);frontier.add(Map.entry(n,e.getValue()-1));}}}
+   while(!frontier.isEmpty()){var e=frontier.remove();if(e.getValue()!=powers.getOrDefault(e.getKey(),0) || e.getValue()<=1)continue;for(var d:block.directions(level,e.getKey())){var n=block.connection(level,e.getKey(),d);if(n!=null && nodes.contains(n) && powers.getOrDefault(n,0)<e.getValue()-1){powers.put(n,e.getValue()-1);frontier.add(Map.entry(n,e.getValue()-1));}}}
    var changed=new ArrayList<BlockPos>();for(var p:nodes){var old=level.getBlockState(p);var next=block.connections(level,p,old).setValue(GlowWireBlock.POWER,enabled?powers.getOrDefault(p,0):0);processed.put(p,level.getGameTime());if(old!=next){level.setBlock(p,next,2);changed.add(p);}}
    for(var p:changed){level.updateNeighborsAt(p,block);for(var d:Direction.values())if(level.hasChunkAt(p.relative(d)))level.updateNeighborsAt(p.relative(d),block);}
    if(dirty && !nodes.isEmpty())level.scheduleTick(nodes.iterator().next(),block,1);return nodes;

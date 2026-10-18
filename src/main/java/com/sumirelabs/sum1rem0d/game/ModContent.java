@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public final class ModContent {
-    public static final List<String> EFFECTS = List.of("vegan", "influenza", "headache", "environment_group", "environment_anger", "sleep_hunger", "sleep_slowness");
+    public static final List<String> EFFECTS = List.of("vegan", "influenza", "headache", "environment_group", "environment_anger", "sleep_hunger", "sleep_slowness", "slime_mouth", "cigarette_delay");
     public static final List<String> VISUAL_NYLIUM = List.of("warped_nylium", "crimson_nylium");
     public static Block createVisualNylium(String name) { return new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERRACK).setId(ResourceKey.create(Registries.BLOCK, id("sideways_" + name)))); }
     private ModContent() {}
@@ -35,6 +35,8 @@ public final class ModContent {
     public static Block createVisualFurnace(String name) { return new VisualFurnaceBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FURNACE).setId(ResourceKey.create(Registries.BLOCK, id("visual_" + name)))); }
     public static Item createSoap() { return new SoapItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id("soap"))).stacksTo(64)); }
     public static MobEffect createEffect(String name) {
+        if(name.equals("slime_mouth"))return SlimeMouthContent.createEffect();
+        if(name.equals("cigarette_delay"))return new CigaretteDelayEffect();
         MobEffect effect = new NamedEffect(name);
         if (name.equals("influenza")) {
             effect.addAttributeModifier(Attributes.MOVEMENT_SPEED, id("influenza_speed"), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
@@ -46,10 +48,20 @@ public final class ModContent {
     }
     public static void registerFabric() {
         ExtraContent.registerFabric();
+        for(String name:PaxelContent.ITEMS)Registry.register(BuiltInRegistries.ITEM,id(name),PaxelContent.createItem(name));
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("paxel"),PaxelRecipe.SERIALIZER);
+        DeliveryBoxContent.registerFabric();
+        AutomationContent.registerFabric();
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("mixed_containers"),MixedContainersRecipe.SERIALIZER);
+        for (String name : FoodContent.ITEMS) Registry.register(BuiltInRegistries.ITEM, id(name), FoodContent.createItem(name));
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id("food_content"), FoodRecipe.SERIALIZER);
+        Registry.register(BuiltInRegistries.ITEM,id("life_berry"),LifeBerryItem.create());
         for (String name : EFFECTS) Registry.register(BuiltInRegistries.MOB_EFFECT, id(name), createEffect(name));
         Registry.register(BuiltInRegistries.BLOCK,id("mixed_concrete"),MixedConcrete.createBlock());
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("mixed_concrete"),MixedConcrete.createType());
         Registry.register(BuiltInRegistries.ITEM,id("mixed_concrete"),MixedConcrete.createItem());
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, id("seat"), MobilityContent.createSeatType());
+        MobilityContent.registerFabric();
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,id("mixed_concrete"),MixedConcreteRecipe.SERIALIZER);
         Registry.register(BuiltInRegistries.ITEM, id("soap"), createSoap());
         Registry.register(BuiltInRegistries.ITEM, id("mud_ball"), createMudBall());

@@ -1,0 +1,326 @@
+[
+  {
+    "source": "art/source/dedicated-2026/life_berry-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/life_berry.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "life_berry",
+    "sha256": "6e9664ede2a0fd7854df9e7bdd1cd4e86693bf3961d2b93e7bac03cd8ab27312",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/cigarette-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/cigarette.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "cigarette",
+    "sha256": "a1172552a0344b55919d20ec3255971e72b4bb73d7ff87f33c04694eb7acfa99",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/bottled_milk-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/bottled_milk.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "bottled_milk",
+    "sha256": "ab7fdd2055354706d2c39911bc4e38cb9696adbc66ba33e374082c2a596a7973",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/milk_bundle-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/milk_bundle.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "milk_bundle",
+    "sha256": "c10b50be248d547832767635457575136fae87d098f03edb861557e924dd40c3",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/cat_meat-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/cat_meat.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "cat_meat",
+    "sha256": "797c1f4cb9946c836aa26a9336b70e3720b0758e4204ba8c74ded4eff1236f79",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/cooked_cat_meat-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/cooked_cat_meat.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "cooked_cat_meat",
+    "sha256": "06fc9fc0aaa35a0391c7e7cca079770c385e72697bd7dcdca36f628896f185f0",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/iron_dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/iron_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "iron_dust",
+    "sha256": "9ebd7ddbac91be07bb565801d35bb6864b34436918bff76de46baf16af4cf068",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/copper_dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/copper_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "copper_dust",
+    "sha256": "867fdeb4dc6b887bc9b886a68b3cf29458967a54794cdfa7658028617bd486cf",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/gold_dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/gold_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "gold_dust",
+    "sha256": "41007f7fe16c4fe9b5e67ccd41e5aa288663e11f48e8bfb1a751b289be1c1ed6",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/washed_iron_dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/washed_iron_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "washed_iron_dust",
+    "sha256": "f285a618bdb71c8b62857f3e9a56ed59fca21fc571536c3d4cc720b40a159c2f",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/washed_copper_dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/washed_copper_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "washed_copper_dust",
+    "sha256": "f28f6780c00f7352ab99cfe01f49e124bba34f23af8115223f8d65f2ccb0e703",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/washed_gold_dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/washed_gold_dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "washed_gold_dust",
+    "sha256": "d56b0f2a9596a355a01ee19e641ac3838ebd4f08b4b6acc1a467b06a60e1710a",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/sulfur-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/sulfur.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "sulfur",
+    "sha256": "a1c6e892dd2cfff1f9a424834ea104142d8e9a22bc14a762ddf3d54aa525c02b",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/wooden_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/wooden_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "wooden_paxel",
+    "sha256": "6a6bb57834fd9b08bfdd066b6ab38c5fd7b28fee95722b32e521669ed4f7e716",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/stone_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/stone_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "stone_paxel",
+    "sha256": "445480616995a5cf8aa4435559476e24ff0887025bbe00502d382f25e5c687c4",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/copper_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/copper_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "copper_paxel",
+    "sha256": "b44c278a46e64018c6f61b224feb0f1ea0384b08e99df804afcd1228d2f5afc8",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/iron_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/iron_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "iron_paxel",
+    "sha256": "f08fab80ea2a72eaf73e63234ca7df59bf30e2671586cfe5365f301d8d3e5d96",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/golden_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/golden_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "golden_paxel",
+    "sha256": "a94bf5bce01d92d8f6760e13f364dc618c6f106e34494e9ef725df0679c545c3",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/diamond_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/diamond_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "diamond_paxel",
+    "sha256": "061529e3dd08962819cba8cba45e06aa91950bec66a3d8e3758fa181a0c3f6ab",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/netherite_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/netherite_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "netherite_paxel",
+    "sha256": "129f0304b67224fdb7df5de3e4c0b51e722ad34775a29e4738e35a1c3cbe49be",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/emerald_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/emerald_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "emerald_paxel",
+    "sha256": "178edf0dc77596aec12ed2ce7117be954bc2f233f1e0fce7e364ef23e5de8b42",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/redstone_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/redstone_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "redstone_paxel",
+    "sha256": "ff5859d289697e3a364b0bd1b3cad07a990a49b04ca56f805f23dc17fcb38619",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/lapis_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/lapis_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "lapis_paxel",
+    "sha256": "c5f91f8cd63c66ccbae69f44f21286d5565051cc850c25bda5c27ef3803479a4",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/manyullyn_paxel-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/item/manyullyn_paxel.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "manyullyn_paxel",
+    "sha256": "970592961c391e6e0dca7c126f19517ee93ee4a22932de6734a5fcd74b73f030",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/dust-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/block/dust.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "dust",
+    "sha256": "ab555ad0b7a7db9fdf55990cf210b69bc669fbf41fe37befdb47582ca3908d6a",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/auto_clicker_front-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/block/auto_clicker_front.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "auto_clicker_front",
+    "sha256": "ab4d705afeb52b39a53ebd84a3371820ca40452a09701bf42d852f08e1794aa3",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  },
+  {
+    "source": "art/source/dedicated-2026/delivery_box_front-ai.png",
+    "asset": "src/main/resources/assets/sum1rem0d/textures/block/delivery_box_front.png",
+    "size": [
+      16,
+      16
+    ],
+    "name": "delivery_box_front",
+    "sha256": "6b1acddaf1377c1a3a25a39fe553ff93e4166fddf5211ba8d63bf6c8214fd13a",
+    "tool": "built-in image_gen",
+    "prompt_summary": "Modern vanilla Minecraft 16x16 pixel-art material; crisp discrete colors. Inventory sprites have transparent padding; block faces are seamless opaque tiles."
+  }
+]

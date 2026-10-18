@@ -16,7 +16,10 @@ public abstract class ItemUseMixin {
     private void sum1rem0d$beforeUse(Level level, LivingEntity entity, CallbackInfoReturnable<ItemStack> cir) { sum1rem0d$eaten = ((ItemStack) (Object) this).copy(); }
     @Inject(method = "finishUsingItem", at = @At("RETURN"))
     private void sum1rem0d$afterUse(Level level, LivingEntity entity, CallbackInfoReturnable<ItemStack> cir) {
-        if (entity instanceof ServerPlayer player && sum1rem0d$eaten != null) Gameplay.ate(player, sum1rem0d$eaten);
+        if (entity instanceof ServerPlayer player && sum1rem0d$eaten != null) {
+            Gameplay.ate(player, sum1rem0d$eaten);
+            com.sumirelabs.sum1rem0d.game.FoodContent.afterUse(player, sum1rem0d$eaten);
+        }
         sum1rem0d$eaten = null;
     }
 }

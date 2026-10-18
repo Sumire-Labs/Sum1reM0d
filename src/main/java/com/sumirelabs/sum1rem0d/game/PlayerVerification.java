@@ -508,6 +508,7 @@ final class PlayerVerification {
         try {
             var draft = config.snapshot(); var features = draft.getAsJsonObject("features");
             var group = features.getAsJsonObject("daily_events"); group.addProperty("enabled", true); group.addProperty("chance", 100); group.addProperty("announce", true);
+            group.addProperty("split_pools",false);
             for (String selected : DailyEvents.FEATURES) {
                 for (String id : DailyEvents.FEATURES) { var option = features.getAsJsonObject(id); option.addProperty("enabled", true); option.addProperty("chance", id.equals(selected) ? 100 : 0); }
                 features.getAsJsonObject("daily_fuel").addProperty("minimum", .2); features.getAsJsonObject("daily_fuel").addProperty("maximum", .2);
@@ -532,6 +533,13 @@ final class PlayerVerification {
             group.addProperty("enabled", false); config.update(draft, config.revision()); require(DailyEvents.FEATURES.stream().noneMatch(state::daily), "Global off disables every event");
             group.addProperty("enabled", true); config.update(draft, config.revision()); require(state.daily("growth_sleep"), "Reenable reuses the saved result");
             passed.accept("zero-probability days, next-morning Config application and global event disable/reenable");
+            group.addProperty("split_pools",true);group.addProperty("visual_chance",100);group.addProperty("gameplay_chance",100);
+            for(String id:DailyEvents.FEATURES)features.getAsJsonObject(id).addProperty("chance",id.equals("upside_down_grass")||id.equals("vegan")?100:0);
+            config.update(draft,config.revision());gameplayAt(server,level,72000,80);
+            require(DailyEvents.VISUAL.stream().filter(state::daily).count()==1&&DailyEvents.GAMEPLAY.stream().filter(state::daily).count()==1&&state.daily("upside_down_grass")&&state.daily("vegan"),"Independent daily pools select exactly one visual and one gameplay event");
+            state.save();var loadedDual=new WorldState(server);require(loadedDual.daily("upside_down_grass")&&loadedDual.daily("vegan")&&!loadedDual.updateDay(),"Both daily pools persist without reroll after reload");
+            group.addProperty("visual_chance",0);config.update(draft,config.revision());gameplayAt(server,level,96000,100);require(DailyEvents.VISUAL.stream().noneMatch(state::daily)&&state.daily("vegan"),"Zero visual chance leaves independent gameplay draw active");
+            passed.accept("independent visual/gameplay daily pools persist together and each chance controls only its own pool");
         } finally {
             players.remove(player); server.getWorldData().overworldData().setGameTime(gameTime); server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set " + clock); level.environmentAttributes().invalidateTickCache(); level.updateSkyBrightness(); state.restore(checkpoint); state.save(); config.update(previous, config.revision());
         }

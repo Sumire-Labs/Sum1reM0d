@@ -58,10 +58,20 @@ public final class ConfigSchema {
         boolean valid;
         if (key.equals("prices")) {
             String[] pair=entry.split("=",-1);valid=pair.length==2 && resourceId(pair[0],false) && pair[1].matches("[0-9]{1,10}");if(valid){try{long price=Long.parseLong(pair[1]);valid=price>=1 && price<=1000000000L;}catch(NumberFormatException e){valid=false;}}
+        } else if (key.equals("random_tool_parts")) {
+            valid = java.util.Set.of("axe","shovel","pickaxe").contains(entry);
         } else if (option.kind() == Kind.MAP) {
             String[] pair = entry.split("=", -1);
             valid = pair.length == 2 && resourceId(pair[0], false) && resourceId(pair[1], false);
-        } else if (key.equals("hud_label")) {
+        } else if (key.equals("media_source")) {
+            if (entry.isEmpty()) valid = true;
+            else try {
+                var uri = java.net.URI.create(entry);
+                valid = ("https".equals(uri.getScheme()) || "http".equals(uri.getScheme())) && uri.getHost() != null;
+            } catch (IllegalArgumentException exception) { valid = false; }
+        } else if (key.equals("local_file")) {
+            valid = entry.codePoints().noneMatch(Character::isISOControl);
+        } else if (key.equals("hud_label") || key.equals("forced_text")) {
             valid = entry.codePoints().noneMatch(Character::isISOControl);
         } else if (key.startsWith("hud_") && key.endsWith("color")) {
             valid = entry.matches("#[0-9a-fA-F]{6}");

@@ -4,15 +4,18 @@ import com.sumirelabs.sum1rem0d.config.*;
 import com.sumirelabs.sum1rem0d.network.ShopStatePayload;
 public final class ShopClient {
  private static JsonObject state=new JsonObject();private static long sequence,pendingId;
+ private static String pendingAction="",queuedAction;private static JsonObject queuedBody;private static long pendingSince;
  public static int ordersPage;public static long completion;public static String message="",action="";public static boolean applied;
  private ShopClient(){}
  public static JsonObject state(){return state.deepCopy();}
  public static long number(String key){return state.has(key)?state.get(key).getAsLong():0;}
  public static boolean flag(String key){return state.has(key)&&state.get(key).getAsBoolean();}
  public static boolean ready(){return state.has("configRevision");}public static boolean pending(){return pendingId!=0;}
- public static void clear(){state=new JsonObject();ordersPage=0;pendingId=0;message="";completion=0;}
- public static void accept(ShopStatePayload payload){var next=JsonParser.parseString(payload.json()).getAsJsonObject();long id=next.get("requestId").getAsLong();if(id!=pendingId)return;state=next;if(id==pendingId){pendingId=0;completion=id;message=next.get("message").getAsString();action=next.get("action").getAsString();applied=next.get("applied").getAsBoolean();}}
- public static void request(String action,JsonObject body){if(pending())return;var q=body.deepCopy();q.addProperty("ordersPage",ordersPage);q.addProperty("action",action);q.addProperty("requestId",++sequence);q.addProperty("revision",number("revision"));q.addProperty("configRevision",number("configRevision"));pendingId=sequence;PlatformClientNetwork.shop(new com.sumirelabs.sum1rem0d.network.ShopRequestPayload(q.toString()));}
+ public static boolean blocking(){return queuedAction!=null || pending()&&!pendingAction.equals("refresh");}
+ public static boolean showProgress(){return blocking()&&System.nanoTime()-pendingSince>350_000_000L;}
+ public static void clear(){state=new JsonObject();ordersPage=0;pendingId=0;pendingAction="";queuedAction=null;queuedBody=null;message="";completion=0;}
+ public static void accept(ShopStatePayload payload){var next=JsonParser.parseString(payload.json()).getAsJsonObject();long id=next.get("requestId").getAsLong();if(id!=pendingId)return;state=next;pendingId=0;completion=id;action=next.get("action").getAsString();if(!action.equals("refresh"))message=next.get("message").getAsString();applied=next.get("applied").getAsBoolean();pendingAction="";if(queuedAction!=null){String queued=queuedAction;var body=queuedBody;queuedAction=null;queuedBody=null;request(queued,body);}}
+ public static void request(String action,JsonObject body){if(pending()){if(pendingAction.equals("refresh")&&!action.equals("refresh")&&queuedAction==null){queuedAction=action;queuedBody=body.deepCopy();}return;}var q=body.deepCopy();q.addProperty("ordersPage",ordersPage);q.addProperty("action",action);q.addProperty("requestId",++sequence);q.addProperty("revision",number("revision"));q.addProperty("configRevision",number("configRevision"));pendingId=sequence;pendingAction=action;pendingSince=System.nanoTime();PlatformClientNetwork.shop(new com.sumirelabs.sum1rem0d.network.ShopRequestPayload(q.toString()));}
  public static void refresh(){request("refresh",new JsonObject());}
  public static boolean adPremium(){var root=ClientGameState.snapshot();return root.has("services") && root.getAsJsonObject("services").has("adPremium") && root.getAsJsonObject("services").get("adPremium").getAsBoolean();}
 }

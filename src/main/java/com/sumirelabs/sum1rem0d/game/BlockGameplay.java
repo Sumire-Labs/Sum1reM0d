@@ -21,6 +21,10 @@ public final class BlockGameplay {
     private BlockGameplay() {}
     public static List<ItemStack> drops(BlockState state, ServerLevel level, Entity entity, ItemStack tool, List<ItemStack> original) {
         original = NetherChanges.loot(state, level, tool, original);
+        if(Rules.on("bush_seeds")&&Rules.matches(state,Rules.list("bush_seeds","target_blocks"))&&!Gameplay.silk(level,tool)&&Rules.roll(level.getRandom(),"bush_seeds")){
+            var seeds=Rules.list("bush_seeds","seeds").stream().map(Rules::id).filter(Objects::nonNull).map(id->BuiltInRegistries.ITEM.getOptional(id).orElse(Items.AIR)).filter(item->item!=Items.AIR).toList();
+            if(!seeds.isEmpty()){original=new ArrayList<>(original);original.add(new ItemStack(seeds.get(level.getRandom().nextInt(seeds.size()))));}
+        }
         if (Rules.on("log_loss") && entity instanceof ServerPlayer && Rules.matches(state, Rules.list("log_loss", "target_blocks")) && Rules.roll(level.getRandom(), "log_loss")) return List.of();
         if (!Rules.on("ore_drops") || Rules.b("ore_drops", "silk_original") && Gameplay.silk(level, tool)) return original;
         String block = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
@@ -60,7 +64,7 @@ public final class BlockGameplay {
         return true;
     }
     public static void hopper(ServerLevel level, BlockPos pos, BlockState state, HopperBlockEntity inventory) {
-        if (!Rules.on("hopper_breaker") || !state.getValue(HopperBlock.ENABLED) || level.getGameTime() % Rules.i("hopper_breaker", "interval") != 0) return;
+        if (!Rules.on("hopper_breaker") || Rules.b("hopper_breaker","respect_redstone")&&!state.getValue(HopperBlock.ENABLED) || level.getGameTime() % Rules.i("hopper_breaker", "interval") != 0) return;
         BlockPos target = pos.above();
         if (!(level.getBlockEntity(target) instanceof Container)) breakInto(level, target, inventory, "hopper_breaker");
     }

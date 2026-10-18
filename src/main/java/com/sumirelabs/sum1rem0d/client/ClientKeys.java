@@ -8,7 +8,7 @@ import net.minecraft.client.*;
 
 /** Vanilla Controls bindings; default unbound so existing controls do not conflict. */
 public final class ClientKeys {
-  private static KeyMapping wiki, config, wallet, shop;
+  private static KeyMapping wiki, config, wallet, shop, crawl;
 
   private ClientKeys() {}
 
@@ -21,6 +21,7 @@ public final class ClientKeys {
     registrar.accept(config);
     registrar.accept(wallet);
     shop=new KeyMapping("key.sum1rem0d.shop",InputConstants.UNKNOWN.getValue(),category);registrar.accept(shop);
+    crawl = new KeyMapping("key.sum1rem0d.crawl", InputConstants.UNKNOWN.getValue(), category); registrar.accept(crawl);
   }
 
   //? if neoforge {
@@ -32,11 +33,16 @@ public final class ClientKeys {
       if (available(mc) && WikiRuntime.enabled()) mc.gui.setScreen(new WikiScreen(null));
     while (config.consumeClick()) if (available(mc)) mc.gui.setScreen(new ConfigScreen(null));
     while(shop.consumeClick())if(available(mc))mc.gui.setScreen(new ShopScreen(null));
+    while (crawl.consumeClick()) if (available(mc) && ClientRules.received() && ClientRules.snapshot().getAsJsonObject("features").has("crawl") && ClientRules.enabled("crawl")) {
+      PlatformClientNetwork.crawl(new com.sumirelabs.sum1rem0d.network.CrawlPayload(!CrawlClientState.crawling()));
+    }
     while (wallet.consumeClick())
       if (available(mc)
           && ClientRules.enabled("economy")
           && ClientGameState.snapshot().has("economy")) mc.gui.setScreen(new WalletScreen(null));
   }
+
+  static void resetCrawl() { CrawlClientState.clear(); }
 
   private static boolean available(Minecraft mc) {
     return mc.player != null && mc.gui.screen() == null && mc.player.isAlive();

@@ -26,7 +26,7 @@ public final class Gameplay {
     private static final Identifier CLEAN_HEALTH = ModContent.id("cleanliness_health");
     private static final ThreadLocal<Boolean> APPLYING_DAMAGE_EFFECT = ThreadLocal.withInitial(() -> false);
     private Gameplay() {}
-    public static boolean eligible(ServerPlayer player) { return player.isAlive() && !player.isCreative() && !player.isSpectator(); }
+    public static boolean eligible(ServerPlayer player) { return !player.entityTags().contains(AutomationMachineActor.TAG) && player.isAlive() && !player.isCreative() && !player.isSpectator(); }
     public static void tick(MinecraftServer server) {
         if (!com.sumirelabs.sum1rem0d.Sum1reM0d.initialized()) return;
         var state = WorldState.get(server);
@@ -35,15 +35,30 @@ public final class Gameplay {
         CraftingMaterialSwap.tick(server);
         Economy.tick(server);
         ShopServices.tick(server);
+        WorldSurvivalRules.tickServer(server);
+        AutomationProcessing.tick(server);
+        SecondOffhandService.tick(server);
+        WhaleEnchantmentRules.tick(server);
+        for(var level:server.getAllLevels())WindChargeBlackHole.tick(level);
         RemainingLiveVerification.tick(server);
         CoinServicesMultiplayerVerification.tick(server);
         EconomyMultiplayerVerification.tick(server);
         long gameTime = server.overworld().getGameTime();
+        WorldMobility.tick(server);
         if (newDay) {
             List<String> active = new ArrayList<>();
             for (String f : DailyEvents.FEATURES)
                 if (state.daily(f) && Rules.b("daily_events", "announce") && (!List.of("vegan", "upside_down_grass", "diamond_disguise", "hardness_swap").contains(f) || Rules.b(f, "announce"))) active.add(DailyEvents.label(f));
             if (!active.isEmpty()) server.getPlayerList().broadcastSystemMessage(Component.literal("今日の異変: " + String.join(" / ", active)), false);
+            if(Rules.on("daily_events")&&Rules.b("daily_events","show_title")){
+                String visual=DailyEvents.VISUAL.stream().filter(state::daily).findFirst().map(DailyEvents::label).orElse("異変なし");
+                String game=DailyEvents.GAMEPLAY.stream().filter(state::daily).findFirst().map(DailyEvents::label).orElse("異変なし");
+                for(var player:server.getPlayerList().getPlayers()){
+                    player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket(10,Rules.i("daily_events","title_ticks"),20));
+                    player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket(Component.literal("ゲームプレイ: "+game).withStyle(net.minecraft.ChatFormatting.GOLD)));
+                    player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket(Component.literal(visual).withStyle(net.minecraft.ChatFormatting.AQUA)));
+                }
+            }
         }
         for (ServerPlayer player : server.getPlayerList().getPlayers()) tickPlayer(player, state, gameTime);
         if (gameTime % 20 == 0) {
@@ -55,7 +70,11 @@ public final class Gameplay {
         if (gameTime % 600 == 0) state.save();
     }
     static void tickPlayer(ServerPlayer player, WorldState state, long gameTime) {
+        WorldSurvivalRules.tickPlayer(player,state,gameTime);
+        WorldMediaRules.tick(player,gameTime);
         var p = state.player(player);
+        String profileName=player.getGameProfile().name();
+        if(!profileName.equals(p.lastKnownName)){p.lastKnownName=profileName;state.save();}
         long clock = player.level().getOverworldClockTime();
         boolean moved = p.lastX != player.getX() || p.lastY != player.getY() || p.lastZ != player.getZ()
             || p.lastYaw != player.getYRot() || p.lastPitch != player.getXRot() || p.lastAction != player.getLastActionTime();
@@ -126,7 +145,7 @@ public final class Gameplay {
         if (health != null) {
             if (Rules.on("cleanliness")) {
                 p.cleanliness = Math.max(0, Math.min(Rules.n("cleanliness", "maximum"), p.cleanliness - Rules.n("cleanliness", "decay_per_minute") / 60));
-                if (player.isInWater()) p.cleanliness = Math.min(Rules.n("cleanliness", "maximum"), p.cleanliness + Rules.n("cleanliness", "water_per_second"));
+                if (player.isInWater()&&WorldSurvivalRules.cleanWater(player,state)) p.cleanliness = Math.min(Rules.n("cleanliness", "maximum"), p.cleanliness + Rules.n("cleanliness", "water_per_second"));
                 double threshold = Rules.n("cleanliness", "health_threshold");
                 double lost = p.cleanliness >= threshold ? 0 : Math.ceil((threshold - p.cleanliness) / Math.max(1, threshold / 5)) * 2;
                 double cap = Math.max(0, health.getBaseValue() - Rules.n("cleanliness", "minimum_health"));
@@ -168,9 +187,11 @@ public final class Gameplay {
     public static void ate(ServerPlayer player, ItemStack eaten) {
         var state = WorldState.get(player.level().getServer());
         boolean forbidden = Rules.matches(eaten, Rules.list("vegan", "forbidden_items"));
+        boolean milk=eaten.is(Items.MILK_BUCKET)||eaten.is(FoodContent.item("bottled_milk"));
+        if(Rules.b("vegan","mod_animal_products")&&(eaten.is(FoodContent.item("bottled_milk"))||eaten.is(FoodContent.item("cat_meat"))||eaten.is(FoodContent.item("cooked_cat_meat"))))forbidden=true;
         boolean unknown = eaten.has(net.minecraft.core.component.DataComponents.FOOD) && !Rules.matches(eaten, Rules.list("vegan", "allowed_items"));
         if (state.daily("vegan") && eligible(player) && (forbidden || unknown && !Rules.b("vegan", "unknown_food_allowed"))) player.kill(player.level());
-        if (eaten.is(Items.MILK_BUCKET) && Rules.b("influenza", "milk_cures")) { state.player(player).influenzaTicks = 0; state.player(player).exposureTicks = 0; }
+        if (milk && Rules.b("influenza", "milk_cures")) { state.player(player).influenzaTicks = 0; state.player(player).exposureTicks = 0; }
     }
     public static void damaged(ServerPlayer player) {
         if (!eligible(player) || !Rules.on("damage_effects") || APPLYING_DAMAGE_EFFECT.get()) return;
@@ -370,6 +391,7 @@ public final class Gameplay {
         json.addProperty("headache", player.hasEffect(ModContent.effect("headache")));
         json.addProperty("redTicks", p.redTicks); json.addProperty("cameraTicks", p.cameraTicks); json.addProperty("cameraYaw", p.cameraYaw); json.addProperty("cameraPitch", p.cameraPitch);
         json.addProperty("originalYaw", p.originalYaw); json.addProperty("originalPitch", p.originalPitch);
+        WorldMediaRules.append(player,json);
         json.add("economy", Economy.state(player));
         json.add("services",ShopServices.summary(player));
         PlatformNetwork.send(player, new GameStatePayload(json.toString()));

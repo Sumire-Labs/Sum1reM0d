@@ -19,6 +19,11 @@ public final class WorldState {
         public long coins;
         public boolean walletInitialized;
         public JsonObject services=new JsonObject();
+        public JsonObject survival=new JsonObject();
+        public String lastKnownName="";
+        public JsonArray deliveryItems=new JsonArray();
+        public String deliveryBoxDimension="";
+        public long deliveryBoxPos;
         public transient long lastServiceRequest=Long.MIN_VALUE,lastServiceFailure=Long.MIN_VALUE;
         public int sleepTicks, exposureTicks, influenzaTicks, environmentTicks, angerTicks;
         public int explosionCooldown, damageCooldown, bedrockCooldown, bedCooldown;
@@ -41,6 +46,7 @@ public final class WorldState {
         Map<String, Boolean> daily = new LinkedHashMap<>();
         Map<String, PlayerData> players = new LinkedHashMap<>();
         Map<String, String> aliases = new LinkedHashMap<>();
+        Map<String,Double> golemHealth = new LinkedHashMap<>();
         int furnacePermutation;
         long nextZeus, nextNames, nextMob, serviceTick;
     }
@@ -56,7 +62,7 @@ public final class WorldState {
             data = Files.exists(path) ? GSON.fromJson(Files.readString(path), Data.class) : new Data();
             if (data == null || data.schema != 1 || data.players == null || data.daily == null || data.aliases == null)
                 throw new IllegalStateException("Invalid or unsupported world state");
-            if (data.eventVersion != 1) { data.day = Long.MIN_VALUE; data.eventVersion = 1; data.daily.clear(); data.fuelMultiplier = 1; data.furnacePermutation = 0; }
+            if (data.eventVersion != 2) { data.day = Long.MIN_VALUE; data.eventVersion = 2; data.daily.clear(); data.fuelMultiplier = 1; data.furnacePermutation = 0; }
         } catch (IOException | RuntimeException exception) { throw new IllegalStateException("Cannot read world state; original preserved: " + path, exception); }
     }
     public static WorldState get(MinecraftServer server) { currentServer = server; return ACTIVE.computeIfAbsent(server, WorldState::new); }
@@ -65,6 +71,15 @@ public final class WorldState {
     public static void saveIfLoaded(MinecraftServer server) { var state = ACTIVE.get(server); if (state != null) state.save(); }
     public static void unload(MinecraftServer server) { CraftingMaterialSwap.close(server); RedstoneRefresh.close(server); saveIfLoaded(server); ACTIVE.remove(server); if (currentServer == server) currentServer = null; }
     public PlayerData player(ServerPlayer player) { return data.players.computeIfAbsent(player.getUUID().toString(), key -> { var p = new PlayerData(); p.cleanliness = Rules.n("cleanliness", "maximum"); return p; }); }
+    public PlayerData player(UUID uuid) { return data.players.computeIfAbsent(uuid.toString(), key -> { var p = new PlayerData(); p.cleanliness = Rules.n("cleanliness", "maximum"); return p; }); }
+    public Map<String,PlayerData> playerRecords() { return data.players; }
+    public JsonArray deliveryItems(UUID uuid) {
+        var player = player(uuid);
+        if (player.deliveryItems == null) player.deliveryItems = new JsonArray();
+        while (player.deliveryItems.size() < 27) player.deliveryItems.add(JsonNull.INSTANCE);
+        if (player.deliveryItems.size() > 27) throw new IllegalStateException("Invalid delivery box inventory size");
+        return player.deliveryItems;
+    }
     public Map<String, JsonObject> coinInventories() { if (data.coinInventories == null) data.coinInventories = new LinkedHashMap<>(); return data.coinInventories; }
     public boolean markCoinBlock(net.minecraft.server.level.ServerLevel level, net.minecraft.core.BlockPos pos) {
         if (data.coinBlocks == null) data.coinBlocks = new HashSet<>();
@@ -76,6 +91,7 @@ public final class WorldState {
     public void fuelEfficiency(double value) { FuelAccounting.consumptionMultiplier(value); data.fuelMultiplier = value; data.daily.put("daily_fuel", true); }
     public int furnacePermutation() { return daily("furnace_textures") ? data.furnacePermutation : 0; }
     public Map<String, String> aliases() { return data.aliases; }
+    public Map<String,Double> golemHealth(){if(data.golemHealth==null)data.golemHealth=new LinkedHashMap<>();return data.golemHealth;}
     // Native verification restores the complete saved state after temporary fixtures.
     JsonObject checkpoint() { return GSON.toJsonTree(data).getAsJsonObject(); }
     void restore(JsonObject checkpoint) { data = GSON.fromJson(checkpoint, Data.class); }
@@ -93,12 +109,13 @@ public final class WorldState {
         var weights = new LinkedHashMap<String, Double>();
         for (String feature : DailyEvents.FEATURES) if (Rules.on(feature)) weights.put(feature, Rules.n(feature, "chance"));
         String selected = DailyEvents.choose(server.overworld().getSeed(), day, Rules.on("daily_events") ? Rules.n("daily_events", "chance") : 0, weights);
+        var split=Rules.b("daily_events","split_pools")?DailyEvents.choosePools(server.overworld().getSeed(),day,Rules.on("daily_events")?Rules.n("daily_events","visual_chance"):0,Rules.on("daily_events")?Rules.n("daily_events","gameplay_chance"):0,weights):new DailyEvents.Selection("",selected);
         data.daily.clear();
-        for (String feature : DailyEvents.FEATURES) data.daily.put(feature, feature.equals(selected));
+        for (String feature : DailyEvents.FEATURES) data.daily.put(feature, feature.equals(split.visual())||feature.equals(split.gameplay()));
         var random = new Random(server.overworld().getSeed() ^ day * 0xD1B54A32D192ED03L);
         double min = Rules.n("daily_fuel", "minimum"), max = Math.max(min, Rules.n("daily_fuel", "maximum"));
-        data.fuelMultiplier = selected.equals("daily_fuel") ? min + random.nextDouble() * (max - min) : 1;
-        data.furnacePermutation = selected.equals("furnace_textures") ? 1 + random.nextInt(5) : 0;
+        data.fuelMultiplier = data.daily.getOrDefault("daily_fuel",false) ? min + random.nextDouble() * (max - min) : 1;
+        data.furnacePermutation = data.daily.getOrDefault("furnace_textures",false) ? 1 + random.nextInt(5) : 0;
         save();
         return true;
     }

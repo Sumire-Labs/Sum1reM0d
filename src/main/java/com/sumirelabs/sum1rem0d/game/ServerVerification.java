@@ -31,6 +31,7 @@ public final class ServerVerification {
     public static void spawned(net.minecraft.world.entity.Entity entity) { if (running) SPAWNED.add(entity); }
     static List<net.minecraft.world.entity.Entity> spawnedIn(ServerLevel level) { return SPAWNED.stream().filter(entity -> entity.level() == level && !entity.isRemoved()).toList(); }
     private static final List<String> PASSED = new ArrayList<>();
+    private static final List<String> GROUP_FAILURES = new ArrayList<>();
     private record Fixture(ServerLevel level, BlockPos pos) {}
     private static final Map<Fixture, BlockState> ORIGINAL = new LinkedHashMap<>();
     private ServerVerification() {}
@@ -61,12 +62,31 @@ public final class ServerVerification {
             testFletching(server, level);
             PlayerVerification.verify(server, level, state, ServerVerification::passed);
             EconomyVerification.verify(server, ServerVerification::passed);
+            FoodNutritionVerification.verify(server, ServerVerification::passed);
+            WorldSurvivalVerification.verify(server, ServerVerification::passed);
+            DustWiringVerification.verify(server, ServerVerification::passed);
+            FuelReservoirVerification.verify(server, ServerVerification::passed);
+            FishingRodRulesVerification.verify(server, ServerVerification::passed);
+            verifyGroup("automation", () -> AutomationVerification.verify(server, ServerVerification::passed));
+            CombatItemRulesVerification.verify(server, ServerVerification::passed);
+            DeliveryBoxVerification.verify(server, ServerVerification::passed);
+            LifeBerryVerification.verify(server, ServerVerification::passed);
+            MixedContainersVerification.verify(server, ServerVerification::passed);
+            MixedWoolShapesVerification.verify(server, ServerVerification::passed);
+            PaxelVerification.verify(server, ServerVerification::passed);
+            WhaleStumbleVerification.verify(server, ServerVerification::passed);
+            CrossbowVolleyVerification.verify(server, ServerVerification::passed);
+            SecondOffhandVerification.verify(server, ServerVerification::passed);
+            FoodContentVerification.verify(server, ServerVerification::passed);
+            AdditionalCombatVerification.verify(server, ServerVerification::passed);
+            verifyGroup("world mobility", () -> WorldMobilityVerification.verify(server, ServerVerification::passed));
             CoinServicesVerification.verify(server, ServerVerification::passed);
             NoChatReportsVerification.verify(server, ServerVerification::passed);
             MudBallVerification.verify(server, ServerVerification::passed);
             NetherChangesVerification.verify(server, ServerVerification::passed);
             CombatConcreteVerification.verify(server, ServerVerification::passed);
             RemainingVerification.verify(server, ServerVerification::passed);
+            if (!GROUP_FAILURES.isEmpty()) throw new AssertionError(String.join("; ", GROUP_FAILURES));
             report.addProperty("success", true);
             Sum1reM0d.LOGGER.info("SERVER_VERIFY: all {} checks passed", PASSED.size());
         } catch (Throwable failure) {
@@ -75,19 +95,40 @@ public final class ServerVerification {
         } finally {
             for (var entry : new ArrayList<>(ORIGINAL.entrySet()).reversed()) {
                 var fixture = entry.getKey();
-                if (fixture.level.getBlockEntity(fixture.pos) instanceof Container container) container.clearContent();
-                fixture.level.setBlock(fixture.pos, entry.getValue(), 3);
+                try {
+                    if (fixture.level.getBlockEntity(fixture.pos) instanceof Container container) container.clearContent();
+                    fixture.level.setBlock(fixture.pos, entry.getValue(), 3);
+                } catch (Throwable failure) { cleanupFailure(report, failure); }
             }
             running = false;
-            SPAWNED.forEach(net.minecraft.world.entity.Entity::discard);
+            for (var entity : SPAWNED) try { entity.discard(); }
+                catch (Throwable failure) { cleanupFailure(report, failure); }
             SPAWNED.clear();
             EXPLOSIONS.clear();
-            try { config.update(previous, config.revision()); } catch (Exception failure) { Sum1reM0d.LOGGER.error("Cannot restore verification config", failure); }
-            state.restore(checkpoint); state.save();
+            try { config.update(previous, config.revision()); }
+                catch (Exception failure) { cleanupFailure(report, failure); }
+            try { state.restore(checkpoint); state.saveStrict(); }
+                catch (Exception failure) { cleanupFailure(report, failure); }
             report.add("passed", new Gson().toJsonTree(PASSED));
             try { Files.writeString(server.getWorldPath(LevelResource.ROOT).resolve("sum1rem0d-verification.json"), new GsonBuilder().setPrettyPrinting().create().toJson(report)); }
             catch (Exception failure) { Sum1reM0d.LOGGER.error("Cannot save verification report", failure); }
             server.halt(false);
+        }
+    }
+
+    private static void cleanupFailure(JsonObject report, Throwable failure) {
+        report.addProperty("success", false);
+        String previous = report.has("failure") ? report.get("failure").getAsString() + "; " : "";
+        report.addProperty("failure", previous + "Fixture cleanup: " + failure);
+        Sum1reM0d.LOGGER.error("Cannot restore verification fixture", failure);
+    }
+
+    @FunctionalInterface private interface VerificationGroup { void run() throws Exception; }
+    private static void verifyGroup(String name, VerificationGroup group) {
+        try { group.run(); }
+        catch (Throwable failure) {
+            GROUP_FAILURES.add(name + ": " + failure);
+            Sum1reM0d.LOGGER.error("SERVER_VERIFY_GROUP: {} failed", name, failure);
         }
     }
     public static void require(boolean condition, String message) { if (!condition) throw new AssertionError(message); }
@@ -416,7 +457,7 @@ public final class ServerVerification {
             config.update(previous, config.revision());
         }
     }
-    private static void testMachines(ServerLevel level) {
+    private static void testMachines(ServerLevel level) throws Exception {
         place(level, pos(3), Blocks.DROPPER.defaultBlockState().setValue(DropperBlock.FACING, Direction.EAST));
         place(level, pos(3).east(), Blocks.STONE.defaultBlockState());
         require(BlockGameplay.dropper(level, pos(3), level.getBlockState(pos(3))), "Dropper handles non-inventory block");
@@ -425,6 +466,19 @@ public final class ServerVerification {
         place(level, pos(4), Blocks.HOPPER.defaultBlockState()); place(level, pos(4).above(), Blocks.STONE.defaultBlockState());
         var hopper = (HopperBlockEntity) level.getBlockEntity(pos(4)); BlockGameplay.hopper(level, pos(4), level.getBlockState(pos(4)), hopper);
         require(level.getBlockState(pos(4).above()).isAir() && hopper.getItem(0).is(Items.COBBLESTONE), "Hopper collects upper block");
+        var config=com.sumirelabs.sum1rem0d.Sum1reM0d.config();var before=config.snapshot();
+        try{
+            var draft=before.deepCopy();draft.getAsJsonObject("features").getAsJsonObject("hopper_breaker").addProperty("respect_redstone",false);config.update(draft,config.revision());
+            place(level,pos(4).above(),Blocks.STONE.defaultBlockState());level.setBlock(pos(4),level.getBlockState(pos(4)).setValue(HopperBlock.ENABLED,false),2);
+            HopperBlockEntity.pushItemsTick(level,pos(4),level.getBlockState(pos(4)),hopper);
+            require(level.getBlockState(pos(4).above()).isAir()&&hopper.getItem(0).getCount()==2,"Powered hopper still breaks independently while vanilla transfer remains stopped");
+            draft.getAsJsonObject("features").getAsJsonObject("hopper_breaker").addProperty("respect_redstone",true);config.update(draft,config.revision());place(level,pos(4).above(),Blocks.STONE.defaultBlockState());
+            level.setBlock(pos(4),level.getBlockState(pos(4)).setValue(HopperBlock.ENABLED,false),2);
+            HopperBlockEntity.pushItemsTick(level,pos(4),level.getBlockState(pos(4)),hopper);require(level.getBlockState(pos(4).above()).is(Blocks.STONE),"Configured redstone stop pauses breaking");
+            draft.getAsJsonObject("features").getAsJsonObject("hopper_breaker").addProperty("respect_redstone",false);config.update(draft,config.revision());
+            for(int slot=0;slot<hopper.getContainerSize();slot++)hopper.setItem(slot,new ItemStack(Items.STONE,64));
+            HopperBlockEntity.pushItemsTick(level,pos(4),level.getBlockState(pos(4)),hopper);require(level.getBlockState(pos(4).above()).is(Blocks.STONE),"Full hopper preserves target block and drops");
+        }finally{config.update(before,config.revision());}
         passed("dropper and hopper block breaking");
     }
     private static void testSignals(ServerLevel level) throws Exception {
@@ -433,12 +487,21 @@ public final class ServerVerification {
         require(lever.setValue(LeverBlock.POWERED, true).getSignal(level, pos(5), Direction.NORTH) == 0, "Powered lever must stop emitting");
         require(Blocks.REDSTONE_BLOCK.defaultBlockState().getSignal(level, pos(5), Direction.UP) == 0, "Redstone block must be off");
         passed("redstone source inversion");
+        var weighted=Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWER,6);
+        require(weighted.getSignal(level,pos(5),Direction.UP)==9&&weighted.getDirectSignal(level,pos(5),Direction.UP)==9,"Analog source strength is 15 minus raw strength, not a 0/15 switch");
+        require(weighted.getDirectSignal(level,pos(5),Direction.DOWN)==0,"Analog inversion preserves non-emitting faces");
         for (int offset = 0; offset < 3; offset++) { place(level, pos(5).east(offset).below(), Blocks.STONE.defaultBlockState()); place(level, pos(5).east(offset), Blocks.REDSTONE_WIRE.defaultBlockState()); }
         RedstoneGameplay.wire(level, pos(5));
         for (int offset = 0; offset < 3; offset++) require(level.getBlockState(pos(5).east(offset)).getValue(RedstoneWireBlock.POWER) == 15, "Unpowered wire network must be on");
         passed("wire network inversion without self-feedback");
         var config = Sum1reM0d.config(); var before = config.snapshot();
         try {
+            var circuit=config.snapshot();circuit.getAsJsonObject("features").getAsJsonObject("redstone_inversion").addProperty("blocks",false);config.update(circuit,config.revision());
+            place(level,pos(5).west(),Blocks.REDSTONE_BLOCK.defaultBlockState());RedstoneGameplay.wire(level,pos(5));
+            for(int offset=0;offset<3;offset++)require(level.getBlockState(pos(5).east(offset)).getValue(RedstoneWireBlock.POWER)==offset,"Inverted wire keeps per-block attenuation instead of flattening to 0/15");
+            place(level,pos(5).west(),Blocks.AIR.defaultBlockState());RedstoneGameplay.wire(level,pos(5));
+            for(int offset=0;offset<3;offset++)require(level.getBlockState(pos(5).east(offset)).getValue(RedstoneWireBlock.POWER)==15,"Removing source clears inverted-wire feedback");
+            config.update(before,config.revision());
             BlockPos floor = pos(6), wall = pos(7);
             place(level, floor.below(), Blocks.STONE.defaultBlockState()); place(level, floor, Blocks.REDSTONE_TORCH.defaultBlockState());
             place(level, wall.west(), Blocks.STONE.defaultBlockState()); place(level, wall, Blocks.REDSTONE_WALL_TORCH.defaultBlockState().setValue(RedstoneWallTorchBlock.FACING, Direction.EAST));

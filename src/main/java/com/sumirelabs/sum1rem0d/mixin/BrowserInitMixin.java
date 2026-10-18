@@ -10,6 +10,7 @@ public abstract class BrowserInitMixin {
     private void sum1rem0d$render(net.minecraft.client.gui.GuiGraphicsExtractor graphics, int x, int y, float partial, CallbackInfo ci) {
         graphics.nextStratum();
         BrowserOverlays.render((Screen) (Object) this, graphics, x, y);
+        com.sumirelabs.sum1rem0d.client.FurnaceHudOverlay.render((Screen) (Object) this, graphics);
     }
     @Inject(method = "init(II)V", at = @At("TAIL"))
     private void sum1rem0d$init(int width, int height, CallbackInfo ci) { BrowserOverlays.initialize((Screen) (Object) this); }

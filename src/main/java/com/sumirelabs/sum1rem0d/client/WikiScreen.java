@@ -60,20 +60,20 @@ public final class WikiScreen extends Screen {
             for (String paragraph : paragraphs) { wrapped.addAll(font.split(Component.literal(paragraph), contentWidth - 18)); wrapped.add(FormattedCharSequence.EMPTY); }
             lines = List.copyOf(wrapped); rows = Math.max(1, available / 11); pages = Math.max(1, (lines.size() + rows - 1) / rows); page = Math.min(page, pages - 1);
         } else if (view.equals("categories")) {
-            rows = Math.max(1, available / 22); pages = Math.max(1, (WikiContent.categories().size() + rows - 1) / rows); page = Math.min(page, pages - 1);
+            rows = Math.max(1, available / 18); pages = Math.max(1, (WikiContent.categories().size() + rows - 1) / rows); page = Math.min(page, pages - 1);
             for (int i = 0; i < rows && page * rows + i < count; i++) {
                 var item = WikiContent.categories().get(page * rows + i);
-                var button = addRenderableWidget(Button.builder(Component.literal(item.title() + " / " + item.features().size() + "機能"), widget -> category(item.id())).bounds(right + 8, bodyY + i * 22, contentWidth - 16, 20).build());
+                var button = addRenderableWidget(Button.builder(Component.literal(item.title() + " / " + item.features().size() + "機能"), widget -> category(item.id())).bounds(right + 8, bodyY + i * 18, contentWidth - 16, 16).build());
                 button.setTooltip(Tooltip.create(Component.literal(item.description())));
             }
         } else {
             var articles = view.equals("search") ? WikiContent.search(query) : WikiContent.category(category).features().stream().map(WikiContent::article).toList();
             resultsCount = articles.size();
-            rows = Math.max(1, available / 22); pages = Math.max(1, (articles.size() + rows - 1) / rows); page = Math.min(page, pages - 1);
+            rows = Math.max(1, available / 18); pages = Math.max(1, (articles.size() + rows - 1) / rows); page = Math.min(page, pages - 1);
             for (int i = 0; i < rows && page * rows + i < articles.size(); i++) {
                 var item = articles.get(page * rows + i);
                 String label = item.title() + (enabled(item.feature()) ? " [ON]" : " [OFF]");
-                var button = addRenderableWidget(Button.builder(Component.literal(label), widget -> article(item.feature())).bounds(right + 8, bodyY + i * 22, contentWidth - 16, 20).build());
+                var button = addRenderableWidget(Button.builder(Component.literal(label), widget -> article(item.feature())).bounds(right + 8, bodyY + i * 18, contentWidth - 16, 16).build());
                 button.setTooltip(Tooltip.create(Component.literal(item.paragraphs().getFirst())));
             }
         }
@@ -100,8 +100,9 @@ public final class WikiScreen extends Screen {
             else if (option.kind() == ConfigSchema.Kind.LIST || option.kind() == ConfigSchema.Kind.MAP) value = ConfigSchema.split(value).size() + "件";
             else if (value.length() > 70) value = value.substring(0, 67) + "...";
             result.add(option.label() + ": " + value + (personal ? "（個人）" : minecraft.getConnection() == null ? "（ローカル）" : "（サーバー）"));
+            result.add("  反映: " + ConfigTiming.description(feature, option.key()));
         }
-        result.add("設定の反映: " + ConfigTiming.description(feature, "enabled")); return result;
+        return result;
     }
     private void turn(int change) { page = Math.max(0, Math.min(pages - 1, page + change)); rebuildWidgets(); }
     @Override public void tick() {

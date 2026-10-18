@@ -136,10 +136,16 @@ public abstract class FurnaceMixin extends BaseContainerBlockEntity implements I
     private void sum1rem0d$break(BlockPos pos, BlockState state, CallbackInfo ci) { sum1rem0d$breaking = true; sum1rem0d$discard(); }
     @Inject(method = "saveAdditional", at = @At("TAIL"))
     private void sum1rem0d$save(ValueOutput output, CallbackInfo ci) { output.putDouble("sum1rem0d_fuel_credit", sum1rem0d$credit); output.putBoolean("sum1rem0d_preview", sum1rem0d$preview); }
+    @Redirect(method="saveAdditional",at=@At(value="INVOKE",target="Lnet/minecraft/world/ContainerHelper;saveAllItems(Lnet/minecraft/world/level/storage/ValueOutput;Lnet/minecraft/core/NonNullList;)V"))
+    private void sum1rem0d$saveLargeFuel(ValueOutput output,NonNullList<ItemStack> original){
+        var copy=NonNullList.withSize(original.size(),ItemStack.EMPTY);for(int i=0;i<original.size();i++)copy.set(i,original.get(i).copy());
+        var fuel=copy.get(1);output.putInt("sum1rem0d_fuel_count",fuel.getCount());fuel.setCount(Math.min(fuel.getCount(),fuel.getMaxStackSize()));net.minecraft.world.ContainerHelper.saveAllItems(output,copy);
+    }
     @Inject(method = "loadAdditional", at = @At("TAIL"))
     private void sum1rem0d$load(ValueInput input, CallbackInfo ci) {
         double credit = input.getDoubleOr("sum1rem0d_fuel_credit", 0); sum1rem0d$credit = Double.isFinite(credit) ? Math.max(0, Math.min(0.999999999, credit)) : 0;
         if (input.getBooleanOr("sum1rem0d_preview", false)) items.set(2, ItemStack.EMPTY);
+        if(!items.get(1).isEmpty()){int count=input.getIntOr("sum1rem0d_fuel_count",items.get(1).getCount());if(count>=items.get(1).getCount()&&count<=1000000)items.get(1).setCount(count);}
         sum1rem0d$preview = false;
     }
 }

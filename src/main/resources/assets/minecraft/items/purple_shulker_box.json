@@ -1,0 +1,49 @@
+{
+  "model": {
+    "property": "minecraft:has_component",
+    "component": "minecraft:dyed_color",
+    "on_true": {
+      "tints": [
+        {
+          "default": -1,
+          "type": "minecraft:dye"
+        }
+      ],
+      "model": "sum1rem0d:item/mixed_shulker_box",
+      "type": "minecraft:model"
+    },
+    "on_false": {
+      "base": "minecraft:item/purple_shulker_box",
+      "transformation": {
+        "translation": [
+          0.5,
+          1.4995,
+          0.5
+        ],
+        "left_rotation": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "right_rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          0.9995,
+          0.9995,
+          0.9995
+        ]
+      },
+      "model": {
+        "texture": "minecraft:shulker_purple",
+        "type": "minecraft:shulker_box"
+      },
+      "type": "minecraft:special"
+    },
+    "type": "minecraft:condition"
+  }
+}

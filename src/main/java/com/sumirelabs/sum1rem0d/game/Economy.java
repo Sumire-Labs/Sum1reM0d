@@ -106,6 +106,24 @@ public final class Economy {
         catch(RuntimeException failure){state.restore(before);throw failure;}
         saved(p);
     }
+    static void takeDeliveryBox(ServerPlayer p, DeliveryBoxEntity box, int slot) {
+        if (!Rules.on("economy") || !p.isAlive() || p.isSpectator() || p.containerMenu == p.inventoryMenu
+            || box == null || !box.mayAccess(p) || box.getLevel() != p.level()
+            || p.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(box.getBlockPos())) > 64) return;
+        var world = WorldState.get(p.level().getServer()); var before = world.checkpoint();
+        try {
+            ItemStack taken = box.takeForPlayer(slot);
+            if (taken.isEmpty()) return;
+            var inventory = completeInventory(p);
+            if (!insert(inventory, taken)) throw new IllegalArgumentException("持ち物に空きがありません。宅配BOXには商品を残しました");
+            commitInventories(Map.of(p,inventory), Map.of(p,balance(p)));
+            saved(p);
+        } catch (RuntimeException failure) {
+            world.restore(before);
+            message(p, failure.getMessage() == null ? "宅配BOXから取り出せません" : failure.getMessage());
+            Gameplay.sendState(p);
+        }
+    }
     public static void recover(ServerPlayer p) {
         var record=WorldState.get(p.level().getServer()).coinInventories().get(p.getUUID().toString()); if(record==null)return;
         String revision=record.get("revision").getAsString(); var marker=(CoinInventoryRevision)p;
@@ -168,7 +186,7 @@ public final class Economy {
     private static boolean near(ServerPlayer a,ServerPlayer b) {
         double distance=Rules.n("player_trading","maximum_distance"); return a!=b && a.level()==b.level() && a.distanceToSqr(b)<=distance*distance;
     }
-    private static boolean active(ServerPlayer p) { return p.isAlive() && !p.isSpectator() && !p.isCreative() && p.connection!=null && p.connection.isAcceptingMessages(); }
+    private static boolean active(ServerPlayer p) { return p.isAlive() && !p.isSpectator() && (!p.isCreative() || Rules.b("player_trading","allow_creative")) && p.connection!=null && p.connection.isAcceptingMessages(); }
     private static void invite(ServerPlayer p,UUID target) {
         if (!Rules.on("player_trading") || !active(p)) return;
         var other=p.level().getServer().getPlayerList().getPlayer(target);
@@ -221,7 +239,7 @@ public final class Economy {
         for(var p:List.of(s.a,s.b)) { if(p.containerMenu instanceof TradeMenu menu && menu.session==s) p.closeContainer();message(p,reason);Gameplay.sendState(p); }
     }
     public static void cancel(ServerPlayer p,String reason) { var s=SESSIONS.get(p.getUUID()); if(s!=null) finish(s,reason); }
-    public static void leaving(ServerPlayer p) { cancel(p,"相手が退出したため取引をキャンセルしました"); INVITES.remove(p.getUUID()); INVITES.entrySet().removeIf(e->e.getValue().sender().equals(p.getUUID())); }
+    public static void leaving(ServerPlayer p) { cancel(p,"相手が退出したため取引をキャンセルしました"); INVITES.remove(p.getUUID()); INVITES.entrySet().removeIf(e->e.getValue().sender().equals(p.getUUID())); DeliveryBoxAccess.clear(p.getUUID()); }
     public static void tick(MinecraftServer server) {
         for(var s:new HashSet<>(SESSIONS.values())) if(s.a.level().getServer()==server) {
             if(!valid(s)) finish(s,"取引条件が満たされないためキャンセルしました");
@@ -234,6 +252,7 @@ public final class Economy {
         var invite=INVITES.get(p.getUUID());
         if(invite!=null) { var sender=p.level().getServer().getPlayerList().getPlayer(invite.sender()); if(sender!=null) {json.addProperty("inviteName",sender.getGameProfile().name());json.addProperty("inviteRevision",invite.revision());} }
         var players=new JsonArray(); if(Rules.on("player_trading")) for(var other:p.level().getServer().getPlayerList().getPlayers()) if(active(other)&&near(p,other)) {var entry=new JsonObject();entry.addProperty("id",other.getUUID().toString());entry.addProperty("name",other.getGameProfile().name());players.add(entry);} json.add("players",players);
+        var deliveryPlayers=new JsonArray();for(var other:p.level().getServer().getPlayerList().getPlayers())if(other!=p&&other.level()==p.level()&&other.isAlive()&&p.distanceToSqr(other)<=256&&deliveryPlayers.size()<64){var entry=new JsonObject();entry.addProperty("id",other.getUUID().toString());entry.addProperty("name",other.getGameProfile().name());deliveryPlayers.add(entry);}json.add("deliveryPlayers",deliveryPlayers);
         var s=SESSIONS.get(p.getUUID()); if(s!=null) {var trade=new JsonObject();trade.addProperty("revision",s.revision);trade.addProperty("other",s.other(p).getGameProfile().name());trade.addProperty("ownCoins",s.coins(p));trade.addProperty("otherCoins",s.coins(s.other(p)));trade.addProperty("accepted",p==s.a?s.acceptedA:s.acceptedB);trade.addProperty("otherAccepted",p==s.a?s.acceptedB:s.acceptedA);json.add("trade",trade);}return json;
     }
     private static void reward(ServerPlayer p,int amount) {

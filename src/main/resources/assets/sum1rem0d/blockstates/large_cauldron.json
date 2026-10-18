@@ -1,0 +1,123 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_shell_x0"
+      },
+      "when": {
+        "z_axis": "false",
+        "part": "0"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_shell_x1"
+      },
+      "when": {
+        "z_axis": "false",
+        "part": "1"
+      }
+    },
+    {
+      "apply": {
+        "y": 90,
+        "model": "sum1rem0d:block/large_cauldron_shell_x0"
+      },
+      "when": {
+        "z_axis": "true",
+        "part": "0"
+      }
+    },
+    {
+      "apply": {
+        "y": 90,
+        "model": "sum1rem0d:block/large_cauldron_shell_x1"
+      },
+      "when": {
+        "z_axis": "true",
+        "part": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_1"
+      },
+      "when": {
+        "contents": "water",
+        "level": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_2"
+      },
+      "when": {
+        "contents": "water",
+        "level": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_water_3"
+      },
+      "when": {
+        "contents": "water",
+        "level": "3"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_1"
+      },
+      "when": {
+        "contents": "powder_snow",
+        "level": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_2"
+      },
+      "when": {
+        "contents": "powder_snow",
+        "level": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_powder_snow_3"
+      },
+      "when": {
+        "contents": "powder_snow",
+        "level": "3"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_1"
+      },
+      "when": {
+        "contents": "lava",
+        "level": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_2"
+      },
+      "when": {
+        "contents": "lava",
+        "level": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "sum1rem0d:block/large_cauldron_lava_3"
+      },
+      "when": {
+        "contents": "lava",
+        "level": "3"
+      }
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 // remain explicit version branches in Java; this only adapts renamed symbols.
 ext.adaptMinecraftSource = { String line, String mc ->
     if (mc == '26.3') return line
+    if (line.trim() == 'import net.minecraft.util.Prediction;') return ''
+    line = line.replaceAll(',\\s*(?:net\\.minecraft\\.util\\.)?Prediction\\.SERVER_ONLY', '')
     line = line.replace('InputConstants.Type.KEYBOARD', 'InputConstants.Type.KEYSYM')
     line = line.replace('AbstractBedBlock', 'BedBlock').replace('RedstoneWireBlock', 'RedStoneWireBlock')
         .replace('net/minecraft/client/renderer/texture/UvMapping', 'net/minecraft/client/renderer/texture/TextureAtlasSprite')

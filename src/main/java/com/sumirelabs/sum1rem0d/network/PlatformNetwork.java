@@ -11,6 +11,11 @@ public final class PlatformNetwork {
     public static void initialize() {
         PayloadTypeRegistry.serverboundPlay().register(ConfigRequestPayload.TYPE, ConfigRequestPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(ActivityPayload.TYPE, ActivityPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(CrawlPayload.TYPE, CrawlPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(CrawlStatePayload.TYPE, CrawlStatePayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(SecondOffhandRequestPayload.TYPE, SecondOffhandRequestPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(SecondOffhandStatePayload.TYPE, SecondOffhandStatePayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(PaxelRecipeMapPayload.TYPE, PaxelRecipeMapPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(EconomyRequestPayload.TYPE, EconomyRequestPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(ShopRequestPayload.TYPE,ShopRequestPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(ShopStatePayload.TYPE,ShopStatePayload.CODEC);
@@ -23,6 +28,8 @@ public final class PlatformNetwork {
         ServerPlayNetworking.registerGlobalReceiver(ConfigRequestPayload.TYPE,
             (request, context) -> ServerConfigHandler.handle(request, context.player()));
         ServerPlayNetworking.registerGlobalReceiver(ActivityPayload.TYPE, (request, context) -> context.player().resetLastActionTime());
+        ServerPlayNetworking.registerGlobalReceiver(CrawlPayload.TYPE, (request, context) -> com.sumirelabs.sum1rem0d.game.WorldMobility.handleCrawl(context.player(), request.crawling()));
+        ServerPlayNetworking.registerGlobalReceiver(SecondOffhandRequestPayload.TYPE, (request, context) -> com.sumirelabs.sum1rem0d.game.SecondOffhandService.requestSwap(context.player()));
     }
     public static void send(ServerPlayer player, ConfigStatePayload state) {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;
@@ -44,6 +51,18 @@ public final class PlatformNetwork {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;
         if (ServerPlayNetworking.canSend(player, FakeAdvancementPayload.TYPE)) ServerPlayNetworking.send(player, state);
     }
+    public static void send(ServerPlayer player, CrawlStatePayload state) {
+        if (player.connection == null || !player.connection.isAcceptingMessages()) return;
+        if (ServerPlayNetworking.canSend(player, CrawlStatePayload.TYPE)) ServerPlayNetworking.send(player, state);
+    }
+    public static void send(ServerPlayer player, SecondOffhandStatePayload state) {
+        if (player.connection == null || !player.connection.isAcceptingMessages()) return;
+        if (ServerPlayNetworking.canSend(player, SecondOffhandStatePayload.TYPE)) ServerPlayNetworking.send(player, state);
+    }
+    public static void send(ServerPlayer player, PaxelRecipeMapPayload state) {
+        if (player.connection == null || !player.connection.isAcceptingMessages()) return;
+        if (ServerPlayNetworking.canSend(player, PaxelRecipeMapPayload.TYPE)) ServerPlayNetworking.send(player, state);
+    }
 }
 //?} elif neoforge {
 /*import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -60,6 +79,11 @@ public final class PlatformNetwork {
         registrar.playToClient(ShopStatePayload.TYPE,ShopStatePayload.CODEC);
         registrar.playToClient(EquipmentStatePayload.TYPE,EquipmentStatePayload.CODEC);
         registrar.playToServer(ActivityPayload.TYPE, ActivityPayload.CODEC, (request, context) -> ((ServerPlayer) context.player()).resetLastActionTime());
+        registrar.playToServer(CrawlPayload.TYPE, CrawlPayload.CODEC, (request, context) -> com.sumirelabs.sum1rem0d.game.WorldMobility.handleCrawl((ServerPlayer) context.player(), request.crawling()));
+        registrar.playToClient(CrawlStatePayload.TYPE, CrawlStatePayload.CODEC);
+        registrar.playToServer(SecondOffhandRequestPayload.TYPE, SecondOffhandRequestPayload.CODEC, (request, context) -> com.sumirelabs.sum1rem0d.game.SecondOffhandService.requestSwap((ServerPlayer) context.player()));
+        registrar.playToClient(SecondOffhandStatePayload.TYPE, SecondOffhandStatePayload.CODEC);
+        registrar.playToClient(PaxelRecipeMapPayload.TYPE, PaxelRecipeMapPayload.CODEC);
         registrar.playToClient(ConfigStatePayload.TYPE, ConfigStatePayload.CODEC);
         registrar.playToClient(GameStatePayload.TYPE, GameStatePayload.CODEC);
         registrar.playToClient(FakeAdvancementPayload.TYPE, FakeAdvancementPayload.CODEC);
@@ -83,6 +107,17 @@ public final class PlatformNetwork {
     public static void send(ServerPlayer player, FakeAdvancementPayload state) {
         if (player.connection == null || !player.connection.isAcceptingMessages()) return;
         if (player.connection.hasChannel(FakeAdvancementPayload.TYPE)) PacketDistributor.sendToPlayer(player, state);
+    }
+    public static void send(ServerPlayer player, CrawlStatePayload state) {
+        if(player.connection==null||!player.connection.isAcceptingMessages())return;
+        if(player.connection.hasChannel(CrawlStatePayload.TYPE)) PacketDistributor.sendToPlayer(player, state);
+    }
+    public static void send(ServerPlayer player, SecondOffhandStatePayload state) {
+        if(player.connection==null||!player.connection.isAcceptingMessages())return;
+        if (player.connection.hasChannel(SecondOffhandStatePayload.TYPE)) PacketDistributor.sendToPlayer(player, state);
+    }
+    public static void send(ServerPlayer player, PaxelRecipeMapPayload state) {
+        if (player.connection != null && player.connection.isAcceptingMessages() && player.connection.hasChannel(PaxelRecipeMapPayload.TYPE)) PacketDistributor.sendToPlayer(player, state);
     }
 }
 *///?}

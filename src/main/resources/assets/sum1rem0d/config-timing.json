@@ -6,7 +6,8 @@
       "options": {
         "enabled": "ONは保存済みの当日抽選を利用。OFFは次の処理で解除",
         "chance": "翌朝の抽選から反映。無効な機能は対象外。発生確率×重み÷有効な候補の重み合計で選択",
-        "announce": "次の日替わり通知から反映"
+        "announce": "次の日替わり通知から反映",
+        "mod_animal_products": "次の飲食から反映。既存の禁止/許可リストは変更しない"
       }
     },
     "damage_effects": {
@@ -203,7 +204,8 @@
         "random_urls": "次のブラウザ作成時に選択。再利用中のページは維持",
         "width": "次の描画で左側の空き幅に収める。インベントリ本体の位置は変更しない",
         "left_gap": "次の描画から反映。ブラウザをさらに左へ離し、空き幅が40未満なら表示だけ隠す",
-        "stop_on_close": "次にインベントリを閉じた時に反映。OFFなら同じセッションで背景再生。切断・機能OFF時は終了"
+        "stop_on_close": "次にインベントリを閉じた時に反映。OFFなら同じセッションで背景再生。切断・機能OFF時は終了",
+        "paused_bar": "次の描画から反映。一時停止中の動画がある場合のみ小さな再開バーを表示し、動画終了時は隠す"
       }
     },
     "advertisements": {
@@ -221,11 +223,7 @@
       "default": "次のカメラ抽選から反映。固定中の角度・残り時間は維持"
     },
     "daily_events": {
-      "options": {
-        "enabled": "OFFは次の処理で全異変を解除。ONは当日の保存済み抽選を再利用",
-        "chance": "翌朝の抽選から反映。同じ日の再抽選はしない",
-        "announce": "次の異変通知から反映"
-      }
+      "default": "抽選条件は翌朝から反映。通知のON/OFFは次の通知から。枠分離後の初回起動では当日分を再抽選して保存する"
     },
     "wiki": {
       "default": "次回参加時の自動表示判定から反映",
@@ -252,7 +250,8 @@
         "hud_text_color": "個人設定。保存後すぐにHUDへ反映します。位置は選んだ画面端からのGUIピクセルで、画面内に収まるよう補正します。",
         "hud_shadow": "個人設定。保存後すぐにHUDへ反映します。位置は選んだ画面端からのGUIピクセルで、画面内に収まるよう補正します。",
         "hud_label": "個人設定。保存後すぐにHUDへ反映します。位置は選んだ画面端からのGUIピクセルで、画面内に収まるよう補正します。",
-        "allow_creative_wallet": "サーバー設定。次のコイン入出金から適用。XP銀行とプレイヤー取引のクリエ制限は維持します。"
+        "allow_creative_wallet": "サーバー設定。次のコイン入出金から適用。XP銀行とプレイヤー取引のクリエ制限は維持します。",
+        "hud_icon": "即時"
       }
     },
     "coin_rewards": {
@@ -380,13 +379,395 @@
       "default": "次の設置/配線更新から反映。設定変更時にロード済みの配線を順次再計算。OFFは既存配線の出力と発光を0にする"
     },
     "sumzon": {
-      "default": "次の見積・新規注文から反映。確定済みの価格・送料・配送予定・受取権を保持。OFFでも支払済み注文は受取可能"
+      "default": "次の見積・新規注文から反映。確定済みの価格・送料・配送予定・受取権を保持。OFFでも支払済み注文は受取可能",
+      "options": {
+        "prices": "次の購入見積りから適用。すでに確定した注文の単価は変更しない",
+        "allow_creative": "次の注文・受取操作から適用",
+        "player_head_price": "次の注文から適用",
+        "player_head_listing_limit": "次のSumzon表示更新から適用",
+        "catalog_refresh_ticks": "次のSumzon画面更新から適用",
+        "search_suggestions": "次の検索入力から適用"
+      }
     },
     "ad_premium": {
       "default": "次の契約・更新から反映。支払済みの有効期限と特典を保持。料金/期間変更時は自動更新を停止して再同意を求める"
     },
     "sumzon_prime": {
       "default": "次の契約・更新から反映。支払済みの有効期限と特典を保持。料金/期間変更時は自動更新を停止して再同意を求める"
+    },
+    "beetroot_soup_boost": {
+      "default": "適用後、次の飲食・ケーキの1切れから反映。元の食品定義や既存アイテムは書き換えない"
+    },
+    "cooked_meat_penalty": {
+      "default": "適用後、次の飲食・ケーキの1切れから反映。元の食品定義や既存アイテムは書き換えない"
+    },
+    "staple_food_penalty": {
+      "default": "適用後、次の飲食・ケーキの1切れから反映。元の食品定義や既存アイテムは書き換えない"
+    },
+    "sweet_food_boost": {
+      "default": "適用後、次の飲食・ケーキの1切れから反映。元の食品定義や既存アイテムは書き換えない"
+    },
+    "gold_equipment": {
+      "default": "適用後、次の耐久判定・採掘・攻撃から反映。既存アイテムにも適用"
+    },
+    "wooden_nerf": {
+      "default": "適用後、次の耐久判定・採掘・攻撃から反映。既存アイテムにも適用"
+    },
+    "chainmail_equipment": {
+      "default": "適用後、次の耐久判定・採掘・攻撃から反映。既存アイテムにも適用"
+    },
+    "shelf_weapon": {
+      "default": "適用後、次の耐久判定・採掘・攻撃から反映。既存アイテムにも適用"
+    },
+    "retro_cobblestone": {
+      "default": "有効な候補として翌朝のビジュアル抽選から反映"
+    },
+    "sperm_whale": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "shield_mob_clone": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "wind_black_hole": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "life_berry": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "netherite_upgrade": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "crossbow_circle": {
+      "default": "次のクロスボウ使用・発射から反映。Config OFFでは蓄積済みの有料矢を次の使用時にバニラの装填弾へ戻す",
+      "options": {
+        "max_stored_arrows": "次に装填済み弾を蓄積/一斉発射する時から反映",
+        "manual_release_enabled": "次のスニーク＋右クリック操作から反映"
+      }
+    },
+    "stumble_enchantment": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "sneak_speed": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "second_offhand": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "slime_mouth": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "material_paxel": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "mixed_containers": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映"
+    },
+    "sumzon_delivery_box": {
+      "default": "適用後の次の処理から反映。登録内容を変える設定は再起動後に反映",
+      "options": {
+        "recipe_enabled": "次のクラフト判定から適用",
+        "enabled": "次の注文から適用。ON中にBOXを置くと未受取の旧注文をBOX配送へ移行。切替前に確定した注文は安全な従来受取を維持",
+        "require_for_claim": "次の受取操作から適用",
+        "permission_radius": "次の許可設定操作から適用"
+      }
+    },
+    "furnace_info": {
+      "default": "クライアントで即時反映。精錬GUIを開いたまま切替可能。"
+    },
+    "programmer_pufferfish": {
+      "default": "有効/手持ち倍率の変更時にリソースを再読込。進捗Overlayは非表示にし、完了後にProgrammer Art画像・モデルを切替。"
+    },
+    "tab_ping": {
+      "default": "クライアント設定変更後に即時反映。"
+    },
+    "last_tool_back": {
+      "default": "クライアント設定変更は即時反映。手に持つツールを切り替えた次の描画から直前のツールをローカルプレイヤーの背中に表示。"
+    },
+    "japanese_ime": {
+      "default": "クライアント設定変更後に即時反映。26.x本体のSDL TextInput/PreeditEvent経路を利用。"
+    },
+    "clock_ticks": {
+      "default": "HUD数値は即時反映。アニメーションtextureからclock_ticks.pngへの切替は設定変更時reload完了後に反映（進捗Overlay非表示）。"
+    },
+    "path_speed": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "stonecutter_hazard": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "nether_heat": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "noon_undress": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "sulfur_dirt": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "endrod_steam": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "infested_swarm": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "crying_obsidian_mix": {
+      "default": "適用後、次の処理・判定から反映。正午の時刻は次に指定時刻をまたぐ時から反映"
+    },
+    "golem_upgrade": {
+      "default": "適用後の次のtick・死亡処理から反映。ゴーレムは現在HPの割合を維持"
+    },
+    "chick_trample": {
+      "default": "適用後の次のtick・死亡処理から反映。ゴーレムは現在HPの割合を維持"
+    },
+    "explosive_deaths": {
+      "default": "適用後の次のtick・死亡処理から反映。ゴーレムは現在HPの割合を維持"
+    },
+    "automated_crafting": {
+      "options": {
+        "enabled": "次の加工周期から適用。停止中もパターンと材料は保持",
+        "interval_ticks": "次のクラフト周期から適用"
+      }
+    },
+    "jukebox_grinder": {
+      "options": {
+        "enabled": "次の粉砕判定から適用。停止中も材料を保持",
+        "interval_ticks": "次の粉砕周期から適用"
+      }
+    },
+    "washing_cauldron": {
+      "options": {
+        "enabled": "次の洗浄判定から適用。停止中も材料と水位は保持",
+        "interval_ticks": "次の洗浄周期から適用",
+        "dust_mineral_chance": "次のダスト洗浄判定から適用"
+      }
+    },
+    "tesla_coil": {
+      "options": {
+        "enabled": "次の通電周期から適用。OFFで即時停止",
+        "range": "次の放電から適用",
+        "damage": "次の放電から適用",
+        "interval_ticks": "次の放電から適用",
+        "affect_players": "次の放電から適用"
+      }
+    },
+    "auto_clicker": {
+      "options": {
+        "enabled": "次の赤石立上りから適用。停止中もスロット品は保持",
+        "interval_ticks": "次のクリックから適用",
+        "entity_interaction": "次のクリックから適用。OFFでは正面のブロックのみ対象"
+      }
+    },
+    "sulfur_gunpowder": {
+      "options": {
+        "enabled": "次のクラフトから適用"
+      }
+    },
+    "lodestone_travel": {
+      "default": "次のコンパス右クリックから反映。開始済みの再使用待機はそのまま"
+    },
+    "powered_creeper": {
+      "default": "次のクリーパー接触判定から適用。開始した起爆は取消しません"
+    },
+    "bush_seeds": {
+      "default": "次の茂みのドロップ計算から適用。シルクタッチは追加対象外"
+    },
+    "classic_dye_names": {
+      "default": "次のアイテム名の表示から適用。アイテムIDとレシピは維持"
+    },
+    "minecart_speed": {
+      "default": "速度上限撤廃は次回トロッコtickから反映。機能OFFでバニラ上限へ戻る。",
+      "options": {
+        "unlimited": "次回トロッコtickから反映。OFFではmax_speed指定値を使う。",
+        "max_speed": "unlimited=falseの場合、次回トロッコtickから反映。"
+      }
+    },
+    "boat_speed": {
+      "default": "速度上限撤廃は次回ボートtickから反映。機能OFFでバニラ上限へ戻る。",
+      "options": {
+        "unlimited": "次回ボートtickから反映。OFFではmax_speed指定値を使う。",
+        "max_speed": "unlimited=falseの場合、次回ボートtickから反映。"
+      }
+    },
+    "boat_mob_spawn": {
+      "default": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+      "options": {
+        "radius": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+        "max_boats": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+        "step_height": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+        "blue_ice_speed": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+        "interval_ticks": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+        "entity_types": "サーバー設定の変更後、次回抽選/ボートtickから反映。",
+        "chance": "サーバー設定の変更後、次回抽選/ボートtickから反映。"
+      }
+    },
+    "copper_chest": {
+      "default": "新規配置時に適用。移行設定は次回チャンクロード時に一度だけ適用。",
+      "options": {
+        "migrate_legacy": "新規配置時に適用。移行設定は次回チャンクロード時に一度だけ適用。"
+      }
+    },
+    "tnt_cluster": {
+      "default": "サーバー設定の変更後に点火するTNTから反映。",
+      "options": {
+        "power_3": "サーバー設定の変更後に点火するTNTから反映。",
+        "recursive_chain_limit": "サーバー設定の変更後に点火するTNTから反映。",
+        "power_2": "サーバー設定の変更後に点火するTNTから反映。"
+      }
+    },
+    "large_cauldron": {
+      "default": "新規配置/隣接更新時に反映。既存液体は保存された各セルの量を保持。",
+      "options": {
+        "auto_merge": "新規配置/隣接更新時に反映。既存液体は保存された各セルの量を保持。"
+      }
+    },
+    "leaf_pass": {
+      "default": "クライアント/サーバー双方で設定受信後すぐ反映。",
+      "options": {
+        "inside_speed": "クライアント/サーバー双方で設定受信後すぐ反映。"
+      }
+    },
+    "unbreakable_lead": {
+      "default": "サーバー設定の変更後、次回リード接続/tickから反映。",
+      "options": {
+        "allow_players": "サーバー設定の変更後、次回リード接続/tickから反映。",
+        "max_length": "サーバー設定の変更後、次回リード接続/tickから反映。"
+      }
+    },
+    "seat_blocks": {
+      "default": "サーバー設定の変更後、次回右クリックから反映。",
+      "options": {
+        "allow_stairs": "サーバー設定の変更後、次回右クリックから反映。",
+        "allow_mushrooms": "サーバー設定の変更後、次回右クリックから反映。",
+        "allow_slabs": "サーバー設定の変更後、次回右クリックから反映。"
+      }
+    },
+    "crawl": {
+      "default": "サーバー設定変更後に即時反映。キーバインドはクライアントControlsから変更。",
+      "options": {
+        "speed_multiplier": "サーバー設定変更後に即時反映。キーバインドはクライアントControlsから変更。"
+      }
+    },
+    "cigarette": {
+      "default": "設定後の次回消費から適用。消費済みの強化は継続し、遅延弱体の発生時にOFFなら発生を取り消す。",
+      "options": {
+        "enabled": "次回消費から反映。",
+        "buff_seconds": "次回消費から反映。既存の効果時間は変更しない。",
+        "buff_level": "次回消費から反映。",
+        "buff_effects": "次回消費から反映。",
+        "debuff_seconds": "次回消費から反映。",
+        "debuff_level": "次回消費から反映。",
+        "debuff_effects": "次回消費から反映。"
+      }
+    },
+    "milk_combo": {
+      "default": "設定後の次回牛乳飲用から反映。連続日数はプレイヤー保存データに記録。",
+      "options": {
+        "enabled": "次回飲用から反映。OFF中は連続日数を進めない。",
+        "buff_effects": "次回飲用から反映。",
+        "duration_seconds": "次回飲用から反映。",
+        "days_per_level": "次回飲用から反映。",
+        "maximum_level": "次回飲用から反映。"
+      }
+    },
+    "bottled_milk": {
+      "default": "レシピと収納はサーバー設定変更後すぐ反映。既存アイテムと収納内容は保持。",
+      "options": {
+        "enabled": "次回クラフトから反映。OFF中も既存の瓶入り牛乳は飲める。",
+        "milk_bundle_enabled": "次回収納から反映。OFFにしても収納済み瓶は取り出せる。"
+      }
+    },
+    "cat_meat": {
+      "default": "ドロップは次回ネコ死亡時、悪影響は次回生肉消費時から反映。",
+      "options": {
+        "enabled": "ドロップと悪影響を即時切替。",
+        "drop_chance": "次回ネコ死亡時から反映。",
+        "drop_min": "次回ネコ死亡時から反映。",
+        "drop_max": "次回ネコ死亡時から反映。",
+        "poison_chance": "次回生肉消費時から反映。",
+        "poison_seconds": "次回生肉消費時から反映。",
+        "hunger_chance": "次回生肉消費時から反映。",
+        "hunger_seconds": "次回生肉消費時から反映。"
+      }
+    },
+    "sugar_wire": {
+      "default": "次の配線更新から反映。既存配線は残し、OFF時は出力停止"
+    },
+    "gunpowder_wire": {
+      "default": "次の配線更新から反映。既存配線は残し、OFF時は出力停止"
+    },
+    "structure_ads": {
+      "default": "次の侵入判定（1秒ごと）から適用。再入場は再表示待機を尊重",
+      "options": {
+        "spawners": "次回の侵入判定から適用",
+        "duration_ticks": "次回に表示する広告から適用。表示中の広告の残り時間は変更しない",
+        "structures": "次回の侵入判定から適用。侵入中の場所は次の判定で反映",
+        "cooldown_ticks": "次回に検出した侵入から適用",
+        "enabled": "次回の1秒ごとの侵入判定から適用",
+        "spawner_radius": "次回の侵入判定から適用"
+      }
+    },
+    "fishing_cast": {
+      "options": {
+        "enabled": "次に釣り針を投げる時から適用",
+        "speed_multiplier": "次に投げる釣り針から適用",
+        "vertical_multiplier": "次に投げる釣り針から適用",
+        "gravity_multiplier": "飛行中の釣り針は次tickから、飛行後は次回投てきから適用"
+      }
+    },
+    "fishing_grapple": {
+      "options": {
+        "enabled": "次回のブロック命中・巻き取りから適用。水中と海洋バイオームは対象外",
+        "pull_strength": "次回巻き取りから適用",
+        "upward_boost": "次回巻き取りから適用",
+        "maximum_range": "次回巻き取りから適用"
+      }
+    },
+    "lava_fishing": {
+      "options": {
+        "enabled": "次回の溶岩投入・巻き取りから適用",
+        "minimum_wait_ticks": "次に溶岩へ投げた釣り針から適用",
+        "maximum_wait_ticks": "次に溶岩へ投げた釣り針から適用",
+        "maximum_item_count": "次の戦利品生成から適用",
+        "loot_items": "次の戦利品生成から適用"
+      }
+    },
+    "wind_burst_blocks": {
+      "options": {
+        "enabled": "次回のウィンドバースト発動から適用",
+        "radius": "次回の発動から適用",
+        "maximum_blocks": "次回の発動から適用",
+        "throw_speed": "次回の発動から適用",
+        "vertical_speed": "次回の発動から適用"
+      }
+    },
+    "pvp_death_media": {
+      "default": "次に他プレイヤーへ倒された時から適用。サーバーURLが空なら、各クライアントにlocal_fileが設定されている場合のみ再生",
+      "options": {
+        "local_file": "次のPvP再生から反映。設定した場合、このクライアントで存在する音源ファイルをサーバーURLより優先",
+        "media_source": "次のPvP死亡イベントから適用。空欄の場合は各クライアントlocal_fileだけを使用",
+        "volume": "再生中に即時反映。他の広告音量とは独立した個人設定"
+      }
+    },
+    "fuel_stacks": {
+      "default": "次の投入から適用。上限引下げ・OFFでも投入済み燃料は保持し、取り出せる"
+    },
+    "mixed_wool_slab": {
+      "default": "レシピと色混ぜは設定変更後すぐ反映。既存ブロックと色付きアイテムは保持。",
+      "options": {
+        "enabled": "次回クラフト・色決定から反映。",
+        "recipe_enabled": "次回レシピ検索から反映。",
+        "recipe_output": "次回クラフトから反映。",
+        "allow_mixed_colors": "次回クラフトから反映。"
+      }
+    },
+    "mixed_wool_stairs": {
+      "default": "レシピと色混ぜは設定変更後すぐ反映。既存ブロックと色付きアイテムは保持。",
+      "options": {
+        "enabled": "次回クラフト・色決定から反映。",
+        "recipe_enabled": "次回レシピ検索から反映。",
+        "recipe_output": "次回クラフトから反映。",
+        "allow_mixed_colors": "次回クラフトから反映。"
+      }
     }
   }
 }

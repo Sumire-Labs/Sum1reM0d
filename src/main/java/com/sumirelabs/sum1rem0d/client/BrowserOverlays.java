@@ -13,13 +13,33 @@ import com.sumirelabs.sum1rem0d.mixin.ContainerScreenAccess;
 
 public final class BrowserOverlays {
     private static Screen owner;
-    private static BrowserSession youtube, ad;
+    private static BrowserSession youtube, ad, worldAd, deathMedia;
     private static String lastYoutubeUrl;
     private static String configuredYoutubeUrl;
     private static long nextAd, adOpened;
     private static int youtubeX, youtubeY, youtubeWidth, youtubeHeight, adX, adY, adWidth, adHeight;
+    private static int hudX = 8, hudY = 26, hudWidth, hudHeight;
+    private static boolean draggingHud;
+    private static long pausedBarConfigRevision = Long.MIN_VALUE;
+    private static boolean cachedPausedBar;
+    private static int worldAdTicksRemaining;
+    private static long deathPlayAttemptAt;
+    private static double dragOffsetX, dragOffsetY;
     private BrowserOverlays() {}
     static BrowserSession youtubeSession() { return youtube; }
+    static int[] hudBounds() { return hudVisible() ? new int[] { hudX, hudY, hudWidth, hudHeight } : null; }
+    private static boolean pausedBar() {
+        if (youtube == null) return false;
+        var state = youtube.playback();
+        var store = PersonalConfig.store();
+        if (pausedBarConfigRevision != store.revision()) {
+            var options = store.snapshot().getAsJsonObject("features").getAsJsonObject("youtube");
+            cachedPausedBar = options.has("paused_bar") && options.get("paused_bar").getAsBoolean();
+            pausedBarConfigRevision = store.revision();
+        }
+        return state.hasMedia() && state.paused() && !state.ended() && cachedPausedBar;
+    }
+    private static boolean hudVisible() { return youtube != null && (youtube.playing() || pausedBar()); }
     static BrowserSession adSession() { return ad; }
     private static boolean inventory(Screen screen) { return screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen; }
     private static boolean advertisementScreen(Screen screen) {
@@ -71,8 +91,25 @@ public final class BrowserOverlays {
         if (owner != null && owner != mc.gui.screen()) changed(mc.gui.screen());
         if (youtube != null && (!ClientRules.enabled("youtube") || mc.level == null)) { youtube.close(); youtube = null; }
         if (ad != null && (!ClientRules.enabled("advertisements") || ShopClient.adPremium() || mc.level == null || !advertisementScreen(mc.gui.screen()))) closeAd();
-        if (youtube != null) youtube.updateVolume(PersonalConfig.store().integer("youtube", "volume"));
+        if (youtube != null) { youtube.updateVolume(PersonalConfig.store().integer("youtube", "volume")); youtube.pollPlayback(); }
         if (ad != null) ad.updateVolume(PersonalConfig.store().integer("advertisements", "volume"));
+        if (worldAd != null) {
+            if (mc.level == null || !ClientRules.enabled("structure_ads") || !ClientRules.enabled("advertisements") || ShopClient.adPremium()) closeWorldAd();
+            else if (--worldAdTicksRemaining <= 0) closeWorldAd();
+            else { worldAd.updateVolume(PersonalConfig.store().integer("advertisements", "volume")); worldAd.pollPlayback(); }
+        }
+        if (deathMedia != null) {
+            if (mc.level == null || !ClientRules.enabled("pvp_death_media") || deathMedia.failed()) closeDeathMedia();
+            else {
+                deathMedia.updateVolume(PersonalConfig.store().integer("pvp_death_media", "volume"));
+                deathMedia.pollPlayback();
+                long now = System.nanoTime();
+                if (!deathMedia.playing() && !deathMedia.playback().ended() && now - deathPlayAttemptAt >= 1_000_000_000L) {
+                    deathPlayAttemptAt = now; deathMedia.playMedia();
+                }
+                if (deathMedia.playback().ended()) closeDeathMedia();
+            }
+        }
         String url = PersonalConfig.store().text("youtube", "url");
         if (configuredYoutubeUrl != null && !configuredYoutubeUrl.equals(url)) {
             if (youtube != null) youtube.close(); youtube = null; lastYoutubeUrl = null; configuredYoutubeUrl = url;
@@ -113,6 +150,112 @@ public final class BrowserOverlays {
             graphics.text(font, wait > 0 ? wait + "秒後に閉じる" : "閉じる ×", adX + adWidth - 90, adY - 16, wait > 0 ? 0xFF909090 : -1);
             ad.draw(graphics, adX, adY, adWidth, adHeight, PersonalConfig.store().integer("advertisements", "volume"));
         }
+    }
+    /** Draws the persistent player while the inventory is closed. */
+    public static void renderHud(GuiGraphicsExtractor graphics) {
+        var mc = Minecraft.getInstance();
+        if (!hudVisible() || mc.level == null || mc.gui.hud.isHidden() || !ClientRules.enabled("youtube") || inventory(mc.gui.screen())) return;
+        boolean paused = pausedBar();
+        hudWidth = paused ? Math.max(140, Math.min(220, graphics.guiWidth() - 16)) : Math.max(1, Math.min(PersonalConfig.store().integer("youtube", "width"), graphics.guiWidth() - 16));
+        hudHeight = paused ? 20 : Math.max(1, Math.min(PersonalConfig.store().integer("youtube", "height"), graphics.guiHeight() - hudY - 8));
+        hudX = Math.max(0, Math.min(hudX, graphics.guiWidth() - hudWidth));
+        hudY = Math.max(0, Math.min(hudY, graphics.guiHeight() - hudHeight - 18));
+        var font = mc.font;
+        if (paused) {
+            graphics.fill(hudX - 2, hudY - 2, hudX + hudWidth + 2, hudY + hudHeight + 2, 0xEE101114);
+            graphics.text(font, "YouTube 一時停止中 · クリックで再開", hudX + 4, hudY + 5, -1);
+            return;
+        }
+        graphics.fill(hudX - 2, hudY - 18, hudX + hudWidth + 2, hudY + hudHeight + 2, 0xEE101114);
+        graphics.text(font, "←  →  ↻  YouTube", hudX + 3, hudY - 13, -1);
+        youtube.draw(graphics, hudX, hudY, hudWidth, hudHeight, PersonalConfig.store().integer("youtube", "volume"));
+    }
+
+    /** Timed structure popup and full-track PvP death media driven by server state serials. */
+    public static void triggerWorldAd(int durationTicks) {
+        var mc = Minecraft.getInstance();
+        if (!ClientRules.enabled("structure_ads") || !ClientRules.enabled("advertisements") || ShopClient.adPremium() || mc.level == null) return;
+        var urls = ClientRules.list("advertisements", "urls");
+        String selected = urls.isEmpty() ? "sum1rem0d:default_ad" : urls.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(urls.size()));
+        closeWorldAd();
+        worldAd = new BrowserSession(selected.equals("sum1rem0d:default_ad") ? defaultAd() : safe(selected, defaultAd()));
+        worldAdTicksRemaining = Math.max(1, Math.min(1200, durationTicks));
+    }
+
+    public static void playDeathMedia(String serverSource) {
+        var mc = Minecraft.getInstance();
+        if (!ClientRules.enabled("pvp_death_media") || mc.level == null) return;
+        String source = localDeathMediaSource();
+        if (source.isEmpty()) source = safe(serverSource == null ? "" : serverSource.trim(), "");
+        if (source.isEmpty()) { closeDeathMedia(); return; }
+        closeDeathMedia(); deathMedia = new BrowserSession(source); deathPlayAttemptAt = 0;
+    }
+
+    private static String localDeathMediaSource() {
+        String configured = PersonalConfig.store().text("pvp_death_media", "local_file").trim();
+        if (configured.isEmpty()) return "";
+        try {
+            java.nio.file.Path path = configured.regionMatches(true, 0, "file:", 0, 5)
+                    ? java.nio.file.Path.of(java.net.URI.create(configured)) : java.nio.file.Path.of(configured);
+            if (!path.isAbsolute()) path = Minecraft.getInstance().gameDirectory.toPath().resolve(path);
+            path = path.toAbsolutePath().normalize();
+            return java.nio.file.Files.isRegularFile(path) ? path.toUri().toString() : "";
+        } catch (RuntimeException invalidPath) { return ""; }
+    }
+
+    public static void renderWorldMedia(GuiGraphicsExtractor graphics) {
+        var mc = Minecraft.getInstance();
+        if (worldAd != null && mc.level != null && !ShopClient.adPremium()) {
+            int width = Math.min(500, Math.max(1, graphics.guiWidth() - 24));
+            int height = Math.min(300, Math.max(1, graphics.guiHeight() - 70));
+            int x = (graphics.guiWidth() - width) / 2, y = (graphics.guiHeight() - height) / 2;
+            graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), 0xA8000000);
+            graphics.fill(x - 3, y - 23, x + width + 3, y + height + 3, 0xFF202126);
+            graphics.text(mc.font, "広告", x + 5, y - 16, 0xFFCCCCCC);
+            worldAd.draw(graphics, x, y, width, height, PersonalConfig.store().integer("advertisements", "volume"));
+        }
+    }
+
+    public static void stopWorldMedia() { closeWorldAd(); closeDeathMedia(); }
+    static BrowserSession worldAdSession() { return worldAd; }
+    static BrowserSession deathMediaSession() { return deathMedia; }
+    static int worldAdTicksRemaining() { return worldAdTicksRemaining; }
+    private static void closeWorldAd() { if (worldAd != null) worldAd.close(); worldAd = null; worldAdTicksRemaining = 0; }
+    private static void closeDeathMedia() { if (deathMedia != null) deathMedia.close(); deathMedia = null; deathPlayAttemptAt = 0; }
+
+    /** Intercepts only clicks within the visible background player. */
+    public static boolean hudClick(MouseButtonEvent event, boolean doubled) {
+        if (!hudVisible() || Minecraft.getInstance().gui.screen() != null || Minecraft.getInstance().level == null) return false;
+        if (event.x() < hudX - 2 || event.x() >= hudX + hudWidth + 2 || event.y() < hudY - 18 || event.y() >= hudY + hudHeight + 2) return false;
+        if (event.y() < hudY) {
+            if (event.x() < hudX + 54) {
+                int part = Math.max(0, (int) ((event.x() - hudX) / 18));
+                if (part == 0) youtube.back(); else if (part == 1) youtube.forward(); else if (part == 2) youtube.reload();
+            } else {
+                draggingHud = true; youtube.focus(false); dragOffsetX = event.x() - hudX; dragOffsetY = event.y() - (hudY - 18);
+            }
+            return true;
+        }
+        if (pausedBar()) youtube.playMedia(); else youtube.click(event, doubled);
+        return true;
+    }
+    public static boolean hudRelease(MouseButtonEvent event) {
+        if (draggingHud) { draggingHud = false; return true; }
+        if (hudVisible() && youtube.focused() && Minecraft.getInstance().gui.screen() == null) { youtube.release(event); return true; }
+        return false;
+    }
+    public static boolean hudDrag(double x, double y) {
+        if (draggingHud) {
+            var mc = Minecraft.getInstance();
+            hudX = (int) Math.max(0, Math.min(mc.getWindow().getGuiScaledWidth() - hudWidth, x - dragOffsetX));
+            hudY = (int) Math.max(18, Math.min(mc.getWindow().getGuiScaledHeight() - hudHeight - 2, y - dragOffsetY + 18));
+            return true;
+        }
+        if (hudVisible() && youtube.focused() && Minecraft.getInstance().gui.screen() == null) { youtube.move(x, y); return true; }
+        return false;
+    }
+    public static boolean hudScroll(double x, double y, double amount) {
+        return hudVisible() && Minecraft.getInstance().gui.screen() == null && youtube.scroll(x, y, amount);
     }
     public static String defaultAd() {
         try (var stream = BrowserOverlays.class.getResourceAsStream("/assets/sum1rem0d/browser/default-ad.html")) {
@@ -159,5 +302,5 @@ public final class BrowserOverlays {
         return false;
     }
     public static boolean character(CharacterEvent event) { if (owner == null || owner != Minecraft.getInstance().gui.screen()) return false; return ad != null ? ad.character(event) : youtube != null && youtube.character(event); }
-    public static void closeAll() { if (youtube != null) youtube.close(); youtube = null; closeAd(); owner = null; lastYoutubeUrl = null; configuredYoutubeUrl = null; }
+    public static void closeAll() { if (youtube != null) youtube.close(); youtube = null; closeAd(); stopWorldMedia(); owner = null; draggingHud = false; lastYoutubeUrl = null; configuredYoutubeUrl = null; }
 }

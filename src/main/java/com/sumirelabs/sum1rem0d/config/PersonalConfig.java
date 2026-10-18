@@ -14,6 +14,6 @@ public final class PersonalConfig {
     public static boolean viewersBlocked() { return store != null && store.enabled("recipe_viewers") && viewerRoll; }
     public static boolean personal(String feature, String option) {
         return feature.equals("player_trading") && option.startsWith("toast_") || feature.equals("no_chat_reports") && option.equals("suppress_signing") || feature.equals("wiki") || feature.equals("recipe_viewers") || feature.equals("youtube") && !option.equals("enabled")
-            || feature.equals("economy") && option.startsWith("hud") || feature.equals("cleanliness") && option.startsWith("hud") || feature.equals("advertisements") && option.equals("volume");
+            || feature.equals("economy") && option.startsWith("hud") || feature.equals("cleanliness") && option.startsWith("hud") || feature.equals("advertisements") && option.equals("volume") || feature.equals("pvp_death_media") && (option.equals("local_file") || option.equals("volume")) || feature.equals("japanese_ime") || feature.equals("last_tool_back") || feature.equals("furnace_info") || feature.equals("programmer_pufferfish") || feature.equals("tab_ping") || feature.equals("clock_ticks");
     }
 }

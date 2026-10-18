@@ -27,7 +27,12 @@ public final class BrowserSmoke {
     private static JsonObject original;
     private static JsonObject originalRules;
     private static double backgroundTime;
+    private static boolean youtubeRestartIssued, youtubeRestartConfirmed;
+    private static long youtubeRestartStartedAt;
+    private static final String YOUTUBE_RESTART_EXPRESSION = "(()=>{const v=document.querySelector('video');if(!v)return false;v.pause();v.currentTime=0;const p=v.play();if(p&&p.catch)p.catch(()=>{});return true})()";
+    private static final String YOUTUBE_RESTART_STATE_EXPRESSION = "(()=>{const v=document.querySelector('video');return {paused:v?.paused??true,ended:v?.ended??true,time:v?.currentTime??-1,duration:Number.isFinite(v?.duration)?v.duration:-1}})()";
     private static HttpServer fixture;
+    private static java.nio.file.Path deathMediaSmokeFile;
     private static BrowserSession first, second, ad;
     private static net.dimaskama.mcef.api.MCEFBrowser releasedFirst, releasedYoutube;
     private static final java.util.List<net.dimaskama.mcef.api.MCEFBrowser> earlyClosed = new java.util.ArrayList<>();
@@ -94,7 +99,7 @@ public final class BrowserSmoke {
                 }
                 case 5 -> {
                     require(probe(first, "window.scrollY").getAsDouble() > 0, "Native scroll reaches browser"); pass("inventory browser button and scroll work");
-                    releasedFirst = (net.dimaskama.mcef.api.MCEFBrowser) first.cef();
+                    releasedFirst = (net.dimaskama.mcef.api.MCEFBrowser) cef(first);
                     mc.gui.setScreen(null); require(first.closed() && BrowserOverlays.youtubeSession() == null, "Closing inventory releases browser");
                     pass("closing inventory releases browser and focus"); mc.gui.setScreen(new InventoryScreen(mc.player)); advance(now);
                     for (int i = 0; i < 10; i++) {
@@ -138,6 +143,7 @@ public final class BrowserSmoke {
                 case 9 -> {
                     if (now - changedAt < 8_000_000_000L) return;
                     var youtube = BrowserOverlays.youtubeSession(); if (youtube == null || !youtube.ready()) return;
+                    youtubeRestartIssued = false; youtubeRestartConfirmed = false; youtubeRestartStartedAt = 0;
                     JsonElement result = probe(youtube, "({title:document.title,video:!!document.querySelector('video'),error:document.querySelector('.ytp-error-content-wrap-reason')?.innerText||'',time:document.querySelector('video')?.currentTime||0,paused:document.querySelector('video')?.paused??true,width:document.querySelector('video')?.videoWidth||0,frames:document.querySelector('video')?.getVideoPlaybackQuality().totalVideoFrames||0,volume:document.querySelector('video')?.volume??-1,state:document.readyState})");
                     observations.add("youtube", result); var object = result.getAsJsonObject();
                     if ((object.get("time").getAsDouble() < 1 || object.get("frames").getAsInt() < 2) && now - changedAt < 75_000_000_000L) { evaluations.clear(); return; }
@@ -157,10 +163,46 @@ public final class BrowserSmoke {
                 }
                 case 11 -> {
                     var youtube = BrowserOverlays.youtubeSession();
-                    var resumed = probe(youtube, "({paused:document.querySelector('video').paused,time:document.querySelector('video').currentTime,error:document.querySelector('.ytp-error-content-wrap-reason')?.innerText||''})").getAsJsonObject();
+                    var resumed = probe(youtube, "(()=>{const v=document.querySelector('video');return {paused:v?.paused??true,ended:v?.ended??true,time:v?.currentTime??-1,duration:Number.isFinite(v?.duration)?v.duration:-1,error:document.querySelector('.ytp-error-content-wrap-reason')?.innerText||''}})()").getAsJsonObject();
                     observations.add("youtubeResume", resumed);
-                    if (resumed.get("paused").getAsBoolean() && now - changedAt < 10_000_000_000L) { evaluations.clear(); return; }
-                    require(!resumed.get("paused").getAsBoolean(), "YouTube native play button resumes playback: " + resumed);
+                    double duration = resumed.get("duration").getAsDouble(), currentTime = resumed.get("time").getAsDouble();
+                    boolean nearEnd = resumed.get("ended").getAsBoolean() || duration > 0 && duration - currentTime <= 6;
+                    if (resumed.get("paused").getAsBoolean() && !nearEnd && now - changedAt < 10_000_000_000L) { evaluations.clear(); return; }
+                    if (!nearEnd) require(!resumed.get("paused").getAsBoolean(), "YouTube native play button resumes playback: " + playbackFailure(youtube, resumed));
+                    if (!youtubeRestartIssued && nearEnd) {
+                        youtubeRestartIssued = true;
+                        youtubeRestartStartedAt = now;
+                    }
+                    if (youtubeRestartIssued) {
+                        if (!youtubeRestartConfirmed) {
+                            require(probeFresh(youtube, YOUTUBE_RESTART_EXPRESSION).getAsBoolean(), "Short YouTube fixture can be rewound for background playback verification");
+                            youtubeRestartConfirmed = true;
+                            pass("short YouTube clip rewound and restarted before background HUD check");
+                        }
+                        resumed = probeFresh(youtube, YOUTUBE_RESTART_STATE_EXPRESSION).getAsJsonObject();
+                        observations.add("youtubeRestart", resumed);
+                        double restartedDuration = resumed.get("duration").getAsDouble();
+                        if (resumed.get("ended").getAsBoolean()) {
+                            youtubeRestartConfirmed = false;
+                            youtubeRestartStartedAt = now;
+                            evaluations.remove(YOUTUBE_RESTART_EXPRESSION);
+                            return;
+                        }
+                        if (!resumed.get("paused").getAsBoolean() && !resumed.get("ended").getAsBoolean()
+                                && restartedDuration > 0 && restartedDuration - resumed.get("time").getAsDouble() <= 6) {
+                            youtubeRestartConfirmed = false;
+                            youtubeRestartStartedAt = now;
+                            evaluations.remove(YOUTUBE_RESTART_EXPRESSION);
+                            return;
+                        }
+                        if (resumed.get("paused").getAsBoolean() || resumed.get("ended").getAsBoolean()
+                                || resumed.get("time").getAsDouble() <= 0.5) {
+                            if (now - youtubeRestartStartedAt < 15_000_000_000L) return;
+                            require(false, "Rewound YouTube fixture did not resume: " + playbackFailure(youtube, resumed));
+                        }
+                    }
+                    require(!resumed.get("paused").getAsBoolean() && !resumed.get("ended").getAsBoolean(), "YouTube playback is active before background test: " + playbackFailure(youtube, resumed));
+                    pass("YouTube native play button resumes playback");
                     var search = probe(youtube, "({inputs:[...document.querySelectorAll('input')].map(e=>({name:e.name,id:e.id,placeholder:e.placeholder,visible:!!e.getClientRects().length})),buttons:[...document.querySelectorAll('button[aria-label]')].map(e=>e.getAttribute('aria-label')).filter(s=>/search/i.test(s))})");
                     observations.add("searchControls", search);
                     pass("YouTube native play button resumes playback");
@@ -195,7 +237,83 @@ public final class BrowserSmoke {
                     var result = probe(youtube, "({path:location.pathname,query:new URL(location.href).searchParams.get('search_query'),results:!!document.querySelector('ytd-search,ytm-search'),text:document.body.innerText.toLowerCase().includes('me at the zoo')})").getAsJsonObject(); observations.add("youtubeSearch", result);
                     if ((!result.get("path").getAsString().equals("/results") || !result.get("text").getAsBoolean()) && now - changedAt < 30_000_000_000L) { evaluations.clear(); return; }
                     require(result.get("path").getAsString().equals("/results") && result.get("query").getAsString().equals("Me at the zoo") && result.get("text").getAsBoolean(), "Native YouTube search input and Enter produce results: " + result);
-                    screenshot(mc, "youtube-search"); pass("YouTube native search input and Enter load search results"); finish(mc, true, "");
+                    screenshot(mc, "youtube-search"); pass("YouTube native search input and Enter load search results");
+                    mc.gui.setScreen(null);
+                    var rules = ClientRules.snapshot();
+                    rules.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("enabled", true);
+                    rules.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("urls", localUrl());
+                    rules.getAsJsonObject("features").getAsJsonObject("structure_ads").addProperty("enabled", true);
+                    rules.getAsJsonObject("features").getAsJsonObject("pvp_death_media").addProperty("enabled", true);
+                    applyRules(rules);
+                    deathMediaSmokeFile = mc.gameDirectory.toPath().resolve("sumire-death-media-smoke.wav");
+                    writeSmokeWav(deathMediaSmokeFile);
+                    var personal = PersonalConfig.store().snapshot();
+                    personal.getAsJsonObject("features").getAsJsonObject("pvp_death_media").addProperty("local_file", deathMediaSmokeFile.getFileName().toString());
+                    personal.getAsJsonObject("features").getAsJsonObject("pvp_death_media").addProperty("volume", 37);
+                    personal.getAsJsonObject("features").getAsJsonObject("advertisements").addProperty("volume", 35);
+                    PersonalConfig.store().update(personal, PersonalConfig.store().revision());
+                    BrowserOverlays.closeAll(); ClientRuntime.resetWorldMediaSerials();
+                    ClientRuntime.applyState(worldMediaState(0, 0, 0, "", true));
+                    require(BrowserOverlays.worldAdSession() == null && BrowserOverlays.deathMediaSession() == null, "Zero serial baseline does not start media");
+                    ClientRuntime.applyState(worldMediaState(0, 0, 0, "", true));
+                    require(BrowserOverlays.worldAdSession() == null && BrowserOverlays.deathMediaSession() == null, "Repeated zero serial baseline does not start media");
+                    pass("initial and repeated baseline state packets do not trigger media");
+                    ClientRuntime.applyState(worldMediaState(10, 200, 0, "", true));
+                    require(BrowserOverlays.worldAdSession() == null, "AdPremium suppresses structure ads");
+                    ClientRuntime.applyState(worldMediaState(10, 200, 0, "", false));
+                    require(BrowserOverlays.worldAdSession() == null, "Removing AdPremium does not replay an already suppressed serial");
+                    pass("structure-ad serial respects AdPremium without replaying the same event afterward");
+                    ClientRuntime.applyState(worldMediaState(11, 200, 0, "", false));
+                    advanceTo(30, now);
+                }
+                case 30 -> {
+                    var worldAd = BrowserOverlays.worldAdSession(); if (worldAd == null || !worldAd.ready()) return;
+                    require(worldAd.url().equals(localUrl()), "Structure ad uses the configured sanitized preset URL");
+                    int remaining = BrowserOverlays.worldAdTicksRemaining();
+                    ClientRuntime.applyState(worldMediaState(11, 200, 0, "", false));
+                    require(BrowserOverlays.worldAdSession() == worldAd && BrowserOverlays.worldAdTicksRemaining() == remaining,
+                            "Repeated state with the same serial does not recreate or extend an ad");
+                    pass("structure-ad serial deduplication keeps one browser and does not reset the duration");
+                    for (int tick = 0; tick < remaining; tick++) BrowserOverlays.tick();
+                    require(BrowserOverlays.worldAdSession() == null, "Server-provided duration closes the structure ad");
+                    pass("structure ad closes after the server-provided tick duration");
+                    ClientRuntime.applyState(worldMediaState(11, 0, 7, "file:///server/private/secret.wav", true));
+                    var death = BrowserOverlays.deathMediaSession();
+                    if (death == null) return;
+                    if (!death.ready()) { advanceTo(31, now); return; }
+                    String deathUrl = death == null ? "<none>" : death.url();
+                    String localFile = PersonalConfig.store().text("pvp_death_media", "local_file");
+                    boolean localFileExists = deathMediaSmokeFile != null && Files.isRegularFile(deathMediaSmokeFile);
+                    require(death != null && localFileExists && sameLocalFileUrl(deathUrl, deathMediaSmokeFile),
+                            "A game-directory-relative client audio file overrides an unusable server filesystem path: session="
+                                    + deathUrl + ", configured=" + localFile + ", fixture=" + deathMediaSmokeFile
+                                    + ", exists=" + localFileExists);
+                    ClientRuntime.applyState(worldMediaState(11, 0, 7, "https://example.invalid/duplicate.wav", true));
+                    require(BrowserOverlays.deathMediaSession() == death, "Repeated death serial does not restart the audio");
+                    pass("death-media serial deduplication uses the configured local file, ignores server paths, and is not blocked by AdPremium");
+                    advanceTo(31, now);
+                }
+                case 31 -> {
+                    var death = BrowserOverlays.deathMediaSession(); if (death == null || !death.ready()) return;
+                    String localFile = PersonalConfig.store().text("pvp_death_media", "local_file");
+                    boolean localFileExists = deathMediaSmokeFile != null && Files.isRegularFile(deathMediaSmokeFile);
+                    require(localFileExists && sameLocalFileUrl(death.url(), deathMediaSmokeFile),
+                            "Ready local death-media browser exposes its configured client file: session=" + death.url()
+                                    + ", configured=" + localFile + ", fixture=" + deathMediaSmokeFile
+                                    + ", exists=" + localFileExists);
+                    if (!death.playing() && now - changedAt < 15_000_000_000L) return;
+                    require(death.playing(), "Local WAV file actually plays in the MCEF browser");
+                    require(death.configuredVolume() == 37, "PvP death media uses its independent personal volume rather than advertisement volume");
+                    screenshot(mc, "death-media-local"); pass("client-local death audio plays with its independent personal volume");
+                    var rules = ClientRules.snapshot(); rules.getAsJsonObject("features").getAsJsonObject("pvp_death_media").addProperty("enabled", false); applyRules(rules);
+                    BrowserOverlays.tick(); require(BrowserOverlays.deathMediaSession() == null, "Config OFF stops current death media");
+                    rules.getAsJsonObject("features").getAsJsonObject("pvp_death_media").addProperty("enabled", true); applyRules(rules);
+                    ClientRuntime.applyState(worldMediaState(11, 0, 7, "file:///server/private/secret.wav", true));
+                    require(BrowserOverlays.deathMediaSession() == null, "Re-enabling Config does not replay the same serial");
+                    ClientRuntime.applyState(worldMediaState(11, 0, 8, "file:///server/private/secret.wav", true));
+                    require(BrowserOverlays.deathMediaSession() != null, "A new serial after re-enabling Config starts the next event");
+                    pass("Config OFF stops playback; ON suppresses stale serials but allows the next event");
+                    finish(mc, true, "");
                 }
                 case 20 -> {
                     var viewport = probe(second, "({width:innerWidth,height:innerHeight,volume:document.getElementById('volumeprobe').volume})").getAsJsonObject(); observations.add("configuredViewport", viewport);
@@ -215,10 +333,10 @@ public final class BrowserSmoke {
                     require(probe(second, "window.open(location.href,'_blank')===null").getAsBoolean(), "Unmanaged popup windows are blocked");
                     require(mc.gui.screen() == null && Math.abs(backgroundVolume - .65) < .001, "Volume changes apply while inventory is closed: volume=" + backgroundVolume + ", screen=" + mc.gui.screen()); pass("background browser applies Config volume changes without reopening inventory");
                     mc.gui.setScreen(new InventoryScreen(mc.player)); require(BrowserOverlays.youtubeSession() == second, "Reopening reuses the retained browser");
-                    int browserId = second.cef().getIdentifier();
+                    int browserId = cef(second).getIdentifier();
                     for (int opening = 0; opening < 10; opening++) {
                         mc.gui.setScreen(null); mc.gui.setScreen(new InventoryScreen(mc.player));
-                        require(BrowserOverlays.youtubeSession() == second && second.cef().getIdentifier() == browserId, "Repeated inventory openings reuse one native browser");
+                        require(BrowserOverlays.youtubeSession() == second && cef(second).getIdentifier() == browserId, "Repeated inventory openings reuse one native browser");
                     }
                     pass("ten inventory reopenings reuse the same native browser; unmanaged popups cannot leave hidden media windows");
                     var draft = PersonalConfig.store().snapshot(); var yt = draft.getAsJsonObject("features").getAsJsonObject("youtube"); yt.addProperty("stop_on_close", true); yt.addProperty("random_video", true); yt.addProperty("random_urls", localUrl() + "?selected=1&variant=2"); PersonalConfig.store().update(draft, PersonalConfig.store().revision()); mc.gui.setScreen(null); mc.gui.setScreen(new InventoryScreen(mc.player)); second = BrowserOverlays.youtubeSession(); advanceTo(22, now);
@@ -257,11 +375,46 @@ public final class BrowserSmoke {
                     var draft = PersonalConfig.store().snapshot(); var yt = draft.getAsJsonObject("features").getAsJsonObject("youtube"); yt.addProperty("url", "https://www.youtube.com/watch?v=jNQXAC9IVRw"); yt.addProperty("volume", 25); PersonalConfig.store().update(draft, PersonalConfig.store().revision()); mc.gui.setScreen(new InventoryScreen(mc.player)); advanceTo(9, now);
                 }
                 case 25 -> {
-                    var playback = probe(first, "({time:document.querySelector('video').currentTime,paused:document.querySelector('video').paused})").getAsJsonObject();
-                    if (playback.get("time").getAsDouble() <= backgroundTime + .5 && now - changedAt < 15_000_000_000L) { evaluations.clear(); return; }
-                    require(!playback.get("paused").getAsBoolean() && playback.get("time").getAsDouble() > backgroundTime + .5, "Actual YouTube video keeps playing after inventory closes in background mode"); pass("background setting keeps actual YouTube playback advancing while inventory is closed");
+                    var playback = probe(first, "(()=>{const v=document.querySelector('video');return {time:v?.currentTime??-1,paused:v?.paused??true,ended:v?.ended??true,duration:Number.isFinite(v?.duration)?v.duration:-1}})()").getAsJsonObject();
+                    observations.add("backgroundPlayback", playback);
+                    if (!playback.get("paused").getAsBoolean() && !playback.get("ended").getAsBoolean()
+                            && playback.get("time").getAsDouble() <= backgroundTime + .5 && now - changedAt < 15_000_000_000L) { evaluations.clear(); return; }
+                    require(!playback.get("paused").getAsBoolean() && !playback.get("ended").getAsBoolean()
+                            && playback.get("time").getAsDouble() > backgroundTime + .5,
+                            "Actual YouTube video keeps playing after inventory closes: " + playbackFailure(first, playback));
+                    pass("background setting keeps actual YouTube playback advancing while inventory is closed");
+                    int[] hud = BrowserOverlays.hudBounds();
+                    if (hud == null || hud[2] <= 0 || hud[3] <= 0) {
+                        var state = first.playback();
+                        observations.addProperty("backgroundHudPlayback", "playing=" + state.playing() + ",paused=" + state.paused()
+                                + ",ended=" + state.ended() + ",readyState=" + state.readyState());
+                        if (now - changedAt < 15_000_000_000L) { evaluations.clear(); return; }
+                        require(false, "Background playback never produced a drawable HUD after media polling: " + observations.get("backgroundHudPlayback"));
+                    }
+                    screenshot(mc, "youtube-background-hud"); pass("left-top player remains available over the game HUD after inventory closes");
+                    int oldX = hud[0], oldY = hud[1];
+                    var titleClick = new MouseButtonEvent(oldX + 64, oldY - 9, new MouseButtonInfo(org.lwjgl.sdl.SDLMouse.SDL_BUTTON_LEFT, 0));
+                    require(BrowserOverlays.hudClick(titleClick, false), "HUD title bar starts a drag");
+                    BrowserOverlays.hudDrag(oldX + 120, oldY + 60); BrowserOverlays.hudRelease(titleClick);
+                    int[] moved = BrowserOverlays.hudBounds();
+                    require(moved[0] != oldX || moved[1] != oldY, "HUD title drag changes player position");
+                    pass("background player title bar can be dragged while the game screen is active");
+                    first.pauseMedia(); advanceTo(28, now);
+                }
+                case 28 -> {
+                    if (!first.playback().paused() || first.playback().ended()) return;
+                    require(BrowserOverlays.hudBounds() == null, "Paused playback hides the HUD player by default");
+                    var hiddenClick = new MouseButtonEvent(16, 34, new MouseButtonInfo(org.lwjgl.sdl.SDLMouse.SDL_BUTTON_LEFT, 0));
+                    require(!BrowserOverlays.hudClick(hiddenClick, false), "A hidden paused player has no input hit area");
+                    pass("real paused media hides the background player and removes its click/drag hit area");
+                    first.playMedia(); advanceTo(29, now);
+                }
+                case 29 -> {
+                    if (!first.playing()) return;
+                    require(BrowserOverlays.hudBounds() != null, "Resumed playback restores the HUD player");
+                    pass("resuming real media restores the background HUD and its input area");
                     mc.gui.setScreen(new InventoryScreen(mc.player)); require(BrowserOverlays.youtubeSession() == first, "Background YouTube reopens the same session");
-                    var draft = PersonalConfig.store().snapshot(); draft.getAsJsonObject("features").getAsJsonObject("youtube").addProperty("stop_on_close", true); PersonalConfig.store().update(draft, PersonalConfig.store().revision()); releasedYoutube = (net.dimaskama.mcef.api.MCEFBrowser) first.cef(); mc.gui.setScreen(null); require(first.closed() && BrowserOverlays.youtubeSession() == null, "Closing inventory stops the actual YouTube browser"); pass("closing inventory releases playing YouTube browser"); mc.gui.setScreen(new InventoryScreen(mc.player)); advanceTo(12, now);
+                    var draft = PersonalConfig.store().snapshot(); draft.getAsJsonObject("features").getAsJsonObject("youtube").addProperty("stop_on_close", true); PersonalConfig.store().update(draft, PersonalConfig.store().revision()); releasedYoutube = (net.dimaskama.mcef.api.MCEFBrowser) cef(first); mc.gui.setScreen(null); require(first.closed() && BrowserOverlays.youtubeSession() == null, "Closing inventory stops the actual YouTube browser"); pass("closing inventory releases playing YouTube browser"); mc.gui.setScreen(new InventoryScreen(mc.player)); advanceTo(12, now);
                 }
             }
         } catch (ProbePending pendingProbe) { /* Resume after CEF replies; never block the render thread. */ }
@@ -271,7 +424,7 @@ public final class BrowserSmoke {
         var pending = evaluations.get(expression);
         if (pending == null) {
             var params = new JsonObject(); params.addProperty("expression", expression); params.addProperty("returnByValue", true); params.addProperty("awaitPromise", true);
-            evaluations.put(expression, session.cef().getDevToolsClient().executeDevToolsMethod("Runtime.evaluate", params.toString())); throw new ProbePending();
+            evaluations.put(expression, cef(session).getDevToolsClient().executeDevToolsMethod("Runtime.evaluate", params.toString())); throw new ProbePending();
         }
         if (!pending.isDone()) throw new ProbePending();
         String text = pending.join();
@@ -279,12 +432,32 @@ public final class BrowserSmoke {
         if (result.has("exceptionDetails")) throw new AssertionError("Browser JavaScript evaluation failed: " + result);
         return result.getAsJsonObject("result").get("value");
     }
+    private static JsonElement probeFresh(BrowserSession session, String expression) {
+        var pending = evaluations.get(expression);
+        if (pending == null || !pending.isDone()) return probe(session, expression);
+        JsonElement value = probe(session, expression);
+        evaluations.remove(expression);
+        return value;
+    }
+    private static String playbackFailure(BrowserSession session, JsonObject state) {
+        return "paused=" + state.get("paused").getAsBoolean()
+                + ",ended=" + state.get("ended").getAsBoolean()
+                + ",time=" + state.get("time").getAsDouble()
+                + ",duration=" + state.get("duration").getAsDouble()
+                + ",session=" + cef(session).getIdentifier();
+    }
+    private static org.cef.browser.CefBrowser cef(BrowserSession session) {
+        if (session == null) throw new ProbePending();
+        var cef = session.cef();
+        if (cef == null) throw new ProbePending();
+        return cef;
+    }
     private static void click(Minecraft mc, BrowserSession browser, double px, double py) {
         var screen = mc.gui.screen(); var access = (ContainerScreenAccess) screen;
         var layout = BrowserOverlays.layout(screen);
         double scale = mc.getWindow().getGuiScale();
         double x = layout.x() + px / scale, y = layout.y() + py / scale;
-        String target = browser.cef().getIdentifier() + ":" + px + ":" + py;
+        String target = cef(browser).getIdentifier() + ":" + px + ":" + py;
         if (!target.equals(pointerTarget)) { pointerTarget = target; pointerMovedAt = System.nanoTime(); BrowserOverlays.moved(x, y); throw new ProbePending(); }
         if (System.nanoTime() - pointerMovedAt < 300_000_000L) throw new ProbePending();
         nativeClick(mc, x, y);
@@ -313,6 +486,29 @@ public final class BrowserSmoke {
     private static void advance(long now) { stage++; changedAt = now; evaluations.clear(); }
     private static void advanceTo(int target, long now) { stage = target; changedAt = now; evaluations.clear(); }
     private static String localUrl() { return "http://127.0.0.1:" + fixture.getAddress().getPort() + "/"; }
+    private static com.sumirelabs.sum1rem0d.network.GameStatePayload worldMediaState(long adSerial, int adTicks, long deathSerial, String source, boolean premium) {
+        var state = new JsonObject(); state.addProperty("day", 1); state.add("daily", new JsonObject());
+        state.addProperty("worldAdSerial", adSerial); state.addProperty("worldAdTicks", adTicks);
+        state.addProperty("deathMediaSerial", deathSerial); state.addProperty("deathMediaSource", source);
+        var services = new JsonObject(); services.addProperty("adPremium", premium); state.add("services", services);
+        return new com.sumirelabs.sum1rem0d.network.GameStatePayload(state.toString());
+    }
+    private static void writeSmokeWav(java.nio.file.Path path) throws java.io.IOException {
+        int rate = 8000, seconds = 20; byte[] samples = new byte[rate * seconds];
+        for (int i = 0; i < samples.length; i++) samples[i] = (byte) (128 + (int) (36 * Math.sin(2 * Math.PI * 440 * i / rate)));
+        var format = new javax.sound.sampled.AudioFormat(rate, 8, 1, false, false);
+        try (var audio = new javax.sound.sampled.AudioInputStream(new java.io.ByteArrayInputStream(samples), format, samples.length)) {
+            javax.sound.sampled.AudioSystem.write(audio, javax.sound.sampled.AudioFileFormat.Type.WAVE, path.toFile());
+        }
+    }
+    private static boolean sameLocalFileUrl(String actual, java.nio.file.Path expected) {
+        if (actual == null || expected == null) return false;
+        try {
+            var uri = java.net.URI.create(actual);
+            return "file".equalsIgnoreCase(uri.getScheme())
+                    && java.nio.file.Path.of(uri).toAbsolutePath().normalize().equals(expected.toAbsolutePath().normalize());
+        } catch (RuntimeException invalid) { return false; }
+    }
     private static void applyRules(JsonObject rules) { ClientRuntime.acceptRules(new com.sumirelabs.sum1rem0d.network.ConfigStatePayload(ClientRules.revision, ClientRules.editable, rules.toString(), "", 0, false)); }
     private static void pass(String value) { if (passed.contains(value)) return; passed.add(value); Sum1reM0d.LOGGER.info("BROWSER_SMOKE: {}", value); }
     private static void require(boolean value, String message) { if (!value) throw new AssertionError(message); }
@@ -320,6 +516,7 @@ public final class BrowserSmoke {
         stage = -1; BrowserOverlays.closeAll(); if (fixture != null) fixture.stop(0);
         if (originalRules != null) applyRules(originalRules);
         if (original != null) try { PersonalConfig.store().update(original, PersonalConfig.store().revision()); } catch (Exception error) { success = false; failure += "; restore: " + error; }
+        if (deathMediaSmokeFile != null) try { Files.deleteIfExists(deathMediaSmokeFile); } catch (Exception error) { success = false; failure += "; media fixture cleanup: " + error; }
         var result = new JsonObject(); result.addProperty("success", success); result.addProperty("failure", failure); result.add("passed", new Gson().toJsonTree(passed)); result.add("observations", observations);
         try { Files.writeString(mc.gameDirectory.toPath().resolve("sum1rem0d-browser-verification.json"), new GsonBuilder().setPrettyPrinting().create().toJson(result)); } catch (Exception error) { Sum1reM0d.LOGGER.error("Cannot save browser report", error); }
         Sum1reM0d.LOGGER.info("BROWSER_SMOKE: completed success={}", success); mc.disconnectFromWorld(net.minecraft.client.multiplayer.ClientLevel.DEFAULT_QUIT_MESSAGE); mc.stop();

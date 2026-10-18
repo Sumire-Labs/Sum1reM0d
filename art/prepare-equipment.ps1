@@ -1,4 +1,4 @@
-param([string]$MinecraftJar=(Join-Path (Split-Path -Parent $PSScriptRoot) '.gradle/isolated-home/caches/fabric-loom/26.3/minecraft-client.jar'))
+param([string]$MinecraftJar=(Join-Path (Split-Path -Parent $PSScriptRoot) '.gradle/isolated-home/caches/fabric-loom/26.3/minecraft-client.jar'),[string[]]$Families=@('emerald','redstone','lapis','manyullyn'),[string[]]$Parts=@('sword','pickaxe','axe','shovel','hoe','helmet','chestplate','leggings','boots'))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
 if(-not ('TextureExport' -as [type])){Add-Type -Path (Join-Path $PSScriptRoot 'TextureExport.cs')}
@@ -20,19 +20,23 @@ function Write-Colored([string]$Native,[string]$Output,[int[]]$Palette,[bool]$Pr
  }finally{$taskGraphics.Dispose();$taskImage.Dispose();$taskSource.Dispose();$taskStream.Dispose()}
 }
 try{
- foreach($taskFamily in @('emerald','redstone','lapis','manyullyn')){
+ foreach($taskFamily in $Families){
   $taskTemplate=if($taskFamily -eq 'manyullyn'){'netherite'}else{'iron'}
-  foreach($taskPart in @('sword','pickaxe','axe','shovel','hoe','helmet','chestplate','leggings','boots')){
+  foreach($taskPart in $Parts){
    $taskSource=Join-Path $PSScriptRoot "source/vanilla-color-2026/${taskFamily}_${taskPart}-ai.png";if(!(Test-Path -LiteralPath $taskSource)){continue}
-   $taskPalette=@(Read-Palette $taskSource $taskFamily)
+   # All redstone heads use one material hue; individual AI references varied too far.
+   $taskPaletteSource=if($taskFamily -eq 'redstone'){Join-Path $PSScriptRoot 'source/vanilla-color-2026/redstone_pickaxe-ai.png'}else{$taskSource}
+   $taskPalette=@(Read-Palette $taskPaletteSource $taskFamily)
    Write-Colored "textures/item/${taskTemplate}_${taskPart}.png" "textures/item/${taskFamily}_${taskPart}.png" $taskPalette ($taskPart -notin @('helmet','chestplate','leggings','boots'))
   }
   $taskArmorSource=Join-Path $PSScriptRoot "source/vanilla-color-2026/${taskFamily}_chestplate-ai.png"
-  if(Test-Path -LiteralPath $taskArmorSource){$taskArmorPalette=@(Read-Palette $taskArmorSource $taskFamily);foreach($taskLayer in @('humanoid','humanoid_leggings','humanoid_baby')){Write-Colored "textures/entity/equipment/$taskLayer/$taskTemplate.png" "textures/entity/equipment/$taskLayer/$taskFamily.png" $taskArmorPalette $false}}
-  if($taskFamily -eq 'manyullyn' -and (Test-Path -LiteralPath $taskArmorSource)){
+  if(($Parts -contains 'chestplate') -and (Test-Path -LiteralPath $taskArmorSource)){$taskArmorPalette=@(Read-Palette $taskArmorSource $taskFamily);foreach($taskLayer in @('humanoid','humanoid_leggings','humanoid_baby')){Write-Colored "textures/entity/equipment/$taskLayer/$taskTemplate.png" "textures/entity/equipment/$taskLayer/$taskFamily.png" $taskArmorPalette $false}}
+  if($taskFamily -eq 'manyullyn' -and ($Parts -contains 'chestplate') -and (Test-Path -LiteralPath $taskArmorSource)){
    foreach($taskPart in @('horse_armor','nautilus_armor','spear','spear_in_hand')){Write-Colored "textures/item/netherite_$taskPart.png" "textures/item/manyullyn_$taskPart.png" $taskArmorPalette ($taskPart -like 'spear*')}
    foreach($taskLayer in @('horse_body','nautilus_body')){Write-Colored "textures/entity/equipment/$taskLayer/netherite.png" "textures/entity/equipment/$taskLayer/manyullyn.png" $taskArmorPalette $false}
   }
  }
- $taskManifest | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 (Join-Path $PSScriptRoot 'manifest-vanilla-color-2026.json')
+ $taskManifestPath=Join-Path $PSScriptRoot 'manifest-vanilla-color-2026.json'
+ if(Test-Path -LiteralPath $taskManifestPath){$taskChanged=@($taskManifest | ForEach-Object {$_.path});foreach($taskPrevious in (Get-Content -LiteralPath $taskManifestPath -Raw | ConvertFrom-Json)){if($taskPrevious.path -notin $taskChanged){$taskManifest.Add($taskPrevious)}}}
+ $taskManifest | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 $taskManifestPath
 }finally{$taskZip.Dispose()}

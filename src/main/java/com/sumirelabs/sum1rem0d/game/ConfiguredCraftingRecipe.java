@@ -16,7 +16,7 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
         StreamCodec.ofMember((recipe, buffer) -> buffer.writeUtf(recipe.feature, 64), buffer -> new ConfiguredCraftingRecipe(buffer.readUtf(64))));
     private final String feature;
     public ConfiguredCraftingRecipe(String feature) {
-        if (!feature.equals("grass_coal") && !feature.equals("cleanliness") && !feature.equals("mud_ball")) throw new IllegalArgumentException("Unknown configured recipe");
+        if (!List.of("grass_coal","cleanliness","mud_ball","sumzon_delivery_box","automated_crafting","jukebox_grinder","washing_cauldron","tesla_coil","auto_clicker","sulfur_gunpowder").contains(feature)) throw new IllegalArgumentException("Unknown configured recipe");
         this.feature = feature;
     }
     /** Reject impossible outputs instead of silently changing the configured quantity. */
@@ -53,6 +53,16 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
     }
     @Override public boolean matches(CraftingInput input, Level level) {
         if (!Rules.on(feature) || assemble(input).isEmpty()) return false;
+        if (feature.equals("sumzon_delivery_box")) {
+            if(!Rules.b(feature,"recipe_enabled")||input.width()!=3||input.height()!=3)return false;
+            for(int i=0;i<9;i++)if(!input.getItem(i).is(i==4?Items.CHEST:Items.IRON_INGOT))return false;
+            return true;
+        }
+        if(List.of("automated_crafting","jukebox_grinder","washing_cauldron","tesla_coil","auto_clicker").contains(feature))return machineRecipeMatches(input,feature);
+        if(feature.equals("sulfur_gunpowder")){
+            var counts=new java.util.HashMap<String,Integer>();for(var stack:input.items())if(!stack.isEmpty())counts.merge(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(),1,Integer::sum);
+            String sulfur=BuiltInRegistries.ITEM.getKey(AutomationContent.sulfur()).toString();return counts.size()==3&&counts.getOrDefault(sulfur,0)==1&&counts.getOrDefault("minecraft:charcoal",0)==1&&counts.getOrDefault("sum1rem0d:dust",0)==1;
+        }
         List<String> required;
         if (feature.equals("mud_ball")) required = new ArrayList<>(Rules.list(feature, "mud_materials"));
         else if (feature.equals("cleanliness")) required = new ArrayList<>(Rules.list(feature, "soap_materials"));
@@ -66,6 +76,10 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
     }
     @Override public ItemStack assemble(CraftingInput input) {
         if (!Rules.on(feature)) return ItemStack.EMPTY;
+        if(feature.equals("sumzon_delivery_box"))return Rules.b(feature,"recipe_enabled")?new ItemStack(DeliveryBoxContent.item()):ItemStack.EMPTY;
+        if(feature.equals("sulfur_gunpowder"))return Rules.b(feature,"enabled")?new ItemStack(Items.GUNPOWDER,4):ItemStack.EMPTY;
+        String automationBlock=switch(feature){case "automated_crafting"->"automated_crafting_table";case "jukebox_grinder"->"jukebox_grinder";case "washing_cauldron"->"washing_cauldron";case "tesla_coil"->"tesla_coil";case "auto_clicker"->"auto_clicker";default->null;};
+        if(automationBlock!=null)return new ItemStack(AutomationContent.block(automationBlock));
         if (feature.equals("mud_ball")) {
             if (!Rules.on("cleanliness") || !Rules.b(feature,"recipe_enabled")) return ItemStack.EMPTY;
             int count = Rules.i(feature,"recipe_output");
@@ -77,6 +91,10 @@ public final class ConfiguredCraftingRecipe extends CustomRecipe {
         Item item = BuiltInRegistries.ITEM.getOptional(id).orElse(Items.AIR);
         int count = Rules.i(feature, "output_count");
         return item == Items.AIR || count > item.getDefaultInstance().getMaxStackSize() ? ItemStack.EMPTY : new ItemStack(item, count);
+    }
+    private static boolean machineRecipeMatches(CraftingInput input,String feature){
+        String[] pattern=switch(feature){case "automated_crafting"->new String[]{"minecraft:iron_ingot","minecraft:redstone","minecraft:iron_ingot","minecraft:redstone","minecraft:crafting_table","minecraft:redstone","minecraft:iron_ingot","minecraft:redstone","minecraft:iron_ingot"};case "jukebox_grinder"->new String[]{"","minecraft:flint","","","minecraft:jukebox","","","",""};case "washing_cauldron"->new String[]{"minecraft:iron_ingot","minecraft:iron_ingot","minecraft:iron_ingot","minecraft:iron_ingot","minecraft:cauldron","minecraft:iron_ingot","minecraft:iron_ingot","minecraft:iron_ingot","minecraft:iron_ingot"};case "tesla_coil"->new String[]{"","minecraft:redstone","","","minecraft:lightning_rod","","","minecraft:heavy_core",""};case "auto_clicker"->new String[]{"","minecraft:netherite_ingot","","","minecraft:dispenser","","","",""};default->new String[0];};
+        if(input.width()!=3||input.height()!=3)return false;for(int i=0;i<9;i++){var stack=input.getItem(i);String expected=pattern[i];if(expected.isEmpty()){if(!stack.isEmpty())return false;}else if(stack.isEmpty()||!BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals(expected))return false;}return true;
     }
     @Override public RecipeSerializer<? extends CustomRecipe> getSerializer() { return SERIALIZER; }
 }

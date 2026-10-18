@@ -1,0 +1,105 @@
+{
+  "model": {
+    "on_true": {
+      "cases": [
+        {
+          "when": "gui",
+          "model": {
+            "on_true": {
+              "models": [
+                {
+                  "model": "minecraft:item/white_bundle_open_back",
+                  "tints": [
+                    {
+                      "default": -1,
+                      "type": "minecraft:dye"
+                    }
+                  ],
+                  "type": "minecraft:model"
+                },
+                {
+                  "type": "minecraft:bundle/selected_item"
+                },
+                {
+                  "model": "minecraft:item/white_bundle_open_front",
+                  "tints": [
+                    {
+                      "default": -1,
+                      "type": "minecraft:dye"
+                    }
+                  ],
+                  "type": "minecraft:model"
+                }
+              ],
+              "type": "minecraft:composite"
+            },
+            "property": "minecraft:bundle/has_selected_item",
+            "on_false": {
+              "model": "minecraft:item/white_bundle",
+              "tints": [
+                {
+                  "default": -1,
+                  "type": "minecraft:dye"
+                }
+              ],
+              "type": "minecraft:model"
+            },
+            "type": "minecraft:condition"
+          }
+        }
+      ],
+      "property": "minecraft:display_context",
+      "fallback": {
+        "model": "minecraft:item/white_bundle",
+        "tints": [
+          {
+            "default": -1,
+            "type": "minecraft:dye"
+          }
+        ],
+        "type": "minecraft:model"
+      },
+      "type": "minecraft:select"
+    },
+    "component": "minecraft:dyed_color",
+    "property": "minecraft:has_component",
+    "on_false": {
+      "cases": [
+        {
+          "when": "gui",
+          "model": {
+            "on_true": {
+              "models": [
+                {
+                  "model": "minecraft:item/lime_bundle_open_back",
+                  "type": "minecraft:model"
+                },
+                {
+                  "type": "minecraft:bundle/selected_item"
+                },
+                {
+                  "model": "minecraft:item/lime_bundle_open_front",
+                  "type": "minecraft:model"
+                }
+              ],
+              "type": "minecraft:composite"
+            },
+            "property": "minecraft:bundle/has_selected_item",
+            "on_false": {
+              "model": "minecraft:item/lime_bundle",
+              "type": "minecraft:model"
+            },
+            "type": "minecraft:condition"
+          }
+        }
+      ],
+      "property": "minecraft:display_context",
+      "fallback": {
+        "model": "minecraft:item/lime_bundle",
+        "type": "minecraft:model"
+      },
+      "type": "minecraft:select"
+    },
+    "type": "minecraft:condition"
+  }
+}

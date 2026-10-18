@@ -1,1 +1,7 @@
-{"replace": false, "values": ["sum1rem0d:mixed_concrete"]}
+{
+  "replace": false,
+  "values": [
+    "sum1rem0d:mixed_concrete",
+    "sum1rem0d:piston_base"
+  ]
+}

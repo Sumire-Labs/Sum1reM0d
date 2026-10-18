@@ -15,7 +15,8 @@ import net.minecraft.world.item.ItemStack;
 final class UtilityAssetsSmoke {
     private static long shownAt;
     private static boolean done,connecting;
-    private static final List<String> NAMES=List.of("glowstone_torch","optical_fiber","wooden_helmet","wooden_chestplate","wooden_leggings","wooden_boots");
+    private static final boolean BOOKSHELVES=Boolean.getBoolean("sum1rem0d.bookshelfAssetsSmoke");
+    private static final List<String> NAMES=BOOKSHELVES?BookshelfContent.BLOCKS:List.of("glowstone_torch","optical_fiber","wooden_helmet","wooden_chestplate","wooden_leggings","wooden_boots");
     static void tick(Minecraft mc){
         if(done||!Boolean.getBoolean("sum1rem0d.utilityAssetsSmoke")||!mc.isGameLoadFinished())return;
         if(mc.player==null||mc.level==null){
@@ -27,17 +28,22 @@ final class UtilityAssetsSmoke {
         try{
             if(shownAt==0){
                 for(var name:NAMES)if(mc.getModelManager().getItemModel(ModContent.id(name)).getClass().getSimpleName().contains("Missing"))throw new AssertionError("Missing item model: "+name);
+                if(BOOKSHELVES)for(int tier=1;tier<=8;tier++){
+                    var state=BookshelfContent.block(tier).defaultBlockState();var tint=mc.getBlockColors().getTintSource(state,0);
+                    if(tint==null||tint.color(state)!=CompressedBookshelfTint.INSTANCE.calculate(new ItemStack(BookshelfContent.item(tier)),mc.level,mc.player))throw new AssertionError("Block/item bookshelf tint mismatch: "+tier);
+                }
                 mc.gui.setScreen(new Preview());shownAt=System.nanoTime();return;
             }
+            if(!(mc.gui.screen() instanceof Preview))mc.gui.setScreen(new Preview());
             if(System.nanoTime()-shownAt<2_000_000_000L)return;
-            Screenshot.grab(mc.gameDirectory,"utility-five-assets.png",mc.gameRenderer.mainRenderTarget(),1,message->{});
+            Screenshot.grab(mc.gameDirectory,(BOOKSHELVES?"compressed-bookshelf-assets.png":"utility-five-assets.png"),mc.gameRenderer.mainRenderTarget(),1,message->{});
             finish(mc,true,"");
         }catch(Throwable e){finish(mc,false,e.toString());}
     }
     private static void finish(Minecraft mc,boolean success,String failure){
         done=true;var report=new JsonObject();report.addProperty("success",success);report.addProperty("failure",failure);
-        var checks=new com.google.gson.JsonArray();if(success){checks.add("Six new item models resolve and render in the native GUI");checks.add("Torch/fiber blockstate models and wooden equipment textures load");}report.add("passed",checks);
-        try{Files.writeString(mc.gameDirectory.toPath().resolve("sum1rem0d-utility-assets.json"),report.toString());}catch(Exception e){throw new IllegalStateException(e);}
+        var checks=new com.google.gson.JsonArray();if(success){checks.add(BOOKSHELVES?"All eight compressed bookshelf models render":"Six new item models resolve and render in the native GUI");checks.add(BOOKSHELVES?"Placed-block and item tint sources produce identical darkness":"Torch/fiber blockstate models and wooden equipment textures load");}report.add("passed",checks);
+        try{Files.writeString(mc.gameDirectory.toPath().resolve(BOOKSHELVES?"sum1rem0d-bookshelf-assets.json":"sum1rem0d-utility-assets.json"),report.toString());}catch(Exception e){throw new IllegalStateException(e);}
         mc.disconnectFromWorld(net.minecraft.client.multiplayer.ClientLevel.DEFAULT_QUIT_MESSAGE);
         mc.stop();
     }
@@ -45,12 +51,13 @@ final class UtilityAssetsSmoke {
         Preview(){super(Component.literal("Utility additions"));}
         @Override public void extractRenderState(GuiGraphicsExtractor graphics,int mouseX,int mouseY,float tick){
             graphics.fill(0,0,width,height,0xFF222A33);
-            graphics.text(font,Component.literal("Sum1reM0d - Utility additions"),16,12,0xFFFFFFFF,false);
+            graphics.text(font,Component.literal(BOOKSHELVES?"Compressed bookshelves":"Sum1reM0d - Utility additions"),16,12,0xFFFFFFFF,false);
             for(int i=0;i<NAMES.size();i++){
-                int x=width*(2*(i%3)+1)/6,y=45+(i/3)*85;String name=NAMES.get(i);
-                var stack=new ItemStack(UtilityContent.ITEMS.contains(name)?UtilityContent.item(name):ExtraContent.item(name));
+                int columns=BOOKSHELVES?4:3;int x=width*(2*(i%columns)+1)/(2*columns),y=45+(i/columns)*85;String name=NAMES.get(i);
+                var stack=new ItemStack(BOOKSHELVES?BookshelfContent.item(i+1):UtilityContent.ITEMS.contains(name)?UtilityContent.item(name):ExtraContent.item(name));
                 graphics.pose().pushMatrix();graphics.pose().translate(x-24,y);graphics.pose().scale(3f,3f);graphics.item(stack,0,0);graphics.pose().popMatrix();
-                graphics.text(font,stack.getHoverName(),x-font.width(stack.getHoverName())/2,y+53,0xFFFFFFFF,false);
+                var label=BOOKSHELVES?Component.literal(String.format(java.util.Locale.ROOT,"%,d×",BookshelfContent.units(i+1))):stack.getHoverName();
+                graphics.text(font,label,x-font.width(label)/2,y+53,0xFFFFFFFF,false);
             }
         }
     }

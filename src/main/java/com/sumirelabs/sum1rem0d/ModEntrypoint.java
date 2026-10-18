@@ -34,6 +34,8 @@ public final class ModEntrypoint {
         bus.addListener(ModEntrypoint::registerContent);
     }
     private static void registerContent(RegisterEvent event) {
+        event.register(Registries.BLOCK,h->{for(var name:com.sumirelabs.sum1rem0d.game.BookshelfContent.BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.BookshelfContent.createBlock(name));});
+        event.register(Registries.ITEM,h->{for(var name:com.sumirelabs.sum1rem0d.game.BookshelfContent.BLOCKS)h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.BookshelfContent.createItem(name));});
         event.register(Registries.BLOCK, h -> { for(var name:com.sumirelabs.sum1rem0d.game.UtilityContent.BLOCKS) h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.UtilityContent.createBlock(name)); });
         event.register(Registries.ITEM, h -> { for(var name:com.sumirelabs.sum1rem0d.game.UtilityContent.ITEMS) h.register(ModContent.id(name),com.sumirelabs.sum1rem0d.game.UtilityContent.createItem(name)); });
         event.register(Registries.BLOCK, h -> h.register(ModContent.id("death_box"), com.sumirelabs.sum1rem0d.game.DeathBoxContent.createBlock()));

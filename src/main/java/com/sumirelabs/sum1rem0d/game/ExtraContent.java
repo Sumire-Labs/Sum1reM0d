@@ -33,7 +33,7 @@ public final class ExtraContent {
   *///?}
  }
  //? if neoforge {
- /*public static void setupNeo(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event){event.enqueueWork(DyeTextiles::registerHomes);}
+ /*public static void setupNeo(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event){event.enqueueWork(()->{DyeTextiles.registerHomes();BookshelfContent.flammable();});}
  *///?}
  public static void registerFabric(){for(var name:BLOCKS)Registry.register(BuiltInRegistries.BLOCK,ModContent.id(name),createBlock(name));for(var name:BLOCK_ENTITIES)Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,ModContent.id(name),createType(name));for(var name:ITEMS)Registry.register(BuiltInRegistries.ITEM,ModContent.id(name),createItem(name));Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,ModContent.id("extra_crafting"),ExtraCraftingRecipe.SERIALIZER);DyeTextiles.registerHomes();}
 }

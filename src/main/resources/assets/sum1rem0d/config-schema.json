@@ -7486,5 +7486,84 @@
         "max": 64
       }
     ]
+  },
+  {
+    "id": "compressed_bookshelves",
+    "label": "圧縮本棚",
+    "implemented": true,
+    "options": [
+      {
+        "key": "enabled",
+        "label": "有効",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "recipe_enabled",
+        "label": "レシピを有効化",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "max_tier",
+        "label": "作成できる最大圧縮段階",
+        "type": "INTEGER",
+        "initial": 8,
+        "min": 1,
+        "max": 8
+      },
+      {
+        "key": "unpack_enabled",
+        "label": "解凍レシピを有効化",
+        "type": "BOOLEAN",
+        "initial": true,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "power_multiplier",
+        "label": "本棚パワー倍率",
+        "type": "DECIMAL",
+        "initial": 1,
+        "min": 0.1,
+        "max": 100
+      },
+      {
+        "key": "expanded_levels",
+        "label": "要求レベル30の上限を拡張",
+        "type": "BOOLEAN",
+        "initial": false,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "key": "maximum_level",
+        "label": "拡張時の要求レベル上限",
+        "type": "INTEGER",
+        "initial": 120,
+        "min": 30,
+        "max": 1000
+      },
+      {
+        "key": "darkening_per_tier",
+        "label": "1段階ごとの暗化率",
+        "type": "DECIMAL",
+        "initial": 0.1,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "minimum_brightness",
+        "label": "最低明度 (%)",
+        "type": "INTEGER",
+        "initial": 15,
+        "min": 5,
+        "max": 100
+      }
+    ]
   }
 ]

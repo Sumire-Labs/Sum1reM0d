@@ -150,7 +150,8 @@
     "FastShulkerBulletMixin",
     "DeathBoxInventoryMixin",
     "DoubleDoorPowerMixin",
-    "FragilityCurseMixin"
+    "FragilityCurseMixin",
+    "CompressedBookshelfEnchantingMixin"
   ],
   "client": [
     "MenuScreenMixin",
@@ -211,7 +212,8 @@
     "SecondOffhandInventoryMixin",
     "SecondOffhandRendererMixin",
     "SecondOffhandInventoryInputMixin",
-    "CopperChestSlotLayoutMixin"
+    "CopperChestSlotLayoutMixin",
+    "CompressedBookshelfItemTintMixin"
   ],
   "injectors": {
     "defaultRequire": 1

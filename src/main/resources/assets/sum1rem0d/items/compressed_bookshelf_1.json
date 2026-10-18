@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "sum1rem0d:block/compressed_bookshelf",
+    "tints": [
+      {
+        "type": "sum1rem0d:compressed_bookshelf"
+      }
+    ]
+  }
+}

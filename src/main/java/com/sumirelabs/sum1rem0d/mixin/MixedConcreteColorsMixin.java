@@ -14,6 +14,7 @@ public abstract class MixedConcreteColorsMixin {
  @Inject(method="createDefault",at=@At("RETURN"))
  private static void sum1rem0d$register(CallbackInfoReturnable<BlockColors> cir){
   var colors=cir.getReturnValue();
+  colors.register(List.of(com.sumirelabs.sum1rem0d.client.CompressedBookshelfTint.INSTANCE),java.util.stream.IntStream.rangeClosed(1,8).mapToObj(BookshelfContent::block).toArray(net.minecraft.world.level.block.Block[]::new));
   colors.register(List.of(sum1rem0d$COLOR),MixedConcrete.block(),ExtraContent.block("mixed_wool"));
   if(ExtraContent.MIXED_SHAPES_AVAILABLE)colors.register(List.of(sum1rem0d$COLOR),ExtraContent.block("mixed_wool_slab"),ExtraContent.block("mixed_wool_stairs"),ExtraContent.block("mixed_concrete_slab"),ExtraContent.block("mixed_concrete_stairs"));
   colors.register(List.of(sum1rem0d$COLOR,sum1rem0d$WHITE),ExtraContent.block("mixed_bed"));

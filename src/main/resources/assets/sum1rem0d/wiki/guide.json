@@ -19,16 +19,15 @@
         "crawl",
         "noon_undress",
         "seat_blocks",
-        "crawl",
         "afk_white",
         "camera_lock",
         "youtube",
+        "death_message",
+        "death_box",
         "japanese_ime",
         "wiki",
         "creative_tab",
-        "recipe_viewers",
-        "death_message",
-        "death_box"
+        "recipe_viewers"
       ]
     },
     {
@@ -1109,17 +1108,17 @@
     {
       "feature": "jukebox_grinder",
       "paragraphs": [
-        "削除予定"
+        "ジュークボックスに原石などのアイテムを使用すると粉砕され、別のアイテムが手に入ります。"
       ]
     },
     {
       "feature": "washing_cauldron",
       "paragraphs": [
-        "削除予定"
+        "水の入った大釜の上と側面にチェストを設置し、上のチェストに洗浄可能なアイテムを入れると、洗浄されて側面のチェストに出力されます。",
+        "一回の洗浄で水入り瓶1杯分の水を消費します。"
       ]
     },
-    {
-      "feature": "tesla_coil",
+    {      "feature": "tesla_coil",
       "paragraphs": [
         "避雷針は、上にヘビーコアが置かれるとテスラコイルとして機能するようになります。",
         "レッドストーン信号を与えると半径10ブロック以内のモブを電撃で攻撃します。"
@@ -1136,7 +1135,7 @@
     {
       "feature": "sulfur_gunpowder",
       "paragraphs": [
-        "レシピ変更予定"
+        "硫黄と木炭から火薬が作れます。"
       ]
     },
     {
@@ -1160,7 +1159,7 @@
     {
       "feature": "boat_speed",
       "paragraphs": [
-        "ボートとトロッコの速度上限を撤廃します。"
+        "ボートの速度上限を撤廃します。"
       ]
     },
     {
@@ -1205,7 +1204,7 @@
     {
       "feature": "minecart_speed",
       "paragraphs": [
-        "boat_speedに合併"
+        "トロッコの速度上限を撤廃します。"
       ]
     },
     {
@@ -1270,7 +1269,7 @@
     {
       "feature": "fishing_grapple",
       "paragraphs": [
-        "[うごかない]釣り針が固いブロックに掛かった状態で釣り竿を巻くと、自分を針の位置へ引き寄せます。水中と海洋バイオームでは発動しません。"
+        "釣り針をブロックに掛けると、自身を針の方向へ飛ばすことができます。水中では発動しません。"
       ]
     },
     {
